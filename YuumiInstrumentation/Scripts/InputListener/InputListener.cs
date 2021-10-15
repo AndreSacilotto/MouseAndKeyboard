@@ -6,13 +6,16 @@ public class InputListener : IDisposable
 {
     private IKeyboardMouseEvents inputEvents;
 
-    public InputListener(bool start)
+    public bool mmove, mdown, mup, mdouble, mwheel, kdown, kup;
+
+    public InputListener(bool enable = true)
     {
         inputEvents = Hook.GlobalEvents();
-
-        if (start)
-            Subscribe();
+        ChangeState(enable);
+        Subscribe();
     }
+
+    public void ChangeState(bool enable) => mmove = mdown = mup = mdouble = mwheel = kdown = kup = enable;
 
     public void Subscribe()
     {
@@ -38,22 +41,30 @@ public class InputListener : IDisposable
 
     }
 
-
     #region Mouse
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
+        if (!mmove)
+            return;
+
         InputListenerUtil.Print(e);
     }
     private void OnMouseDown(object sender, MouseEventArgs e)
     {
+        if (!mdown)
+            return;
         InputListenerUtil.Print(e);
     }
     private void OnMouseDobleClick(object sender, MouseEventArgs e)
     {
+        if (!mdouble)
+            return;
         InputListenerUtil.Print(e);
     }
     private void OnMouseWheel(object sender, MouseEventArgs e)
     {
+        if (!mwheel)
+            return;
         InputListenerUtil.Print(e);
     }
     #endregion
@@ -64,6 +75,8 @@ public class InputListener : IDisposable
 
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
+        if (!kdown)
+            return;
         if (isHolding)
             return;
         isHolding = true;
@@ -73,6 +86,8 @@ public class InputListener : IDisposable
 
     private void OnKeyUp(object sender, KeyEventArgs e)
     {
+        if (!kup)
+            return;
         isHolding = false;
 
         //LoggerUtil.Print(e);

@@ -57,6 +57,7 @@
     <Compile Include="Scripts\InputSimulator\Keyboard.cs" />
     <Compile Include="Scripts\InputListener\InputListener.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
+    <Compile Include="Scripts\Interpolation.cs" />
     <Compile Include="Scripts\Main.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

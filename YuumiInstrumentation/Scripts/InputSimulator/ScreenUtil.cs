@@ -1,4 +1,12 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
+
+/*
+1600 x 900
+1360 x 768
+=
+2960 x 900
+*/
 
 public static class ScreenUtil
 {
@@ -15,6 +23,7 @@ public static class ScreenUtil
             this.width = width;
             this.height = height;
         }
+        public override string ToString() => $"W: {width}, H: {height}";
     }
 
     public static ScreenSize GetPrimaryScreenSize { get; private set; }

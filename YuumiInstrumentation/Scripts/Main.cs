@@ -14,15 +14,23 @@ public class Main : ApplicationContext
         inputListener = new InputListener(false);
         //network = new NetworkManager();
 
-        Mouse.DragAndDrop(1000, 500);
-        //Task.Delay(1500).ContinueWith(t =>
-        //{
-            //Mouse.GetCursorPosition(out uint x, out uint y);
+        
+        Task.Delay(1500).ContinueWith(t =>
+        {
+            Mouse.LinearGradualMove(1000, 500);
+            //Mouse.GetCursorPosition(out int x, out int y);
             //Console.WriteLine(x + " " + y);
-            //Mouse.MoveAbsoluteVirtual(2000, 500);
+            //Console.WriteLine(Mouse.PositionToAbsolutePrint(x, y));
+            //for (int i = 1350; i < 1500; i += 10)
+            //{
+            //    Mouse.MoveAbsolute(i, 500);
+            //    Mouse.GetCursorPosition(out x, out y);
+            //    Console.WriteLine(x + " " + y);
+            //}
+            //Mouse.MoveAbsolute(0, 0);
             //Mouse.GetCursorPosition(out x, out y);
             //Console.WriteLine(x + " " + y);
-        //});
+        });
     }
 
     private void OnExit(object sender, EventArgs e)
