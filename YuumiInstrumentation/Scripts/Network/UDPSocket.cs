@@ -5,13 +5,12 @@ using System.Text;
 
 public abstract class UDPSocket
 {
-    public Socket Socket { get; } = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-    public IPEndPoint ServerEndPoint { get; private set; }
+    public Socket MySocket { get; } = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+    public IPEndPoint HostEndPoint { get; private set; }
 
     protected EndPoint senderEndPoint = new IPEndPoint(IPAddress.Any, 0);
     protected AsyncCallback recv = null;
     protected ByteBuffer byteBuffer;
-
 
     public class ByteBuffer
     {
@@ -27,35 +26,28 @@ public abstract class UDPSocket
 
     public void Start(IPAddress address, int port)
     {
-        ServerEndPoint = new IPEndPoint(address, port);
-        byteBuffer = new ByteBuffer(Socket.SendBufferSize);
-        InternalStart(ServerEndPoint);
+        HostEndPoint = new IPEndPoint(address, port);
+        byteBuffer = new ByteBuffer(MySocket.SendBufferSize);
+        InternalStart(HostEndPoint);
     }
 
     protected abstract void InternalStart(IPEndPoint hostEndPoint);
 
-    public void Stop() => Socket.Close();
+    public void Stop() => MySocket.Close();
 
+    public virtual void Send(int value) { }
+    public virtual void Send(float value) { }
     public void Send(string text)
     {
         byte[] packetData = Encoding.ASCII.GetBytes(text);
-        Socket.BeginSend(packetData, 0, packetData.Length, SocketFlags.None, (ar) =>
+        MySocket.BeginSend(packetData, 0, packetData.Length, SocketFlags.None, (ar) =>
         {
             ByteBuffer so = (ByteBuffer)ar.AsyncState;
-            int bytes = Socket.EndSend(ar);
+            int bytes = MySocket.EndSend(ar);
             Console.WriteLine("SEND: {0}, {1}", bytes, text);
         }, byteBuffer);
     }
 
-    protected void Receive()
-    {
-        Socket.BeginReceiveFrom(byteBuffer.buffer, 0, byteBuffer.Length, SocketFlags.None, ref senderEndPoint, recv = (ar) =>
-        {
-            ByteBuffer so = (ByteBuffer)ar.AsyncState;
-            int bytes = Socket.EndReceiveFrom(ar, ref senderEndPoint);
-            Console.WriteLine("RECV: {0}: {1}, {2}", senderEndPoint.ToString(), bytes, Encoding.ASCII.GetString(so.buffer, 0, bytes));
+    protected abstract void Receive();
 
-            Socket.BeginReceiveFrom(so.buffer, 0, byteBuffer.Length, SocketFlags.None, ref senderEndPoint, recv, so);
-        }, byteBuffer);
-    }
 }

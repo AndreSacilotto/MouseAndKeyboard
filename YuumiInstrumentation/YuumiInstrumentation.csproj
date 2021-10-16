@@ -52,11 +52,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Scripts\ConfigFile\ConfigXML.cs" />
     <Compile Include="Scripts\InputSimulator\InputSender.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardUtil.cs" />
     <Compile Include="Scripts\InputSimulator\Keyboard.cs" />
     <Compile Include="Scripts\InputListener\InputListener.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
+    <Compile Include="Scripts\Network\CustomPacket\MouseKeyboardCommands.cs" />
+    <Compile Include="Scripts\Network\CustomPacket\MouseKeyboardPacket.cs" />
+    <Compile Include="Scripts\Network\CustomPacket\Packet.cs" />
     <Compile Include="Scripts\Network\UDPSocketClient.cs" />
     <Compile Include="Scripts\Network\UDPSocketHost.cs" />
     <Compile Include="Scripts\Others\Interpolation.cs" />
