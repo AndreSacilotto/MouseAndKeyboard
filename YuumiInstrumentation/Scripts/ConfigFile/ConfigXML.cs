@@ -4,6 +4,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
+//Desk = @"D:\Defaults\Desktop\test.xml
+
 public class ConfigXML
 {
     public string ip;
