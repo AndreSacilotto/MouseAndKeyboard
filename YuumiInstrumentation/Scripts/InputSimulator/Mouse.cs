@@ -71,51 +71,10 @@ public static class Mouse
 
     #region Gradual Movement
 
-    public const float MoveEpsilon = 0.2f;
-    public static void PixelGradualMove(int x1, int y1, int pixelSpeed = 32, int delay = 10)
+    public static Task GradualMoveLinear(int x1, int y1, int steps = 32, int delay = 10)
     {
         GetCursorPosition(out var x0, out var y0);
-        Task.Run(async () =>
-        {
-            int xSpeed = Math.Abs(x1 - x0) / pixelSpeed;
-            int ySpeed = Math.Abs(y1 - y0) / pixelSpeed;
-            while (x0 != x1 || y0 != y1)
-            {
-                if (x0 < x1)
-                {
-                    x0 += xSpeed;
-                    if (x0 > x1)
-                        x0 = x1;
-                }
-                else if (x1 < x0)
-                {
-                    x1 -= xSpeed;
-                    if (x1 < x0)
-                        x1 = x0;
-                }
-
-                if (y0 < y1)
-                {
-                    y0 += ySpeed;
-                    if (y0 > y1)
-                        y0 = y1;
-                }
-                else if (y1 < y0)
-                {
-                    y1 -= ySpeed;
-                    if (y1 < y0)
-                        y1 = y0;
-                }
-
-                MoveAbsolute(x0, y0);
-                await Task.Delay(delay);
-            }
-        });
-    }
-    public static void LinearGradualMove(int x1, int y1, int steps = 32, int delay = 100)
-    {
-        GetCursorPosition(out var x0, out var y0);
-        Task.Run(async () =>
+        return Task.Run(async () =>
         {
             float N = steps;
             for (int i = 0; i < steps; i++)
@@ -129,25 +88,56 @@ public static class Mouse
         });
     }
 
-    public static void LerpGradualMove(int x1, int y1, float t = 0.1f, int delay = 10)
+    public static Task GradualMoveLerp(int x1, int y1, int steps = 32, int delay = 10)
     {
         GetCursorPosition(out var x0, out var y0);
-        Task.Run(async () =>
+        return Task.Run(async () =>
         {
-            float x = x0;
-            float y = y0;
-            while (Math.Abs(x - x1) > MoveEpsilon || Math.Abs(y - y1) > MoveEpsilon)
+            float N = steps;
+            for (int i = 0; i < steps; i++)
             {
-                x = Interpolation.Lerp(x, x1, t);
-                y = Interpolation.Lerp(y, y1, t);
-
+                var v = Interpolation.Lerp(0, 1, i / N);
+                var x = (x1 * v) + (x0 * (1f - v));
+                var y = (y1 * v) + (y0 * (1f - v));
                 MoveAbsolute(x, y);
                 await Task.Delay(delay);
             }
         });
     }
 
+    public static Task GradualMoveSmoothStep(int x1, int y1, int steps = 32, int delay = 10)
+    {
+        GetCursorPosition(out var x0, out var y0);
+        return Task.Run(async () =>
+        {
+            float N = steps;
+            for (int i = 0; i < steps; i++)
+            {
+                var v = Interpolation.SmoothStep(0, 1, i / N);
+                var x = (x1 * v) + (x0 * (1f - v));
+                var y = (y1 * v) + (y0 * (1f - v));
+                MoveAbsolute(x, y);
+                await Task.Delay(delay);
+            }
+        });
+    }
 
+    public static Task GradualMoveSlerp(int x1, int y1, int steps = 32, int delay = 10)
+    {
+        GetCursorPosition(out var x0, out var y0);
+        return Task.Run(async () =>
+        {
+            float N = steps;
+            for (int i = 0; i < steps; i++)
+            {
+                var v = Interpolation.Slerp(0, 1, i / N);
+                var x = (x1 * v) + (x0 * (1f - v));
+                var y = (y1 * v) + (y0 * (1f - v));
+                MoveAbsolute(x, y);
+                await Task.Delay(delay);
+            }
+        });
+    }
 
     #endregion
 

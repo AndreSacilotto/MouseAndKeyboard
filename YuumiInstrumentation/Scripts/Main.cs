@@ -15,9 +15,22 @@ public class Main : ApplicationContext
         //network = new NetworkManager();
 
         
-        Task.Delay(1500).ContinueWith(t =>
+        Task.Delay(1500).ContinueWith(async t =>
         {
-            Mouse.LinearGradualMove(1000, 500);
+            int steps = 100;
+            int delay = 50;
+
+            Mouse.MoveAbsolute(0, 0);
+            await Mouse.GradualMoveLinear(1000, 500, steps, delay);
+            await Task.Delay(500);
+            Mouse.MoveAbsolute(0, 0);
+            await Mouse.GradualMoveLerp(1000, 500, steps, delay);
+            await Task.Delay(500);
+            Mouse.MoveAbsolute(0, 0);
+            await Mouse.GradualMoveSmoothStep(1000, 500, steps, delay);
+            await Task.Delay(500);
+            Mouse.MoveAbsolute(0, 0);
+            await Mouse.GradualMoveSlerp(1000, 500, steps, delay);
             //Mouse.GetCursorPosition(out int x, out int y);
             //Console.WriteLine(x + " " + y);
             //Console.WriteLine(Mouse.PositionToAbsolutePrint(x, y));
