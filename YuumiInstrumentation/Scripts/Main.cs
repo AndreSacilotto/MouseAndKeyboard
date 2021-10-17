@@ -1,8 +1,6 @@
-﻿using System;
-using System.Net;
+﻿using MouseKeyboard.Network;
+using System;
 using System.Windows.Forms;
-using MouseKeyboardPacket;
-
 using static System.Console;
 
 public class Main : ApplicationContext
@@ -26,75 +24,75 @@ public class Main : ApplicationContext
 
         if (config.sender)
         {
-            inputListener = new InputListener();
-            inputListener.OnMoveMove += OnMoveMove;
-            inputListener.OnMouseScroll += OnMouseScroll;
-            inputListener.OnMouseDown += OnMouseDown;
-            inputListener.OnMouseDoubleClick += OnMouseDoubleClick;
-
-            inputListener.OnKeyDown += OnKeyDown;
-            inputListener.OnKeyUp += OnKeyUp;
+            inputListener = new InputListener(OnMouseMove, OnMouseDown, OnMouseDoubleClick, OnMouseScroll, OnKeyDown, OnKeyUp);
         }
 
 
         networkManager.Start();
     }
 
+    #region RECEIVE
     private void OnReceive(int bytes, byte[] data)
     {
-        WriteLine("RECIVE");
+        WriteLine("RECEIVE");
         var mk = MKPacket.ReadAll(data);
         mk.Print();
         WriteLine(bytes);
     }
 
-    private void OnMoveMove(object sender, MouseEventArgs e)
+
+
+    #endregion
+
+    #region SEND
+    private void OnMouseMove(object sender, MouseEventArgs e)
     {
         //InputListenerUtil.Print(e);
-        //mkPacket.Reset();
-        //mkPacket.WriteMouseMove(e.X, e.Y);
-        //networkManager.Client.Send(mkPacket.GetPacket);
+        mkPacket.Reset();
+        mkPacket.WriteMouseMove(e.X, e.Y);
+        networkManager.Client.Send(mkPacket.GetPacket);
     }
 
     private void OnMouseScroll(object sender, MouseEventArgs e)
     {
         //InputListenerUtil.Print(e);
-        //mkPacket.Reset();
-        //mkPacket.WriteMouseScroll(e.Delta);
-        //networkManager.Client.Send(mkPacket.GetPacket);
+        mkPacket.Reset();
+        mkPacket.WriteMouseScroll(e.Delta);
+        networkManager.Client.Send(mkPacket.GetPacket);
     }
 
     private void OnMouseDown(object sender, MouseEventArgs e)
     {
         //InputListenerUtil.Print(e);
-        //mkPacket.Reset();
-        //mkPacket.WriteMouseClick(e.Button);
-        //networkManager.Client.Send(mkPacket.GetPacket);
+        mkPacket.Reset();
+        mkPacket.WriteMouseClick(e.Button);
+        networkManager.Client.Send(mkPacket.GetPacket);
     }
 
     private void OnMouseDoubleClick(object sender, MouseEventArgs e)
     {
         //InputListenerUtil.Print(e);
-        //mkPacket.Reset();
-        //mkPacket.WriteDoubleMouseClick(e.Button, 2);
-        //networkManager.Client.Send(mkPacket.GetPacket);
+        mkPacket.Reset();
+        mkPacket.WriteDoubleMouseClick(e.Button, 2);
+        networkManager.Client.Send(mkPacket.GetPacket);
     }
 
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
-        InputListenerUtil.Print(e);
-        //mkPacket.Reset();
-        //mkPacket.WriteKeyDown(e.KeyCode);
-        //networkManager.Client.Send(mkPacket.GetPacket);
+        //InputListenerUtil.Print(e);
+        mkPacket.Reset();
+        mkPacket.WriteKeyDown(e.KeyCode);
+        networkManager.Client.Send(mkPacket.GetPacket);
     }
 
     private void OnKeyUp(object sender, KeyEventArgs e)
     {
-        InputListenerUtil.Print(e);
-        //mkPacket.Reset();
-        //mkPacket.WriteKeyUp(e.Button);
-        //networkManager.Client.Send(mkPacket.GetPacket);
+        //InputListenerUtil.Print(e);
+        mkPacket.Reset();
+        mkPacket.WriteKeyUp(e.KeyCode);
+        networkManager.Client.Send(mkPacket.GetPacket);
     }
+    #endregion
 
     private void OnExit(object sender, EventArgs e)
     {

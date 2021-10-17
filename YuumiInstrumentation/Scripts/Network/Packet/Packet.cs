@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Buffers.Binary;
+using System.Text;
 
 //16 = short | 32 = int | 64 = long
 

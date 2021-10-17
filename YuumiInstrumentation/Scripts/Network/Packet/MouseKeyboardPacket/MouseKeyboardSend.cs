@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
-namespace MouseKeyboardPacket
+namespace MouseKeyboard.Network
 {
     public partial class MKPacket
     {
@@ -64,13 +62,6 @@ namespace MouseKeyboardPacket
         {
             packet.Add((byte)Commands.KeyUp);
             packet.Add((int)key);
-        }
-
-        public void KeyDownWithModifier(Keys key, KeyModifier modifier)
-        {
-            packet.Add((byte)Commands.KeyWithModifier);
-            packet.Add((int)key);
-            packet.Add((byte)modifier);
         }
 
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -9,7 +8,7 @@ using System.Xml.Serialization;
 
 public class ConfigXML
 {
-    public const  string FILE_NAME = "config.xml";
+    public const string FILE_NAME = "config.xml";
 
     public string ip;
     public int port;
@@ -22,8 +21,8 @@ public class ConfigXML
         StringBuilder sb = new StringBuilder();
 
         using (var writer = new StringWriter(sb))
-            using (var xmlWriter = new XmlTextWriter(writer) { Formatting = Formatting.Indented })
-                serializer.Serialize(xmlWriter, this);
+        using (var xmlWriter = new XmlTextWriter(writer) { Formatting = Formatting.Indented })
+            serializer.Serialize(xmlWriter, this);
         return sb.ToString();
     }
 

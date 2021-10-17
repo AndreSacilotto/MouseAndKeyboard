@@ -44,9 +44,9 @@ public static class KeyboardUtil
 
         if ((modifiers & 1) != 0)
             retval |= Keys.Shift;
-        if ((modifiers & 2) != 0) 
+        if ((modifiers & 2) != 0)
             retval |= Keys.Control;
-        if ((modifiers & 4) != 0) 
+        if ((modifiers & 4) != 0)
             retval |= Keys.Alt;
         return retval;
     }

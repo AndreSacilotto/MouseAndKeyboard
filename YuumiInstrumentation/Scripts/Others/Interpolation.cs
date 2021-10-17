@@ -1,6 +1,4 @@
-﻿using System;
-
-/// <summary> 
+﻿/// <summary> 
 /// http://sol.gfxile.net/interpolation/index.html#s3 
 /// https://stackoverflow.com/questions/33044848/c-sharp-lerping-from-position-to-position
 /// </summary>
