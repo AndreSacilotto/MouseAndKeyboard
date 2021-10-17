@@ -1,18 +1,46 @@
 ﻿using System;
 using System.Windows.Forms;
+using Gma.System.MouseKeyHook;
 
 namespace MouseKeyboard.Network
 {
     public class MKInputListener : IDisposable
     {
-        private readonly InputListener inputListener;
-        private readonly MKPacket mkPacket = new MKPacket();
+        private readonly IKeyboardMouseEvents inputEvents;
+        private readonly MKPacket mkPacket;
         private readonly UDPSocketClient client;
 
         public MKInputListener(UDPSocketClient client)
         {
             this.client = client;
-            inputListener = new InputListener(OnMouseMove, OnMouseDown, OnMouseDoubleClick, OnMouseScroll, OnKeyDown, OnKeyUp);
+            mkPacket = new MKPacket();
+            inputEvents = Hook.GlobalEvents();
+            //inputEvents.Subscribe(OnMouseMove, OnMouseDown, OnMouseDoubleClick, OnMouseScroll, OnKeyDown, OnKeyUp);
+
+            inputEvents.KeyDown += OnKeyDownBase;
+            inputEvents.KeyUp += OnKeyUpBase;
+        }
+
+        public void Subscribe()
+        {
+            inputEvents.MouseMove += OnMouseMove;
+            inputEvents.MouseDown += OnMouseDown;
+            inputEvents.MouseDoubleClick += OnMouseDoubleClick;
+            inputEvents.MouseWheel += OnMouseScroll;
+
+            inputEvents.KeyDown += OnKeyDown;
+            inputEvents.KeyUp += OnKeyUp;
+        }
+
+        public void Unsubscribe()
+        {
+            inputEvents.MouseMove -= OnMouseMove;
+            inputEvents.MouseDown -= OnMouseDown;
+            inputEvents.MouseDoubleClick -= OnMouseDoubleClick;
+            inputEvents.MouseWheel -= OnMouseScroll;
+
+            inputEvents.KeyDown -= OnKeyDown;
+            inputEvents.KeyUp -= OnKeyUp;
         }
 
         private void SendPacket()
@@ -75,9 +103,23 @@ namespace MouseKeyboard.Network
             SendPacket();
         }
 
+        private bool isHolding = false;
+        private void OnKeyDownBase(object sender, KeyEventArgs e)
+        {
+            if (isHolding)
+                return;
+            isHolding = true;
+            OnKeyDown(sender, e);
+        }
+
+        private void OnKeyUpBase(object sender, KeyEventArgs e) => isHolding = false;
+
         public void Dispose()
         {
-            inputListener.Dispose();
+            Unsubscribe();
+            inputEvents.KeyDown -= OnKeyDownBase;
+            inputEvents.KeyUp -= OnKeyUpBase;
+            inputEvents.Dispose();
         }
     }
 }

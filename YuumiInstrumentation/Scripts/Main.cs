@@ -29,8 +29,8 @@ public class Main : ApplicationContext
         if (!config.listener && config.sender)
         {
             mkListener = new MKInputListener(networkManager.Client);
+            mkListener.Subscribe();
         }
-
 
         networkManager.Start();
     }
@@ -49,8 +49,8 @@ public class Main : ApplicationContext
 
     private void OnExit(object sender, EventArgs e)
     {
+        ThreadExit -= OnExit;
         mkListener?.Dispose();
         networkManager?.Stop();
-        ThreadExit -= OnExit;
     }
 }
