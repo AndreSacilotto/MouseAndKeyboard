@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 public class UDPSocketClient : UDPSocket
 {
-
     protected override void InternalStart(IPEndPoint hostEndPoint)
     {
         MySocket.Connect(hostEndPoint);
-        Receive();
+        //Receive();
+    }
+
+    public void Send(Packet packet, Action<int> callback = null)
+    {
+        MySocket.BeginSend(packet.GetBuffer, 0, packet.Length, SocketFlags.None, (aResult) =>
+        {
+            int bytes = MySocket.EndSend(aResult);
+            callback?.Invoke(bytes);
+        }, null);
     }
 }

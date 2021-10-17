@@ -4,12 +4,18 @@ using System.Buffers.Binary;
 
 //16 = short | 32 = int | 64 = long
 
-public partial class Packet
+public class Packet
 {
     private byte[] buffer;
     private Memory<byte> memory;
 
     private int pointer;
+
+    public Packet(byte[] arr)
+    {
+        buffer = arr;
+        memory = new Memory<byte>(buffer);
+    }
 
     public Packet(int size = 8192)
     {
@@ -17,9 +23,7 @@ public partial class Packet
         memory = new Memory<byte>(buffer);
     }
 
-    public Packet(int bystes, int ints) : 
-        this(ints * sizeof(int) + bystes * sizeof(byte)) { }
-
+    public byte[] GetBuffer => buffer;
     public byte this[int index]
     {
         get => buffer[index];
@@ -71,6 +75,15 @@ public partial class Packet
         BinaryPrimitives.WriteInt32LittleEndian(memory.Span.Slice(pointer, sizeof(int)), value);
         pointer += sizeof(int);
     }
+    public void Add(params int[] values)
+    {
+        for (int i = 0; i < values.Length; i++)
+        {
+            BinaryPrimitives.WriteInt32LittleEndian(memory.Span.Slice(pointer, sizeof(int)), values[i]);
+            pointer += sizeof(int);
+        }
+    }
+
     public void Add(uint value)
     {
         BinaryPrimitives.WriteUInt32LittleEndian(memory.Span.Slice(pointer, sizeof(uint)), value);
@@ -82,7 +95,6 @@ public partial class Packet
         pointer += sizeof(long);
     }
     #endregion
-
 
     #region READ
     public int ReadInt()

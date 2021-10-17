@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using MouseKeyboardPacket;
+
+using static System.Console;
 
 public class Main : ApplicationContext
 {
@@ -13,25 +15,30 @@ public class Main : ApplicationContext
 
         //inputListener = new InputListener(false);
 
-        //var ip = IPAddress.Parse("127.0.0.1");
-        //var port = 27000;
+        var config = ConfigXML.FromXML(ConfigXML.GetPath());
+        WriteLine(config);
 
-        //var s = new UDPSocketHost(true);
-        //s.Start(ip, port);
+        var ip = IPAddress.Parse("127.0.0.1");
+        var port = 27000;
 
-        //var c = new UDPSocketClient();
-        //c.Start(ip, port);
-        //c.Send("TEST");
+        var s = new UDPSocketHost(true);
+        s.Start(ip, port);
+        s.OnReceive += OnReceive;
 
+        var c = new UDPSocketClient();
+        c.Start(ip, port);
 
-        var p = new Packet(8);
-        p.AddInt(5);
-        p.AddByte(20);
+        var p = new MKPacket();
+        //p.WriteMouseMove(100, 100);
+        p.WriteMouseClick(MouseButtons.Middle);
 
-        p.Rewind();
+        c.Send(p.GetPacket, x => Console.WriteLine(x));
+    }
 
-        Console.WriteLine( p.ReadInt() );
-        Console.WriteLine( p.ReadByte() );
+    private void OnReceive(int bytes, byte[] data)
+    {
+        MKPacket.ReadAll(data).Print();
+        Console.WriteLine(bytes);
     }
 
     private void OnExit(object sender, EventArgs e)

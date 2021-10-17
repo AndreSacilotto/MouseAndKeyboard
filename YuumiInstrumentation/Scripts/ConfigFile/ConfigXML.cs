@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -8,6 +9,8 @@ using System.Xml.Serialization;
 
 public class ConfigXML
 {
+    public const  string FILE_NAME = "config.xml";
+
     public string ip;
     public int port;
     public bool sender;
@@ -37,6 +40,20 @@ public class ConfigXML
         var serializer = new XmlSerializer(typeof(ConfigXML));
         using (var xmlReader = new XmlTextReader(path))
             return (ConfigXML)serializer.Deserialize(xmlReader);
+    }
+
+    public static string CurrentDirectory()
+    {
+        //return Assembly.GetExecutingAssembly().Location;
+        //return new FileInfo(Assembly.GetEntryAssembly().Location).DirectoryName;
+        return AppDomain.CurrentDomain.BaseDirectory;
+    }
+    public static string GetPath() => CurrentDirectory() + FILE_NAME;
+
+
+    public override string ToString()
+    {
+        return $"{base.ToString()} | {ip} | {port} | {sender} | {listener}";
     }
 
 }

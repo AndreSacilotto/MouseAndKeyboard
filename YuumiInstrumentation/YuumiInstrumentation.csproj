@@ -14,7 +14,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -71,9 +71,10 @@
     <Compile Include="Scripts\InputSimulator\Keyboard.cs" />
     <Compile Include="Scripts\InputListener\InputListener.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
-    <Compile Include="Scripts\Network\CustomPacket\MouseKeyboardCommands.cs" />
-    <Compile Include="Scripts\Network\CustomPacket\MouseKeyboardPacket.cs" />
-    <Compile Include="Scripts\Network\CustomPacket\Packet.cs" />
+    <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardCommands.cs" />
+    <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardReceive.cs" />
+    <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardSend.cs" />
+    <Compile Include="Scripts\Network\Packet\Packet.cs" />
     <Compile Include="Scripts\Network\UDPSocketClient.cs" />
     <Compile Include="Scripts\Network\UDPSocketHost.cs" />
     <Compile Include="Scripts\Others\Interpolation.cs" />
