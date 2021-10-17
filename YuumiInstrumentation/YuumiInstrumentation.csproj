@@ -67,15 +67,16 @@
   <ItemGroup>
     <Compile Include="Scripts\ConfigFile\ConfigXML.cs" />
     <Compile Include="Scripts\InputSimulator\InputSender.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputSender.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardUtil.cs" />
     <Compile Include="Scripts\InputSimulator\Keyboard.cs" />
     <Compile Include="Scripts\InputListener\InputListener.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
     <Compile Include="Scripts\Network\NetworkManager.cs" />
-    <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardCommands.cs" />
-    <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardReceive.cs" />
-    <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardSend.cs" />
-    <Compile Include="Scripts\Network\Packet\Packet.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MouseKeyboardCommands.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MouseKeyboardReceive.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MouseKeyboardSend.cs" />
+    <Compile Include="Scripts\Network\Packet.cs" />
     <Compile Include="Scripts\Network\UDPSocketClient.cs" />
     <Compile Include="Scripts\Network\UDPSocketHost.cs" />
     <Compile Include="Scripts\Others\Interpolation.cs" />

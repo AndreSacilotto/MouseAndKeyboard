@@ -1,6 +1,7 @@
-﻿using MouseKeyboard.Network;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using MouseKeyboard.Network;
+
 using static System.Console;
 
 public class Main : ApplicationContext
@@ -34,13 +35,13 @@ public class Main : ApplicationContext
     #region RECEIVE
     private void OnReceive(int bytes, byte[] data)
     {
-        WriteLine("RECEIVE");
-        var mk = MKPacket.ReadAll(data);
-        mk.Print();
+        var mkContent = MKPacket.ReadAll(data);
         WriteLine(bytes);
+        mkContent.Print();
+
+        MKInputSender.TryGetFunc(mkContent.command, out var mkfunc);
+        mkfunc?.Invoke(mkContent);
     }
-
-
 
     #endregion
 
