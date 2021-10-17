@@ -14,6 +14,14 @@ public abstract class UDPSocket
     protected AsyncCallback recv = null;
 
     public virtual void Stop() => MySocket.Close();
+
+    public void Start(IPEndPoint endPoint)
+    {
+        if (MySocket.Connected)
+            return;
+        HostEndPoint = endPoint;
+        InternalStart(endPoint);
+    }
     public void Start(IPAddress address, int port)
     {
         if (MySocket.Connected)

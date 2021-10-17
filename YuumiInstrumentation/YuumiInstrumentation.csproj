@@ -71,6 +71,7 @@
     <Compile Include="Scripts\InputSimulator\Keyboard.cs" />
     <Compile Include="Scripts\InputListener\InputListener.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
+    <Compile Include="Scripts\Network\NetworkManager.cs" />
     <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardCommands.cs" />
     <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardReceive.cs" />
     <Compile Include="Scripts\Network\Packet\MouseKeyboardPacket\MouseKeyboardSend.cs" />

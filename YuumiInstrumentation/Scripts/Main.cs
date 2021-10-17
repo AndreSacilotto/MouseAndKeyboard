@@ -7,43 +7,99 @@ using static System.Console;
 
 public class Main : ApplicationContext
 {
-    //private readonly InputListener inputListener;
+    private readonly NetworkManager networkManager;
+    private readonly InputListener inputListener;
+    private readonly MKPacket mkPacket = new MKPacket();
 
     public Main()
     {
         ThreadExit += OnExit;
 
-        //inputListener = new InputListener(false);
-
         var config = ConfigXML.FromXML(ConfigXML.GetPath());
-        WriteLine(config);
+        networkManager = new NetworkManager(config.ip, config.port, config.sender, config.listener);
 
-        var ip = IPAddress.Parse("127.0.0.1");
-        var port = 27000;
+        if (config.listener)
+        {
+            networkManager.Host.MySocket.SendBufferSize = MKPacket.MAX_PACKET_BYTE_SIZE;
+            networkManager.Host.OnReceive += OnReceive;
+        }
 
-        var s = new UDPSocketHost(true);
-        s.Start(ip, port);
-        s.OnReceive += OnReceive;
+        if (config.sender)
+        {
+            inputListener = new InputListener();
+            inputListener.OnMoveMove += OnMoveMove;
+            inputListener.OnMouseScroll += OnMouseScroll;
+            inputListener.OnMouseDown += OnMouseDown;
+            inputListener.OnMouseDoubleClick += OnMouseDoubleClick;
 
-        var c = new UDPSocketClient();
-        c.Start(ip, port);
+            inputListener.OnKeyDown += OnKeyDown;
+            inputListener.OnKeyUp += OnKeyUp;
+        }
 
-        var p = new MKPacket();
-        //p.WriteMouseMove(100, 100);
-        p.WriteMouseClick(MouseButtons.Middle);
 
-        c.Send(p.GetPacket, x => Console.WriteLine(x));
+        networkManager.Start();
     }
 
     private void OnReceive(int bytes, byte[] data)
     {
-        MKPacket.ReadAll(data).Print();
-        Console.WriteLine(bytes);
+        WriteLine("RECIVE");
+        var mk = MKPacket.ReadAll(data);
+        mk.Print();
+        WriteLine(bytes);
+    }
+
+    private void OnMoveMove(object sender, MouseEventArgs e)
+    {
+        //InputListenerUtil.Print(e);
+        //mkPacket.Reset();
+        //mkPacket.WriteMouseMove(e.X, e.Y);
+        //networkManager.Client.Send(mkPacket.GetPacket);
+    }
+
+    private void OnMouseScroll(object sender, MouseEventArgs e)
+    {
+        //InputListenerUtil.Print(e);
+        //mkPacket.Reset();
+        //mkPacket.WriteMouseScroll(e.Delta);
+        //networkManager.Client.Send(mkPacket.GetPacket);
+    }
+
+    private void OnMouseDown(object sender, MouseEventArgs e)
+    {
+        //InputListenerUtil.Print(e);
+        //mkPacket.Reset();
+        //mkPacket.WriteMouseClick(e.Button);
+        //networkManager.Client.Send(mkPacket.GetPacket);
+    }
+
+    private void OnMouseDoubleClick(object sender, MouseEventArgs e)
+    {
+        //InputListenerUtil.Print(e);
+        //mkPacket.Reset();
+        //mkPacket.WriteDoubleMouseClick(e.Button, 2);
+        //networkManager.Client.Send(mkPacket.GetPacket);
+    }
+
+    private void OnKeyDown(object sender, KeyEventArgs e)
+    {
+        InputListenerUtil.Print(e);
+        //mkPacket.Reset();
+        //mkPacket.WriteKeyDown(e.KeyCode);
+        //networkManager.Client.Send(mkPacket.GetPacket);
+    }
+
+    private void OnKeyUp(object sender, KeyEventArgs e)
+    {
+        InputListenerUtil.Print(e);
+        //mkPacket.Reset();
+        //mkPacket.WriteKeyUp(e.Button);
+        //networkManager.Client.Send(mkPacket.GetPacket);
     }
 
     private void OnExit(object sender, EventArgs e)
     {
-        //inputListener.Dispose();
+        inputListener.Dispose();
+        networkManager.Stop();
         ThreadExit -= OnExit;
     }
 }

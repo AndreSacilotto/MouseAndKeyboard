@@ -6,95 +6,57 @@ public class InputListener : IDisposable
 {
     private IKeyboardMouseEvents inputEvents;
 
-    public bool mmove, mdown, mup, mdouble, mwheel, kdown, kup;
-
-    public InputListener(bool enable = true)
+    public InputListener(MouseEventHandler OnMouseMove, MouseEventHandler OnMouseDown, MouseEventHandler OnMouseDoubleClick, MouseEventHandler OnMouseScroll, KeyEventHandler OnKeyDown, KeyEventHandler OnKeyUp)
     {
         inputEvents = Hook.GlobalEvents();
-        ChangeState(enable);
-        Subscribe();
+
+        inputEvents.KeyDown += OnKeyDownBase;
+        inputEvents.KeyUp += OnKeyUpBase;
     }
 
-    public void ChangeState(bool enable) => mmove = mdown = mup = mdouble = mwheel = kdown = kup = enable;
-
-    public void Subscribe()
+    public event MouseEventHandler OnMoveMove
     {
-        inputEvents.MouseMove += OnMouseMove;
-        inputEvents.MouseDown += OnMouseDown;
-        inputEvents.MouseDoubleClick += OnMouseDobleClick;
-        inputEvents.MouseWheel += OnMouseWheel;
-
-
-        inputEvents.KeyDown += OnKeyDown;
-        inputEvents.KeyUp += OnKeyUp;
+        add => inputEvents.MouseMove += value;
+        remove => inputEvents.MouseMove -= value;
     }
-
-    private void Unsubscribe()
+    public event MouseEventHandler OnMouseDown
     {
-        inputEvents.MouseMove -= OnMouseMove;
-        inputEvents.MouseDown -= OnMouseDown;
-        inputEvents.MouseDoubleClick -= OnMouseDobleClick;
-        inputEvents.MouseWheel -= OnMouseWheel;
-
-        inputEvents.KeyDown -= OnKeyDown;
-        inputEvents.KeyUp -= OnKeyUp;
-
+        add => inputEvents.MouseDown += value;
+        remove => inputEvents.MouseDown -= value;
     }
-
-    #region Mouse
-    private void OnMouseMove(object sender, MouseEventArgs e)
+    public event MouseEventHandler OnMouseDoubleClick
     {
-        if (!mmove)
-            return;
-
-        InputListenerUtil.Print(e);
+        add => inputEvents.MouseDoubleClick += value;
+        remove => inputEvents.MouseDoubleClick -= value;
     }
-    private void OnMouseDown(object sender, MouseEventArgs e)
+    public event MouseEventHandler OnMouseScroll
     {
-        if (!mdown)
-            return;
-        InputListenerUtil.Print(e);
+        add => inputEvents.MouseWheel += value;
+        remove => inputEvents.MouseWheel -= value;
     }
-    private void OnMouseDobleClick(object sender, MouseEventArgs e)
-    {
-        if (!mdouble)
-            return;
-        InputListenerUtil.Print(e);
-    }
-    private void OnMouseWheel(object sender, MouseEventArgs e)
-    {
-        if (!mwheel)
-            return;
-        InputListenerUtil.Print(e);
-    }
-    #endregion
 
+    public event KeyEventHandler OnKeyDown;
+    public event KeyEventHandler OnKeyUp;
 
-    #region Keyboard
     private bool isHolding = false;
-
-    private void OnKeyDown(object sender, KeyEventArgs e)
+    private void OnKeyDownBase(object sender, KeyEventArgs e)
     {
-        if (!kdown)
-            return;
         if (isHolding)
             return;
         isHolding = true;
-
-        InputListenerUtil.Print(e);
+        OnKeyDown?.Invoke(sender, e);
     }
 
-    private void OnKeyUp(object sender, KeyEventArgs e)
+    private void OnKeyUpBase(object sender, KeyEventArgs e)
     {
-        if (!kup)
-            return;
         isHolding = false;
-
-        //LoggerUtil.Print(e);
+        OnKeyDown?.Invoke(sender, e);
     }
 
-
-    #endregion
-
-    public void Dispose() => Unsubscribe();
+    public void Dispose()
+    {
+        inputEvents.KeyDown -= OnKeyDown;
+        inputEvents.KeyUp -= OnKeyUp;
+        inputEvents.Dispose();
+    }
 }

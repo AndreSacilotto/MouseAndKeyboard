@@ -14,14 +14,18 @@ namespace MouseKeyboardPacket
         MouseMove,
         /// <summary>Command [B] MouseButton [I]</summary>
         MouseClick,
+        /// <summary>Command [B] MouseButton [I] Quant [i]</summary>
+        MouseDoubleClick,
         /// <summary>Command [B] Quant [I]</summary>
         MouseScroll,
 
         /// <summary>Command [B] Key [I]</summary>
         KeyDown,
+        /// <summary>Command [B] Key [I]</summary>
+        KeyUp,
 
         /// <summary>Command [B] Key [I] Mods [B]</summary>
-        KeyDownWithModifier,
+        KeyWithModifier,
     }
 
     [Flags]

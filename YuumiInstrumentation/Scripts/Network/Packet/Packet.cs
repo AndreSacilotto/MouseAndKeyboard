@@ -37,8 +37,7 @@ public class Packet
 
     public void Clear()
     {
-        for (int i = 0; i < Length; i++)
-            buffer[i] = 0;
+        Array.Clear(buffer, 0, Length);
         Rewind();
     }
 

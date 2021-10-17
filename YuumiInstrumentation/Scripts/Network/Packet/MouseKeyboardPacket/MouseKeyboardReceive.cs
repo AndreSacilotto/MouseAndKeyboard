@@ -52,13 +52,20 @@ namespace MouseKeyboardPacket
                 case Commands.MouseClick:
                     response.mouseButton = (MouseButtons) packet.ReadInt();
                     break;
+                case Commands.MouseDoubleClick:
+                    response.mouseButton = (MouseButtons)packet.ReadInt();
+                    response.quant = packet.ReadInt();
+                    break;
                 case Commands.MouseScroll:
                     response.quant = packet.ReadInt();
                     break;
                 case Commands.KeyDown:
                     response.keys = (Keys)packet.ReadInt();
                     break;
-                case Commands.KeyDownWithModifier:
+                case Commands.KeyUp:
+                    response.keys = (Keys)packet.ReadInt();
+                    break;
+                case Commands.KeyWithModifier:
                     response.keys = (Keys)packet.ReadInt();
                     response.keyModifiers = (KeyModifier)packet.ReadByte();
                     break;
