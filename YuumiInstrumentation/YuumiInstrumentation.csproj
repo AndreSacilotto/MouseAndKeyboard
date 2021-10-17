@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Scripts\ConfigFile\ConfigXML.cs" />
     <Compile Include="Scripts\InputSimulator\InputSender.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputListener.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputSender.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardUtil.cs" />
     <Compile Include="Scripts\InputSimulator\Keyboard.cs" />

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace MouseKeyboard.Network
@@ -19,6 +18,7 @@ namespace MouseKeyboard.Network
 
         //public MKInputSender(MKInput MouseMove, MKInput MouseClick, MKInput MouseDoubleClick, MKInput MouseScroll, MKInput KeyDown, MKInput KeyUp)
         public static bool TryGetFunc(Commands index, out MKInput mk) => dict.TryGetValue(index, out mk);
+        public static MKInput GetFunc(Commands index) => dict[index];
 
         public static void MouseMove(MKPacketContent content)
         {

@@ -36,6 +36,9 @@ public class ConfigXML
 
     public static ConfigXML FromXML(string path)
     {
+        if (!File.Exists(path))
+            return null;
+
         var serializer = new XmlSerializer(typeof(ConfigXML));
         using (var xmlReader = new XmlTextReader(path))
             return (ConfigXML)serializer.Deserialize(xmlReader);
