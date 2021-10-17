@@ -13,7 +13,10 @@ public class Main : ApplicationContext
 
         var config = ConfigXML.FromXML(ConfigXML.GetPath());
         if (config == null)
+        {
             ExitThread();
+            return;
+        }
 
         networkManager = new NetworkManager(config.ip, config.port, config.sender, config.listener);
 
@@ -46,8 +49,8 @@ public class Main : ApplicationContext
 
     private void OnExit(object sender, EventArgs e)
     {
-        mkListener.Dispose();
-        networkManager.Stop();
+        mkListener?.Dispose();
+        networkManager?.Stop();
         ThreadExit -= OnExit;
     }
 }
