@@ -13,16 +13,25 @@ public class Main : ApplicationContext
 
         //inputListener = new InputListener(false);
 
-        var ip = IPAddress.Parse("127.0.0.1");
-        var port = 27000;
+        //var ip = IPAddress.Parse("127.0.0.1");
+        //var port = 27000;
 
-        var s = new UDPSocketHost(true);
-        s.Start(ip, port);
+        //var s = new UDPSocketHost(true);
+        //s.Start(ip, port);
 
-        var c = new UDPSocketClient();
-        c.Start(ip, port);
+        //var c = new UDPSocketClient();
+        //c.Start(ip, port);
+        //c.Send("TEST");
 
-        c.Send("TEST");
+
+        var p = new Packet(8);
+        p.AddInt(5);
+        p.AddByte(20);
+
+        p.Rewind();
+
+        Console.WriteLine( p.ReadInt() );
+        Console.WriteLine( p.ReadByte() );
     }
 
     private void OnExit(object sender, EventArgs e)
