@@ -10,42 +10,59 @@ namespace MouseKeyboard.Network
         private readonly MKPacket mkPacket;
         private readonly UDPSocketClient client;
 
-        public MKInputListener(UDPSocketClient client)
+        private KeyEventHandler KeyDown;
+
+        private bool enabled = false;
+        public Keys enablingKey;
+
+        public MKInputListener(UDPSocketClient client, bool enabled = false)
         {
             this.client = client;
             mkPacket = new MKPacket();
             inputEvents = Hook.GlobalEvents();
-            //inputEvents.Subscribe(OnMouseMove, OnMouseDown, OnMouseDoubleClick, OnMouseScroll, OnKeyDown, OnKeyUp);
 
             inputEvents.KeyDown += OnKeyDownBase;
             inputEvents.KeyUp += OnKeyUpBase;
+
+            if (enabled)
+                Subscribe();
         }
 
+        #region SUB
         public void Subscribe()
         {
+            enabled = true;
+
             inputEvents.MouseMove += OnMouseMove;
             inputEvents.MouseDown += OnMouseDown;
             inputEvents.MouseDoubleClick += OnMouseDoubleClick;
             inputEvents.MouseWheel += OnMouseScroll;
 
-            inputEvents.KeyDown += OnKeyDown;
+            //inputEvents.KeyDown += OnKeyDown;
+            KeyDown = OnKeyDown;
             inputEvents.KeyUp += OnKeyUp;
         }
 
         public void Unsubscribe()
         {
+            enabled = false;
+
             inputEvents.MouseMove -= OnMouseMove;
             inputEvents.MouseDown -= OnMouseDown;
             inputEvents.MouseDoubleClick -= OnMouseDoubleClick;
             inputEvents.MouseWheel -= OnMouseScroll;
 
-            inputEvents.KeyDown -= OnKeyDown;
+            KeyDown = null;
             inputEvents.KeyUp -= OnKeyUp;
         }
+        #endregion
+
+        #region SEND
 
         private void SendPacket()
         {
-            client.Send(mkPacket.GetPacket);
+            if (client.MySocket.Connected)
+                client.Send(mkPacket.GetPacket);
             mkPacket.Reset();
         }
 
@@ -103,13 +120,27 @@ namespace MouseKeyboard.Network
             SendPacket();
         }
 
+        #endregion
+
         private bool isHolding = false;
         private void OnKeyDownBase(object sender, KeyEventArgs e)
         {
             if (isHolding)
                 return;
             isHolding = true;
-            OnKeyDown(sender, e);
+
+            if (e.KeyCode == enablingKey)
+            {
+                if (enabled)
+                    Unsubscribe();
+                else
+                    Subscribe();
+                //Console.WriteLine(enabled);
+                return;
+            }
+
+            //InputListenerUtil.Print(e);
+            KeyDown?.Invoke(sender, e);
         }
 
         private void OnKeyUpBase(object sender, KeyEventArgs e) => isHolding = false;

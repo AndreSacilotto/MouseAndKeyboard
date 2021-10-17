@@ -28,8 +28,10 @@ public class Main : ApplicationContext
 
         if (!config.listener && config.sender)
         {
-            mkListener = new MKInputListener(networkManager.Client);
-            mkListener.Subscribe();
+            bool scrollLock = Control.IsKeyLocked(Keys.Scroll);
+            mkListener = new MKInputListener(networkManager.Client, scrollLock) {
+                enablingKey = Keys.Scroll
+            };
         }
 
         networkManager.Start();
