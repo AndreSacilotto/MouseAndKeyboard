@@ -13,7 +13,7 @@ namespace MouseKeyboard.Network
         private KeyEventHandler KeyDown;
 
         private bool enabled = false;
-        public Keys enablingKey;
+        public Keys enablingKey, shutdownKey, pingKey;
 
         public MKInputListener(UDPSocketClient client, bool enabled = false)
         {
@@ -61,8 +61,7 @@ namespace MouseKeyboard.Network
 
         private void SendPacket()
         {
-            if (client.MySocket.Connected)
-                client.Send(mkPacket.GetPacket);
+            client.Send(mkPacket.GetPacket);
             mkPacket.Reset();
         }
 
@@ -135,12 +134,26 @@ namespace MouseKeyboard.Network
                     Unsubscribe();
                 else
                     Subscribe();
-                //Console.WriteLine(enabled);
-                return;
             }
+            else if (e.KeyCode == Keys.W || e.KeyCode == Keys.Y)
+            {
 
-            //InputListenerUtil.Print(e);
-            KeyDown?.Invoke(sender, e);
+            }
+            else if (e.KeyCode == pingKey)
+            {
+                mkPacket.WritePing();
+                SendPacket();
+            }
+            else if (e.KeyCode == shutdownKey)
+            {
+                mkPacket.WriteShutdown();
+                SendPacket();
+            }
+            else
+            {
+                //InputListenerUtil.Print(e);
+                KeyDown?.Invoke(sender, e);
+            }
         }
 
         private void OnKeyUpBase(object sender, KeyEventArgs e) => isHolding = false;

@@ -30,7 +30,9 @@ public class Main : ApplicationContext
         {
             bool scrollLock = Control.IsKeyLocked(Keys.Scroll);
             mkListener = new MKInputListener(networkManager.Client, scrollLock) {
-                enablingKey = Keys.Scroll
+                enablingKey = Keys.Scroll,
+                pingKey = Keys.NumPad0,
+                shutdownKey = Keys.NumPad1,
             };
         }
 

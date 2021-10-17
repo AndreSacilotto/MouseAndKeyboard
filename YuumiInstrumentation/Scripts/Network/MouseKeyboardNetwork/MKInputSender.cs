@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace MouseKeyboard.Network
@@ -8,6 +9,8 @@ namespace MouseKeyboard.Network
         public delegate void MKInput(MKPacketContent content);
 
         private static Dictionary<Commands, MKInput> dict = new Dictionary<Commands, MKInput> {
+            {Commands.Ping, Ping},
+            {Commands.Shutdown, Shutdown},
             {Commands.MouseMove, MouseMove},
             {Commands.MouseClick, MouseClick},
             {Commands.MouseDoubleClick, MouseDoubleClick},
@@ -19,11 +22,6 @@ namespace MouseKeyboard.Network
         //public MKInputSender(MKInput MouseMove, MKInput MouseClick, MKInput MouseDoubleClick, MKInput MouseScroll, MKInput KeyDown, MKInput KeyUp)
         public static bool TryGetFunc(Commands index, out MKInput mk) => dict.TryGetValue(index, out mk);
         public static MKInput GetFunc(Commands index) => dict[index];
-
-        public static void MouseMove(MKPacketContent content)
-        {
-            Mouse.MoveAbsolute(content.x, content.y);
-        }
 
         public static void FindMouse(MKPacketContent content, out InputSender.MouseEventF dwFlags, out InputSender.MouseDataXButton mdata)
         {
@@ -49,6 +47,21 @@ namespace MouseKeyboard.Network
                     mdata = InputSender.MouseDataXButton.XButton2;
                     break;
             }
+        }
+
+        public static void Ping(MKPacketContent content)
+        {
+            Console.WriteLine("PING");
+        }
+
+        public static void Shutdown(MKPacketContent content)
+        {
+            Application.Exit();
+        }
+
+        public static void MouseMove(MKPacketContent content)
+        {
+            Mouse.MoveAbsolute(content.x, content.y);
         }
 
         public static void MouseClick(MKPacketContent content)

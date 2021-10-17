@@ -12,10 +12,11 @@ public class UDPSocketClient : UDPSocket
 
     public void Send(Packet packet, Action<int> callback = null)
     {
-        MySocket.BeginSend(packet.GetBuffer, 0, packet.Length, SocketFlags.None, (aResult) =>
-        {
-            int bytes = MySocket.EndSend(aResult);
-            callback?.Invoke(bytes);
-        }, null);
+        if (MySocket.Connected)
+            MySocket.BeginSend(packet.GetBuffer, 0, packet.Length, SocketFlags.None, (aResult) =>
+            {
+                int bytes = MySocket.EndSend(aResult);
+                callback?.Invoke(bytes);
+            }, null);
     }
 }
