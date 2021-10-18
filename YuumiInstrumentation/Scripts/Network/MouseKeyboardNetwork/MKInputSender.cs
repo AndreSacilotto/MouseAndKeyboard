@@ -76,12 +76,12 @@ namespace MouseKeyboard.Network
 
         public static void KeyDown(MKPacketContent content)
         {
-            Keyboard.SendKeyDown(content.keys);
+            KeyboardVSC.SendKeyDown(content.keys);
         }
 
         public static void KeyUp(MKPacketContent content)
         {
-            Keyboard.SendKeyUp(content.keys);
+            KeyboardVSC.SendKeyUp(content.keys);
         }
     }
 }

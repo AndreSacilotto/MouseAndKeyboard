@@ -67,7 +67,7 @@ namespace MouseKeyboard.Network
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            //InputListenerUtil.Print(e);
+            //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.X + " " + e.Y);
 
             mkPacket.WriteMouseMove(e.X, e.Y);
@@ -76,7 +76,7 @@ namespace MouseKeyboard.Network
 
         private void OnMouseScroll(object sender, MouseEventArgs e)
         {
-            //InputListenerUtil.Print(e);
+            //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.Delta);
 
             mkPacket.WriteMouseScroll(e.Delta);
@@ -85,7 +85,7 @@ namespace MouseKeyboard.Network
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
-            //InputListenerUtil.Print(e);
+            //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.Button);
 
             mkPacket.WriteMouseClick(e.Button);
@@ -94,7 +94,7 @@ namespace MouseKeyboard.Network
 
         private void OnMouseDoubleClick(object sender, MouseEventArgs e)
         {
-            //InputListenerUtil.Print(e);
+            //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.Button + " 2");
 
             mkPacket.WriteDoubleMouseClick(e.Button, 2);
@@ -103,7 +103,7 @@ namespace MouseKeyboard.Network
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            //InputListenerUtil.Print(e);
+            //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.KeyCode);
 
             mkPacket.WriteKeyDown(e.KeyCode);
@@ -112,7 +112,7 @@ namespace MouseKeyboard.Network
 
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
-            //InputListenerUtil.Print(e);
+            //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.KeyCode);
 
             mkPacket.WriteKeyUp(e.KeyCode);
@@ -138,7 +138,7 @@ namespace MouseKeyboard.Network
             }
             else
             {
-                //InputListenerUtil.Print(e);
+                MKEventHandleUtil.Print(e);
                 KeyDown?.Invoke(sender, e);
             }
         }

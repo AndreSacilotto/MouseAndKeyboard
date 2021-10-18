@@ -9,6 +9,14 @@ public static class InputSender
     [DllImport("user32.dll")]
     static extern uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray), In] InputStruct[] pInputs, int cbSize);
 
+    #region Util
+
+    public static InputStruct NewMouseInput => new InputStruct(InputType.Mouse);
+    public static InputStruct NewKeyboardInput => new InputStruct(InputType.Keyboard);
+    public static InputStruct NewHardwareInput => new InputStruct(InputType.Hardware);
+
+    #endregion
+
     #region Inputs Merge
 
     public static int SendInput(params InputStruct[] inputs) => (int)SendInput((uint)inputs.Length, inputs, InputStruct.Size);
@@ -45,8 +53,8 @@ public static class InputSender
     #endregion
 
     #region Mouse Input
-    //https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
 
+    ///<summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput</summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct MouseInput
     {
@@ -111,7 +119,9 @@ public static class InputSender
     #endregion
 
     #region Keyboard Input
+
     [StructLayout(LayoutKind.Sequential)]
+    /// <summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput</summary>
     public struct KeyboardInput
     {
         /// <summary>https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes</summary>
@@ -126,9 +136,13 @@ public static class InputSender
     [Flags]
     public enum KeyEventF : uint
     {
+        /// <summary>If used, the scan code was preceded by a prefix byte that has the value 0xE0 (224)</summary>
         ExtendedKey = 0x0001,
+        /// <summary>If used, the key is being released. If not specified, the key is being pressed</summary>
         KeyUp = 0x0002,
+        /// <summary>If used, wScan identifies the key and wVk is ignored</summary>
         ScanCode = 0x0008,
+        /// <summary>If used, the system synthesizes a VK_PACKET keystroke. The wVk parameter must be zero</summary>
         Unicode = 0x0004
     }
 

@@ -2,15 +2,13 @@
 
 using static InputSender;
 
-public static class Keyboard
+public static class KeyboardVSC
 {
-
     #region Key Down
-    private static InputStruct KeyboardInput => new InputStruct(InputType.Keyboard);
 
     private static InputStruct KeyDownInput(Keys key)
     {
-        var input = KeyboardInput;
+        var input = NewKeyboardInput;
         input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);
         input.union.ki.dwFlags = KeyEventF.ScanCode;
         return input;
@@ -34,7 +32,7 @@ public static class Keyboard
 
     private static InputStruct KeyUpInput(Keys key)
     {
-        var input = KeyboardInput;
+        var input = NewKeyboardInput;
         input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);
         input.union.ki.dwFlags = KeyEventF.KeyUp | KeyEventF.ScanCode;
         return input;
@@ -58,7 +56,7 @@ public static class Keyboard
     #region Key Full
     private static void KeyFullInput(Keys key, out InputStruct down, out InputStruct up)
     {
-        var input = KeyboardInput;
+        var input = NewKeyboardInput;
         input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);
         input.union.ki.dwFlags = KeyEventF.ScanCode;
         down = input;
