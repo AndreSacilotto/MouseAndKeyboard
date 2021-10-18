@@ -1,5 +1,6 @@
 ﻿using MouseKeyboard.Network;
 using System;
+using System.Text;
 using System.Windows.Forms;
 
 public class Main : ApplicationContext
@@ -11,15 +12,17 @@ public class Main : ApplicationContext
     {
         ThreadExit += OnExit;
 
-        var config = ConfigXML.FromXML(ConfigXML.GetPath());
+        var filePath = ConfigXML.GetPath();
+        var config = XMLerialization.FromXMLFile<ConfigXML>(filePath);
         if (config == null)
         {
-            ExitThread();
+            Console.WriteLine($"No {ConfigXML.FILE_NAME} File Found");
+            XMLerialization.ToXMLFile<ConfigXML>(filePath, Encoding.ASCII, ConfigXML.Default);
             return;
         }
 
         networkManager = new NetworkManager(config.ip, config.port, config.sender, config.listener);
-
+        
         if (config.listener && !config.sender)
         {
             networkManager.Listener.MySocket.SendBufferSize = MKPacketWriter.MAX_PACKET_BYTE_SIZE;

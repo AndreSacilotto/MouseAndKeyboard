@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Scripts\ConfigFile\ConfigXML.cs" />
+    <Compile Include="Scripts\ConfigFile\XMLerialization.cs" />
     <Compile Include="Scripts\InputSimulator\InputSender.cs" />
     <Compile Include="Scripts\InputSimulator\InputSenderData.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardVK.cs" />
