@@ -211,13 +211,13 @@ namespace InputSimulation
             });
         }
 
-        public static void MoveAndClick(MouseEventF dwFlags, int x, int y)
+        internal static void MoveAndClick(MouseEventF dwFlags, int x, int y)
         {
             var input = MoveAbsoluteInput(x, y);
             input.union.mi.dwFlags |= dwFlags;
             SendInput(input);
         }
-        public static void MoveAndClick(MouseEventF dwFlags, int x, int y, int numberOfClicks = 2)
+        internal static void MoveAndClick(MouseEventF dwFlags, int x, int y, int numberOfClicks = 2)
         {
             var inputs = new InputStruct[numberOfClicks + 1];
             inputs[0] = MoveAbsoluteInput(x, y);

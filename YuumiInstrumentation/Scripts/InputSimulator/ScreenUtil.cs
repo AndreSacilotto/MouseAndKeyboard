@@ -20,7 +20,7 @@ namespace InputSimulation
         {
             internal readonly int width;
             internal readonly int height;
-            public ScreenSize(int width, int height)
+            internal ScreenSize(int width, int height)
             {
                 this.width = width;
                 this.height = height;

@@ -4,18 +4,18 @@ using Gma.System.MouseKeyHook;
 
 namespace MouseKeyboard.Network
 {
-    public class MKInputListener : IDisposable
+    public class MKInputListen : IDisposable
     {
         private readonly IKeyboardMouseEvents inputEvents;
         private readonly MKPacketWriter mkPacket;
-        private readonly UDPSocketSender client;
+        private readonly UDPSocketShipper client;
 
         private KeyEventHandler KeyDown;
 
         private bool enabled = false;
         public Keys enablingKey;
 
-        public MKInputListener(UDPSocketSender client, bool enabled = false)
+        public MKInputListen(UDPSocketShipper client, bool enabled = false)
         {
             this.client = client;
             mkPacket = new MKPacketWriter();
@@ -35,6 +35,7 @@ namespace MouseKeyboard.Network
 
             inputEvents.MouseMove += OnMouseMove;
             inputEvents.MouseDown += OnMouseDown;
+            inputEvents.MouseUp += OnMouseUp;
             inputEvents.MouseDoubleClick += OnMouseDoubleClick;
             inputEvents.MouseWheel += OnMouseScroll;
 
@@ -88,7 +89,16 @@ namespace MouseKeyboard.Network
             //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.Button);
 
-            mkPacket.WriteMouseClick(e.Button);
+            mkPacket.WriteMouseClick(e.Button, InputSimulation.PressedState.Down);
+            SendPacket();
+        }
+
+        private void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            //MKEventHandleUtil.Print(e);
+            Console.WriteLine("SEND: " + e.Button);
+
+            mkPacket.WriteMouseClick(e.Button, InputSimulation.PressedState.Up);
             SendPacket();
         }
 
@@ -106,7 +116,7 @@ namespace MouseKeyboard.Network
             //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.KeyCode);
 
-            mkPacket.WriteKeyDown(e.KeyCode);
+            mkPacket.WriteKey(e.KeyCode, InputSimulation.PressedState.Down);
             SendPacket();
         }
 
@@ -115,7 +125,7 @@ namespace MouseKeyboard.Network
             //MKEventHandleUtil.Print(e);
             Console.WriteLine("SEND: " + e.KeyCode);
 
-            mkPacket.WriteKeyUp(e.KeyCode);
+            mkPacket.WriteKey(e.KeyCode, InputSimulation.PressedState.Up);
             SendPacket();
         }
 

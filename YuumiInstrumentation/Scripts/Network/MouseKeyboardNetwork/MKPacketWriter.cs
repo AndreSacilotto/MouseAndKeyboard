@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using InputSimulation;
 
 namespace MouseKeyboard.Network
 {
@@ -23,10 +24,17 @@ namespace MouseKeyboard.Network
             packet.Add(y);
         }
 
-        public void WriteMouseClick(MouseButtons mouseButton)
+        public void WriteMouseScroll(int scrollQuant = 120)
+        {
+            packet.Add((byte)Commands.MouseScroll);
+            packet.Add(scrollQuant);
+        }
+
+        public void WriteMouseClick(MouseButtons mouseButton, PressedState pressedState)
         {
             packet.Add((byte)Commands.MouseClick);
             packet.Add((int)mouseButton);
+            packet.Add((byte)pressedState);
         }
 
         public void WriteDoubleMouseClick(MouseButtons mouseButton, int mouseClicks = 2)
@@ -34,25 +42,14 @@ namespace MouseKeyboard.Network
             packet.Add((byte)Commands.MouseDoubleClick);
             packet.Add((int)mouseButton);
             packet.Add(mouseClicks);
+            packet.Add((byte)PressedState.Click);
         }
 
-        public void WriteMouseScroll(int scrollQuant = 120)
+        public void WriteKey(Keys key, PressedState pressedState)
         {
-            packet.Add((byte)Commands.MouseScroll);
-            packet.Add(scrollQuant);
-        }
-
-        public void WriteKeyDown(Keys key)
-        {
-            packet.Add((byte)Commands.KeyDown);
+            packet.Add((byte)Commands.Key);
             packet.Add((int)key);
+            packet.Add((byte)pressedState);
         }
-
-        public void WriteKeyUp(Keys key)
-        {
-            packet.Add((byte)Commands.KeyUp);
-            packet.Add((int)key);
-        }
-
     }
 }

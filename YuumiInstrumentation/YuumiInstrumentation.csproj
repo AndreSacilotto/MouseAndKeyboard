@@ -88,8 +88,9 @@
     <Compile Include="Scripts\InputSimulator\InputSenderData.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardVK.cs" />
     <Compile Include="Scripts\InputSimulator\MouseButtonExplicit.cs" />
+    <Compile Include="Scripts\InputSimulator\PressedState.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKEventHandleUtil.cs" />
-    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputListener.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputListen.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputSender.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardUtil.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardVSC.cs" />
@@ -99,8 +100,8 @@
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketReader.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketWriter.cs" />
     <Compile Include="Scripts\Network\Packet.cs" />
-    <Compile Include="Scripts\Network\UDPSocketSender.cs" />
-    <Compile Include="Scripts\Network\UDPSocketListener.cs" />
+    <Compile Include="Scripts\Network\UDPSocketShipper.cs" />
+    <Compile Include="Scripts\Network\UDPSocketReceiver.cs" />
     <Compile Include="Scripts\Others\Interpolation.cs" />
     <Compile Include="Scripts\Main.cs" />
     <Compile Include="Program.cs" />

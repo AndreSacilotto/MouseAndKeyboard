@@ -65,13 +65,13 @@ namespace InputSimulation
             up = input;
         }
 
-        public static void Send(Keys key)
+        public static void SendFull(Keys key)
         {
             KeyFullInput(key, out var down, out var up);
             SendInput(down, up);
         }
 
-        public static void Send(params Keys[] keys)
+        public static void SendFull(params Keys[] keys)
         {
             var inputs = new InputStruct[keys.Length * 2];
             for (int i = 0, e = 0; i < keys.Length; i++)
@@ -87,30 +87,54 @@ namespace InputSimulation
 
         #region Send With Modifiers
 
-        public static void SendWithModifier(Keys modifier, Keys key)
+        public static void SendWithModifier(Keys modifier, PressedState pressedState, Keys key)
         {
             SendKeyDown(modifier);
-            Send(key);
+            Send(pressedState, key);
             SendKeyUp(modifier);
         }
-        public static void SendWithModifier(Keys modifier, params Keys[] keys)
+        public static void SendWithModifier(Keys modifier, PressedState pressedState, params Keys[] keys)
         {
             SendKeyDown(modifier);
-            Send(keys);
+            Send(pressedState, keys);
             SendKeyUp(modifier);
         }
 
-        public static void SendWithModifiers(Keys[] modifiers, Keys key)
+        public static void SendWithModifiers(Keys[] modifiers, PressedState pressedState, Keys key)
         {
             SendKeyDown(modifiers);
-            Send(key);
+            Send(pressedState, key);
             SendKeyUp(modifiers);
         }
-        public static void SendWithModifiers(Keys[] modifiers, params Keys[] keys)
+        public static void SendWithModifiers(Keys[] modifiers, PressedState pressedState, params Keys[] keys)
         {
             SendKeyDown(modifiers);
-            Send(keys);
+            Send(pressedState, keys);
             SendKeyUp(modifiers);
+        }
+
+        #endregion
+
+        #region Find
+
+        public static void Send(PressedState pressedState, Keys key)
+        {
+            if (pressedState == PressedState.Down)
+                SendKeyDown(key);
+            else if (pressedState == PressedState.Up)
+                SendKeyUp(key);
+            else
+                SendFull(key);
+        }
+
+        public static void Send(PressedState pressedState, params Keys[] keys)
+        {
+            if (pressedState == PressedState.Down)
+                SendKeyDown(keys);
+            else if (pressedState == PressedState.Up)
+                SendKeyUp(keys);
+            else
+                SendFull(keys);
         }
 
         #endregion

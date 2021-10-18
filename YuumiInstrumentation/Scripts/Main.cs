@@ -5,7 +5,7 @@ using System.Windows.Forms;
 public class Main : ApplicationContext
 {
     private readonly NetworkManager networkManager;
-    private readonly MKInputListener mkListener;
+    private readonly MKInputListen mkListener;
 
     public Main()
     {
@@ -29,7 +29,7 @@ public class Main : ApplicationContext
         if (!config.listener && config.sender)
         {
             bool scrollLock = Control.IsKeyLocked(Keys.Scroll);
-            mkListener = new MKInputListener(networkManager.Sender, scrollLock) {
+            mkListener = new MKInputListen(networkManager.Sender, scrollLock) {
                 enablingKey = Keys.Scroll,
             };
         }

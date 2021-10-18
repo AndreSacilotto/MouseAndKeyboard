@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using InputSimulation;
 
 namespace MouseKeyboard.Network
 {
@@ -20,21 +21,21 @@ namespace MouseKeyboard.Network
                     response.x = packet.ReadInt();
                     response.y = packet.ReadInt();
                     break;
+                case Commands.MouseScroll:
+                    response.quant = packet.ReadInt();
+                    break;
                 case Commands.MouseClick:
                     response.mouseButton = (MouseButtons)packet.ReadInt();
+                    response.pressedState = (PressedState)packet.ReadByte();
                     break;
                 case Commands.MouseDoubleClick:
                     response.mouseButton = (MouseButtons)packet.ReadInt();
                     response.quant = packet.ReadInt();
+                    response.pressedState = (PressedState)packet.ReadByte();
                     break;
-                case Commands.MouseScroll:
-                    response.quant = packet.ReadInt();
-                    break;
-                case Commands.KeyDown:
+                case Commands.Key:
                     response.keys = (Keys)packet.ReadInt();
-                    break;
-                case Commands.KeyUp:
-                    response.keys = (Keys)packet.ReadInt();
+                    response.pressedState = (PressedState)packet.ReadByte();
                     break;
             }
             return response;
