@@ -2,7 +2,7 @@
 using System.Text;
 using System.Windows.Forms;
 
-public static class InputListenerUtil
+public static class MKEventHandleUtil
 {
     public static void Print(MouseEventArgs ev)
     {
@@ -36,5 +36,4 @@ public static class InputListenerUtil
         str.AppendLine("Control: " + ev.KeyChar.ToString());
         Console.WriteLine(str.ToString());
     }
-
 }

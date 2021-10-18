@@ -2,8 +2,8 @@
 
 public class NetworkManager
 {
-    public UDPSocketClient Client { get; }
-    public UDPSocketHost Host { get; }
+    public UDPSocketSender Sender { get; }
+    public UDPSocketListener Listener { get; }
 
     private IPEndPoint ep;
 
@@ -11,21 +11,21 @@ public class NetworkManager
     {
         ep = new IPEndPoint(IPAddress.Parse(ip), port);
         if (isSender)
-            Client = new UDPSocketClient();
+            Sender = new UDPSocketSender();
 
         if (isListener)
-            Host = new UDPSocketHost(true);
+            Listener = new UDPSocketListener(true);
     }
 
     public void Start()
     {
-        Client?.Start(ep);
-        Host?.Start(ep);
+        Sender?.Start(ep);
+        Listener?.Start(ep);
     }
 
     public void Stop()
     {
-        Client?.Stop();
-        Host?.Stop();
+        Sender?.Stop();
+        Listener?.Stop();
     }
 }

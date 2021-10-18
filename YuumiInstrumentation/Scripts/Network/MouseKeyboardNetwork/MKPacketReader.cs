@@ -2,7 +2,7 @@
 
 namespace MouseKeyboard.Network
 {
-    public partial class MKPacket
+    public static class MKPacketReader
     {
         public static MKPacketContent ReadAll(byte[] data) =>
             ReadAll(new Packet(data));
@@ -10,17 +10,12 @@ namespace MouseKeyboard.Network
         public static MKPacketContent ReadAll(Packet packet)
         {
             var cmd = (Commands)packet.ReadByte();
-            var response = new MKPacketContent
-            {
+            var response = new MKPacketContent{
                 command = cmd
             };
 
             switch (cmd)
             {
-                case Commands.Ping:
-                    break;
-                case Commands.Shutdown:
-                    break;
                 case Commands.MouseMove:
                     response.x = packet.ReadInt();
                     response.y = packet.ReadInt();

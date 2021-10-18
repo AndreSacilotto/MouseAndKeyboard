@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-public class UDPSocketClient : UDPSocket
+public class UDPSocketSender : UDPSocket
 {
     protected override void InternalStart(IPEndPoint hostEndPoint)
     {

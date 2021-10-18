@@ -2,7 +2,7 @@
 
 namespace MouseKeyboard.Network
 {
-    public partial class MKPacket
+    public class MKPacketWriter
     {
         public const int MAX_PACKET_BYTE_SIZE = 16;
 
@@ -14,16 +14,6 @@ namespace MouseKeyboard.Network
         {
             packet.Clear();
             packet.Rewind();
-        }
-
-        public void WritePing()
-        {
-            packet.Add((byte)Commands.Ping);
-        }
-
-        public void WriteShutdown()
-        {
-            packet.Add((byte)Commands.Shutdown);
         }
 
         public void WriteMouseMove(int x, int y)

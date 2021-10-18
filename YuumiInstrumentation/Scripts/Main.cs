@@ -22,17 +22,15 @@ public class Main : ApplicationContext
 
         if (config.listener && !config.sender)
         {
-            networkManager.Host.MySocket.SendBufferSize = MKPacket.MAX_PACKET_BYTE_SIZE;
-            networkManager.Host.OnReceive += OnReceive;
+            networkManager.Listener.MySocket.SendBufferSize = MKPacketWriter.MAX_PACKET_BYTE_SIZE;
+            networkManager.Listener.OnReceive += OnReceive;
         }
 
         if (!config.listener && config.sender)
         {
             bool scrollLock = Control.IsKeyLocked(Keys.Scroll);
-            mkListener = new MKInputListener(networkManager.Client, scrollLock) {
+            mkListener = new MKInputListener(networkManager.Sender, scrollLock) {
                 enablingKey = Keys.Scroll,
-                pingKey = Keys.NumPad0,
-                shutdownKey = Keys.NumPad1,
             };
         }
 
@@ -41,7 +39,7 @@ public class Main : ApplicationContext
 
     private void OnReceive(int bytes, byte[] data)
     {
-        var mkContent = MKPacket.ReadAll(data);
+        var mkContent = MKPacketReader.ReadAll(data);
 
         Console.WriteLine("RECEIVE: " + mkContent.command);
 

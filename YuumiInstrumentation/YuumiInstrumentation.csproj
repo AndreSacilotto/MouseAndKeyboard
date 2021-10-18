@@ -85,19 +85,19 @@
   <ItemGroup>
     <Compile Include="Scripts\ConfigFile\ConfigXML.cs" />
     <Compile Include="Scripts\InputSimulator\InputSender.cs" />
-    <Compile Include="Scripts\Network\MouseKeyboardNetwork\InputListenerUtil.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKEventHandleUtil.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputListener.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputSender.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardUtil.cs" />
     <Compile Include="Scripts\InputSimulator\Keyboard.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
     <Compile Include="Scripts\Network\NetworkManager.cs" />
-    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MouseKeyboardCommands.cs" />
-    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MouseKeyboardReceive.cs" />
-    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MouseKeyboardSend.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketData.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketReader.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketWriter.cs" />
     <Compile Include="Scripts\Network\Packet.cs" />
-    <Compile Include="Scripts\Network\UDPSocketClient.cs" />
-    <Compile Include="Scripts\Network\UDPSocketHost.cs" />
+    <Compile Include="Scripts\Network\UDPSocketSender.cs" />
+    <Compile Include="Scripts\Network\UDPSocketListener.cs" />
     <Compile Include="Scripts\Others\Interpolation.cs" />
     <Compile Include="Scripts\Main.cs" />
     <Compile Include="Program.cs" />

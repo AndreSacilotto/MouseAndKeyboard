@@ -9,8 +9,6 @@ namespace MouseKeyboard.Network
         public delegate void MKInput(MKPacketContent content);
 
         private static Dictionary<Commands, MKInput> dict = new Dictionary<Commands, MKInput> {
-            {Commands.Ping, Ping},
-            {Commands.Shutdown, Shutdown},
             {Commands.MouseMove, MouseMove},
             {Commands.MouseClick, MouseClick},
             {Commands.MouseDoubleClick, MouseDoubleClick},
@@ -47,16 +45,6 @@ namespace MouseKeyboard.Network
                     mdata = InputSender.MouseDataXButton.XButton2;
                     break;
             }
-        }
-
-        public static void Ping(MKPacketContent content)
-        {
-            Console.WriteLine("PING");
-        }
-
-        public static void Shutdown(MKPacketContent content)
-        {
-            Application.Exit();
         }
 
         public static void MouseMove(MKPacketContent content)

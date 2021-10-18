@@ -1,14 +1,14 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-public class UDPSocketHost : UDPSocket
+public class UDPSocketListener : UDPSocket
 {
     private byte[] stateBuffer;
 
     public delegate void NetReceive(int bytes, byte[] data);
     public event NetReceive OnReceive;
 
-    public UDPSocketHost(bool clientCanHost = false) : base()
+    public UDPSocketListener(bool clientCanHost = false) : base()
     {
         if (clientCanHost)
             MySocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);

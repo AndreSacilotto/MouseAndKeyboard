@@ -7,18 +7,18 @@ namespace MouseKeyboard.Network
     public class MKInputListener : IDisposable
     {
         private readonly IKeyboardMouseEvents inputEvents;
-        private readonly MKPacket mkPacket;
-        private readonly UDPSocketClient client;
+        private readonly MKPacketWriter mkPacket;
+        private readonly UDPSocketSender client;
 
         private KeyEventHandler KeyDown;
 
         private bool enabled = false;
-        public Keys enablingKey, shutdownKey, pingKey;
+        public Keys enablingKey;
 
-        public MKInputListener(UDPSocketClient client, bool enabled = false)
+        public MKInputListener(UDPSocketSender client, bool enabled = false)
         {
             this.client = client;
-            mkPacket = new MKPacket();
+            mkPacket = new MKPacketWriter();
             inputEvents = Hook.GlobalEvents();
 
             inputEvents.KeyDown += OnKeyDownBase;
@@ -134,20 +134,7 @@ namespace MouseKeyboard.Network
                     Unsubscribe();
                 else
                     Subscribe();
-            }
-            else if (e.KeyCode == Keys.W || e.KeyCode == Keys.Y)
-            {
-
-            }
-            else if (e.KeyCode == pingKey)
-            {
-                mkPacket.WritePing();
-                SendPacket();
-            }
-            else if (e.KeyCode == shutdownKey)
-            {
-                mkPacket.WriteShutdown();
-                SendPacket();
+                Console.WriteLine("Enabled: " + enabled);
             }
             else
             {
