@@ -10,8 +10,6 @@ namespace MouseKeyboard.Network
         private readonly MKPacketWriter mkPacket;
         private readonly UDPSocketShipper client;
 
-        private KeyEventHandler KeyDown;
-
         private bool enabled = false;
         public Keys enablingKey;
 
@@ -20,9 +18,6 @@ namespace MouseKeyboard.Network
             this.client = client;
             mkPacket = new MKPacketWriter();
             inputEvents = Hook.GlobalEvents();
-
-            inputEvents.KeyDown += OnKeyDownBase;
-            inputEvents.KeyUp += OnKeyUpBase;
 
             if (enabled)
                 Subscribe();
@@ -39,8 +34,7 @@ namespace MouseKeyboard.Network
             inputEvents.MouseDoubleClick += OnMouseDoubleClick;
             inputEvents.MouseWheel += OnMouseScroll;
 
-            //inputEvents.KeyDown += OnKeyDown;
-            KeyDown = OnKeyDown;
+            inputEvents.KeyDown += OnKeyDown;
             inputEvents.KeyUp += OnKeyUp;
         }
 
@@ -53,7 +47,7 @@ namespace MouseKeyboard.Network
             inputEvents.MouseDoubleClick -= OnMouseDoubleClick;
             inputEvents.MouseWheel -= OnMouseScroll;
 
-            KeyDown = null;
+            inputEvents.KeyDown -= OnKeyDown;
             inputEvents.KeyUp -= OnKeyUp;
         }
         #endregion
@@ -69,7 +63,7 @@ namespace MouseKeyboard.Network
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
             //MKEventHandleUtil.Print(e);
-            Console.WriteLine("SEND: " + e.X + " " + e.Y);
+            //Console.WriteLine("SEND: " + e.X + " " + e.Y);
 
             mkPacket.WriteMouseMove(e.X, e.Y);
             SendPacket();
@@ -87,7 +81,7 @@ namespace MouseKeyboard.Network
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
             //MKEventHandleUtil.Print(e);
-            Console.WriteLine("SEND: " + e.Button);
+            Console.WriteLine("SEND: " + e.Button + " DOWN");
 
             mkPacket.WriteMouseClick(e.Button, InputSimulation.PressedState.Down);
             SendPacket();
@@ -96,7 +90,7 @@ namespace MouseKeyboard.Network
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             //MKEventHandleUtil.Print(e);
-            Console.WriteLine("SEND: " + e.Button);
+            Console.WriteLine("SEND: " + e.Button + " UP");
 
             mkPacket.WriteMouseClick(e.Button, InputSimulation.PressedState.Up);
             SendPacket();
@@ -114,29 +108,7 @@ namespace MouseKeyboard.Network
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             //MKEventHandleUtil.Print(e);
-            Console.WriteLine("SEND: " + e.KeyCode);
-
-            mkPacket.WriteKey(e.KeyCode, InputSimulation.PressedState.Down);
-            SendPacket();
-        }
-
-        private void OnKeyUp(object sender, KeyEventArgs e)
-        {
-            //MKEventHandleUtil.Print(e);
-            Console.WriteLine("SEND: " + e.KeyCode);
-
-            mkPacket.WriteKey(e.KeyCode, InputSimulation.PressedState.Up);
-            SendPacket();
-        }
-
-        #endregion
-
-        private bool isHolding = false;
-        private void OnKeyDownBase(object sender, KeyEventArgs e)
-        {
-            if (isHolding)
-                return;
-            isHolding = true;
+            Console.WriteLine("SEND: " + e.KeyCode + " DOWN");
 
             if (e.KeyCode == enablingKey)
             {
@@ -148,18 +120,27 @@ namespace MouseKeyboard.Network
             }
             else
             {
-                MKEventHandleUtil.Print(e);
-                KeyDown?.Invoke(sender, e);
+                //MKEventHandleUtil.Print(e);
+                mkPacket.WriteKey(e.KeyCode, InputSimulation.PressedState.Down);
+                SendPacket();
             }
+
         }
 
-        private void OnKeyUpBase(object sender, KeyEventArgs e) => isHolding = false;
+        private void OnKeyUp(object sender, KeyEventArgs e)
+        {
+            //MKEventHandleUtil.Print(e);
+            Console.WriteLine("SEND: " + e.KeyCode + " UP");
+
+            mkPacket.WriteKey(e.KeyCode, InputSimulation.PressedState.Up);
+            SendPacket();
+        }
+
+        #endregion
 
         public void Dispose()
         {
             Unsubscribe();
-            inputEvents.KeyDown -= OnKeyDownBase;
-            inputEvents.KeyUp -= OnKeyUpBase;
             inputEvents.Dispose();
         }
     }

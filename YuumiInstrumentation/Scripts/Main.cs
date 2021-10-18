@@ -26,6 +26,8 @@ public class Main : ApplicationContext
         if (config.listener && !config.sender)
         {
             networkManager.Listener.MySocket.SendBufferSize = MKPacketWriter.MAX_PACKET_BYTE_SIZE;
+            var senderConfig = new MKInputSenderConfig();
+
             networkManager.Listener.OnReceive += OnReceive;
         }
 

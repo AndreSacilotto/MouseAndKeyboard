@@ -90,14 +90,17 @@
     <Compile Include="Scripts\InputSimulator\KeyboardVK.cs" />
     <Compile Include="Scripts\InputSimulator\MouseButtonExplicit.cs" />
     <Compile Include="Scripts\InputSimulator\PressedState.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\Commands.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKEventHandleUtil.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputListen.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputSenderConfig.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputListenConfig.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputSender.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardUtil.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardVSC.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
     <Compile Include="Scripts\Network\NetworkManager.cs" />
-    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketData.cs" />
+    <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketContent.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketReader.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketWriter.cs" />
     <Compile Include="Scripts\Network\Packet.cs" />
@@ -109,6 +112,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\Network\UDPSocket.cs" />
     <Compile Include="Scripts\InputSimulator\ScreenUtil.cs" />
+    <Compile Include="Scripts\YuumiSpecific\YuumiListen.cs" />
+    <Compile Include="Scripts\YuumiSpecific\YuumiSender.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

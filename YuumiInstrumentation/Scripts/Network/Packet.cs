@@ -45,12 +45,13 @@ public class Packet
 
     #region Util Funcs
 
-    public byte[] Copy()
+    public byte[] CopyBuffer()
     {
         var arr = new byte[Length];
         Array.Copy(buffer, arr, Length);
         return arr;
     }
+    public Packet Copy() => new Packet(CopyBuffer());
 
     public override string ToString()
     {
@@ -69,6 +70,24 @@ public class Packet
         buffer[pointer] = value;
         pointer += sizeof(byte);
     }
+    public void Add(params byte[] values)
+    {
+        for (int i = 0; i < values.Length; i++)
+            Add(values[i]);
+    }
+
+    public void Add(short value)
+    {
+        BinaryPrimitives.WriteInt16LittleEndian(memory.Span.Slice(pointer, sizeof(short)), value);
+        pointer += sizeof(short);
+    }
+    public void Add(params short[] values)
+    {
+        for (int i = 0; i < values.Length; i++)
+            Add(values[i]);
+    }
+
+
     public void Add(int value)
     {
         BinaryPrimitives.WriteInt32LittleEndian(memory.Span.Slice(pointer, sizeof(int)), value);
@@ -77,10 +96,7 @@ public class Packet
     public void Add(params int[] values)
     {
         for (int i = 0; i < values.Length; i++)
-        {
-            BinaryPrimitives.WriteInt32LittleEndian(memory.Span.Slice(pointer, sizeof(int)), values[i]);
-            pointer += sizeof(int);
-        }
+            Add(values[i]);
     }
 
     public void Add(uint value)
@@ -88,25 +104,44 @@ public class Packet
         BinaryPrimitives.WriteUInt32LittleEndian(memory.Span.Slice(pointer, sizeof(uint)), value);
         pointer += sizeof(uint);
     }
+    public void Add(params uint[] values)
+    {
+        for (int i = 0; i < values.Length; i++)
+            Add(values[i]);
+    }
+
     public void Add(long value)
     {
         BinaryPrimitives.WriteInt64LittleEndian(memory.Span.Slice(pointer, sizeof(uint)), value);
         pointer += sizeof(long);
     }
+    public void Add(params long[] values)
+    {
+        for (int i = 0; i < values.Length; i++)
+            Add(values[i]);
+    }
+
     #endregion
 
     #region READ
-    public int ReadInt()
-    {
-        var value = BinaryPrimitives.ReadInt32LittleEndian(memory.Span.Slice(pointer, sizeof(int)));
-        pointer += sizeof(int);
-        return value;
-    }
 
     public byte ReadByte()
     {
         var value = buffer[pointer];
         pointer += sizeof(byte);
+        return value;
+    }
+    public short ReadShort()
+    {
+        var value = BinaryPrimitives.ReadInt16LittleEndian(memory.Span.Slice(pointer, sizeof(short)));
+        pointer += sizeof(short);
+        return value;
+    }
+
+    public int ReadInt()
+    {
+        var value = BinaryPrimitives.ReadInt32LittleEndian(memory.Span.Slice(pointer, sizeof(int)));
+        pointer += sizeof(int);
         return value;
     }
 
