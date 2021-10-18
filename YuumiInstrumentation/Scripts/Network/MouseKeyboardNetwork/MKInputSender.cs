@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using InputSimulation;
+
 
 namespace MouseKeyboard.Network
 {
@@ -21,28 +23,28 @@ namespace MouseKeyboard.Network
         public static bool TryGetFunc(Commands index, out MKInput mk) => dict.TryGetValue(index, out mk);
         public static MKInput GetFunc(Commands index) => dict[index];
 
-        public static void FindMouse(MKPacketContent content, out InputSender.MouseEventF dwFlags, out InputSender.MouseDataXButton mdata)
+        public static void FindMouse(MKPacketContent content, out MouseEventF dwFlags, out MouseDataXButton mdata)
         {
             dwFlags = 0;
             mdata = 0;
             switch (content.mouseButton)
             {
                 case MouseButtons.Left:
-                    dwFlags = InputSender.MouseEventF.LeftClick;
+                    dwFlags = MouseEventF.LeftClick;
                     break;
                 case MouseButtons.Right:
-                    dwFlags = InputSender.MouseEventF.RightClick;
+                    dwFlags = MouseEventF.RightClick;
                     break;
                 case MouseButtons.Middle:
-                    dwFlags = InputSender.MouseEventF.MiddleClick;
+                    dwFlags = MouseEventF.MiddleClick;
                     break;
                 case MouseButtons.XButton1:
-                    dwFlags = InputSender.MouseEventF.XClick;
-                    mdata = InputSender.MouseDataXButton.XButton1;
+                    dwFlags = MouseEventF.XClick;
+                    mdata = MouseDataXButton.XButton1;
                     break;
                 case MouseButtons.XButton2:
-                    dwFlags = InputSender.MouseEventF.XClick;
-                    mdata = InputSender.MouseDataXButton.XButton2;
+                    dwFlags = MouseEventF.XClick;
+                    mdata = MouseDataXButton.XButton2;
                     break;
             }
         }
