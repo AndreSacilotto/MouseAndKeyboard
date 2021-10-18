@@ -35,12 +35,6 @@ public class Main : ApplicationContext
         }
 
         networkManager.Start();
-
-        var a = KeyboardUtil.KeyCodeToScanCode(Keys.Right);
-        var b = KeyboardUtil.KeyCodeToScanCode(Keys.NumPad6);
-
-        Console.WriteLine(a);
-        Console.WriteLine(b);
     }
 
     private void OnReceive(int bytes, byte[] data)

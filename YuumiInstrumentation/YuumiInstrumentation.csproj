@@ -85,11 +85,12 @@
   <ItemGroup>
     <Compile Include="Scripts\ConfigFile\ConfigXML.cs" />
     <Compile Include="Scripts\InputSimulator\InputSender.cs" />
+    <Compile Include="Scripts\InputSimulator\KeyboardVK.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKEventHandleUtil.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputListener.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKInputSender.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardUtil.cs" />
-    <Compile Include="Scripts\InputSimulator\Keyboard.cs" />
+    <Compile Include="Scripts\InputSimulator\KeyboardVSC.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
     <Compile Include="Scripts\Network\NetworkManager.cs" />
     <Compile Include="Scripts\Network\MouseKeyboardNetwork\MKPacketData.cs" />
