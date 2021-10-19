@@ -85,35 +85,5 @@ namespace InputSimulation
 
         #endregion
 
-        #region Send With Modifiers
-
-        public static void SendWithModifier(Keys modifier, Keys key)
-        {
-            SendKeyDown(modifier);
-            SendFull(key);
-            SendKeyUp(modifier);
-        }
-        public static void SendWithModifier(Keys modifier, params Keys[] keys)
-        {
-            SendKeyDown(modifier);
-            SendFull(keys);
-            SendKeyUp(modifier);
-        }
-
-        public static void SendWithModifiers(Keys[] modifiers, Keys key)
-        {
-            SendKeyDown(modifiers);
-            SendFull(key);
-            SendKeyUp(modifiers);
-        }
-        public static void SendWithModifiers(Keys[] modifiers, params Keys[] keys)
-        {
-            SendKeyDown(modifiers);
-            SendFull(keys);
-            SendKeyUp(modifiers);
-        }
-
-        #endregion
-
     }
 }

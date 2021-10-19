@@ -1,8 +1,5 @@
 ﻿using System.Windows.Forms;
 
-using static InputSimulation.InputSender;
-using static InputSimulation.Keyboard;
-
 namespace InputSimulation
 {
     public static class KeyboardWithMod
@@ -12,30 +9,28 @@ namespace InputSimulation
 
         public static void SendKeyDown(Keys key, Keys mod)
         {
-            SendInput(KeyDownInput(key));
+            Keyboard.SendKeyDown(mod);
+            Keyboard.SendKeyDown(key);
         }
-        public static void SendKeyDown(params Keys[] keys)
+        public static void SendKeyDown(Keys key, params Keys[] mods)
         {
-            var inputs = new InputStruct[keys.Length];
-            for (int i = 0; i < keys.Length; i++)
-                inputs[i] = KeyDownInput(keys[i]);
-            SendInput(inputs);
+            Keyboard.SendKeyDown(mods);
+            Keyboard.SendKeyDown(key);
         }
 
         #endregion
 
         #region Key Up
 
-        public static void SendKeyUp(Keys key)
+        public static void SendKeyUp(Keys key, Keys mod)
         {
-            SendInput(KeyUpInput(key));
+            Keyboard.SendKeyUp(mod);
+            Keyboard.SendKeyUp(key);
         }
-        public static void SendKeyUp(params Keys[] keys)
+        public static void SendKeyUp(Keys key, params Keys[] mods)
         {
-            var inputs = new InputStruct[keys.Length];
-            for (int i = 0; i < keys.Length; i++)
-                inputs[i] = KeyUpInput(keys[i]);
-            SendInput(inputs);
+            Keyboard.SendKeyUp(mods);
+            Keyboard.SendKeyUp(key);
         }
 
 
@@ -43,22 +38,15 @@ namespace InputSimulation
 
         #region Key Full
 
-        public static void SendFull(Keys key)
+        public static void SendFull(Keys key, Keys mod)
         {
-            KeyFullInput(key, out var down, out var up);
-            SendInput(down, up);
+            Keyboard.SendFull(mod);
+            Keyboard.SendFull(key);
         }
-
-        public static void SendFull(params Keys[] keys)
+        public static void SendFull(Keys key, params Keys[] mods)
         {
-            var inputs = new InputStruct[keys.Length * 2];
-            for (int i = 0, e = 0; i < keys.Length; i++)
-            {
-                KeyFullInput(keys[i], out var down, out var up);
-                inputs[e++] = down;
-                inputs[e++] = up;
-            }
-            SendInput(inputs);
+            Keyboard.SendFull(mods);
+            Keyboard.SendFull(key);
         }
 
         #endregion

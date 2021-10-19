@@ -1,24 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using InputSimulation;
 using MouseKeyboard.Network;
-using InputSimulation;
-using System;
+using System.Windows.Forms;
 
 namespace YuumiInstrumentation
 {
-    public class YuumiPacketRead : IDisposable
+    public class YuumiPacketRead
     {
-        public event Action<int, int> MouseMove;
+        private readonly IYuumiPacketReceiver receiver;
 
-        public event Action<int> MouseScroll;
-
-        public event Action<MouseButtons, PressedState> MouseClick;
-
-        public event Action<Keys, PressedState> Key;
-
-        public event Action<Keys, Keys, PressedState> KeyModifier;
-
-        #region READ
+        public YuumiPacketRead(IYuumiPacketReceiver receiver)
+        {
+            this.receiver = receiver;
+        }
 
         public void ReadAll(byte[] data) => ReadAll(new Packet(data));
 
@@ -46,31 +39,33 @@ namespace YuumiInstrumentation
             }
         }
 
+        #region READ
+
         private void ReadMouseMove(Packet packet)
         {
             var x = packet.ReadInt();
             var y = packet.ReadInt();
-            MouseMove(x, y);
+            receiver.MouseMove(x, y);
         }
 
         private void ReadMouseScroll(Packet packet)
         {
             int scrollDelta = packet.ReadInt();
-            MouseScroll?.Invoke(scrollDelta);
+            receiver.MouseScroll(scrollDelta);
         }
 
         private void ReadMouseClick(Packet packet)
         {
             var mouseButton = (MouseButtons)packet.ReadInt();
             var pressedState = (PressedState)packet.ReadByte();
-            MouseClick?.Invoke(mouseButton, pressedState);
+            receiver.MouseClick(mouseButton, pressedState);
         }
 
         private void ReadKey(Packet packet)
         {
             var keys = (Keys)packet.ReadInt();
             var pressedState = (PressedState)packet.ReadByte();
-            Key?.Invoke(keys, pressedState);
+            receiver.Key(keys, pressedState);
         }
 
         private void ReadKeyModifier(Packet packet)
@@ -79,19 +74,11 @@ namespace YuumiInstrumentation
             var keys = (Keys)packet.ReadInt();
             var mods = (Keys)packet.ReadInt();
             var pressedState = (PressedState)packet.ReadByte();
-            KeyModifier?.Invoke(keys, mods, pressedState);
+            receiver.KeyModifier(keys, mods, pressedState);
         }
 
 
         #endregion
 
-        public void Dispose()
-        {
-            MouseMove = null;
-            MouseScroll = null;
-            MouseClick = null;
-            Key = null;
-            KeyModifier = null;
-        }
     }
 }

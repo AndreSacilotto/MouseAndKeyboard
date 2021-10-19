@@ -1,9 +1,8 @@
-﻿using System;
+﻿using InputSimulation;
+using MouseKeyboard.Network;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-
-using InputSimulation;
-using MouseKeyboard.Network;
 
 namespace YuumiInstrumentation
 {
