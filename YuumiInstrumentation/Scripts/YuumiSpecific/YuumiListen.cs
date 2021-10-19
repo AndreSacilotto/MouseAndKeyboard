@@ -192,9 +192,11 @@ public class YuumiListen : MKInputListen
     #endregion
 
     //Q W E R - Skills 4
-    //D F - Spells 2 (DONE)
+    //D F - Spells 2
     //Space D1 D2 D4 - Itens 4
-    //Y P - HUD 2 (DONE)
+    //Y P B - Util 2
+
+    #region Buttons Data
 
     private static Dictionary<MouseButtons, Keys> mouseToKey = new Dictionary<MouseButtons, Keys> {
         { MouseButtons.XButton1, Keys.Q },
@@ -202,8 +204,8 @@ public class YuumiListen : MKInputListen
     };
 
     private static Dictionary<MouseButtons, Keys> mouseWithControlToKey = new Dictionary<MouseButtons, Keys> {
-        { MouseButtons.XButton1, Keys.D },
-        { MouseButtons.XButton2, Keys.F },
+        { MouseButtons.XButton1, Keys.D1 },
+        { MouseButtons.XButton2, Keys.D2 },
     };
 
     private static HashSet<Keys> alwaysAllowedKeys = new HashSet<Keys> {
@@ -213,17 +215,20 @@ public class YuumiListen : MKInputListen
     };
 
     private static Dictionary<Keys, Keys> allowedKeys = new Dictionary<Keys, Keys> {
-        { Keys.Up, Keys.W },
-        { Keys.OemBackslash, Keys.R },
+        { Keys.D8, Keys.R },
+        { Keys.D9, Keys.D4 },
     };
 
     private static HashSet<Keys> allowedWithControlKeys = new HashSet<Keys> {
+        Keys.D,
+        Keys.F,
+
         Keys.Space,
-        Keys.D1,
-        Keys.D2,
-        Keys.D4,
+
+        Keys.B,
         Keys.Y,
         Keys.P,
     };
 
+    #endregion 
 }
