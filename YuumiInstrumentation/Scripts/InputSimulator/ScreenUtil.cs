@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace InputSimulation.Util
+namespace InputSimulation
 {
 
     /*

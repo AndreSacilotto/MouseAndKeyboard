@@ -1,11 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
-namespace InputSimulation.Mouse
+namespace InputSimulation
 {
     public static class MouseButtonExplicit
     {
+        public static bool Shift => Control.ModifierKeys == Keys.Shift;
+        public static bool Ctrl => Control.ModifierKeys == Keys.Shift;
+        public static bool Alt => Control.ModifierKeys == Keys.Alt;
+        public static bool ShiftControl => Control.ModifierKeys == (Keys.Shift | Keys.Control);
+        public static bool ShiftAlt => Control.ModifierKeys == (Keys.Shift | Keys.Alt);
+        public static bool ControAlt => Control.ModifierKeys == (Keys.Control | Keys.Alt);
+        public static bool ControAltShift => Control.ModifierKeys == (Keys.Control | Keys.Shift | Keys.Alt);
+
+
         public static void Click(PressedState pressState, MouseButtons mouseButton)
         {
             switch (mouseButton)

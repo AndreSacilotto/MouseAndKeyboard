@@ -1,7 +1,7 @@
-﻿using System;
-using Gma.System.MouseKeyHook;
+﻿using Gma.System.MouseKeyHook;
+using System;
 
-namespace MouseKeyboard
+namespace MouseKeyboard.MKInput
 {
     public abstract class MKInputListen : IDisposable
     {

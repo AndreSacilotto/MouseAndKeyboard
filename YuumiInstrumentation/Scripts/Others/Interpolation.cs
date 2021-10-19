@@ -1,4 +1,4 @@
-﻿namespace Yuumi.Others
+﻿namespace Others
 {
     /// <summary> 
     /// http://sol.gfxile.net/interpolation/index.html#s3 

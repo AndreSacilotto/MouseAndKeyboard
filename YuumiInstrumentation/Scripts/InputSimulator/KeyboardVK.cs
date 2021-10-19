@@ -2,7 +2,7 @@
 
 using static InputSimulation.InputSender;
 
-namespace InputSimulation.Keyboard
+namespace InputSimulation
 {
     public static class KeyboardVK
     {

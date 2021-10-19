@@ -1,10 +1,9 @@
-﻿using MouseKeyboard.Network;
-using System;
+﻿using System;
 using System.Text;
 using System.Windows.Forms;
-using Yuumi.Config;
-using Yuumi.Network;
-using YuumiInstrumentation.Scripts.ConfigFile;
+using Others;
+using MouseKeyboard.MKInput;
+using MouseKeyboard.Network;
 
 public class Main : ApplicationContext
 {
@@ -23,24 +22,20 @@ public class Main : ApplicationContext
         {
             Console.WriteLine($"No {ConfigXML.FILE_NAME} File Found");
             XMLerialization.ToXMLFile<ConfigXML>(filePath, Encoding.ASCII, ConfigXML.Default);
+            ExitThread();
             return;
         }
 
-        networkManager = new NetworkManager(config.ip, config.port, config.sender, config.listener);
-        
-        if (config.listener && !config.sender)
-        {
-            networkManager.Listener.MySocket.SendBufferSize = YummiPacket.MAX_PACKET_BYTE_SIZE;
-            MKInputSender listen = new YuumiSender(networkManager.Listener);
-        }
+        networkManager = new NetworkManager(config.ip, config.port, config.isReceiver, !config.isReceiver);
 
-        if (!config.listener && config.sender)
-        {
-            MKInputListen listen = new YuumiListen(networkManager.Sender);
-        }
+        if (config.isReceiver)
+            mkSender = new YuumiSender(networkManager.Listener);
+        else
+            mkListener = new YuumiListen(networkManager.Sender);
 
         networkManager.Start();
     }
+
     private void OnExit(object sender, EventArgs e)
     {
         ThreadExit -= OnExit;

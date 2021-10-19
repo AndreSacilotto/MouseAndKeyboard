@@ -9,14 +9,15 @@ namespace MouseKeyboard.Network
 
         private IPEndPoint ep;
 
-        public NetworkManager(string ip, int port, bool isSender, bool isListener)
+        public NetworkManager(string ip, int port, bool isReceiver, bool isShipper)
         {
             ep = new IPEndPoint(IPAddress.Parse(ip), port);
-            if (isSender)
-                Sender = new UDPSocketShipper();
 
-            if (isListener)
+            if (isReceiver)
                 Listener = new UDPSocketReceiver(true);
+
+            if (isShipper)
+                Sender = new UDPSocketShipper();
         }
 
         public void Start()

@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using InputSimulation;
+using MouseKeyboard.MKInput;
 using MouseKeyboard.Network;
-using Yuumi.Network;
 
 public class YuumiSender : MKInputSender
 {
     UDPSocketReceiver listener;
 
-    private static Dictionary<Commands, Action<YummiPacketContent>> dict = new Dictionary<Commands, Action<YummiPacketContent>> {
-        { Commands.MouseMove, MouseMove },
-        { Commands.MouseScroll, MouseScroll },
-        { Commands.MouseClick, MouseClick },
-        { Commands.MouseDoubleClick, MouseDoubleClick },
-        { Commands.Key, Key },
-    };
-
     public YuumiSender(UDPSocketReceiver listener)
     {
         this.listener = listener;
+        listener.MySocket.SendBufferSize = YummiPacket.MAX_PACKET_BYTE_SIZE;
         listener.OnReceive += OnReceive;
     }
 
@@ -29,37 +22,56 @@ public class YuumiSender : MKInputSender
 
         Console.WriteLine("RECEIVE: " + mkContent.command);
 
-        dict[mkContent.command](mkContent);
+        switch (mkContent.command)
+        {
+            case Commands.None:
+                break;
+            case Commands.MouseMove:
+                MouseMove(mkContent.x, mkContent.y);
+                break;
+            case Commands.MouseScroll:
+                MouseScroll(mkContent.quant);
+                break;
+            case Commands.MouseClick:
+                MouseClick(mkContent.pressedState, mkContent.mouseButton);
+                break;
+            case Commands.MouseDoubleClick:
+                MouseDoubleClick(mkContent.pressedState, mkContent.mouseButton, mkContent.quant);
+                break;
+            case Commands.Key:
+                Key(mkContent.pressedState, mkContent.keys);
+                break;
+        }
     }
 
-    public static void MouseMove(YummiPacketContent content)
+    private static void MouseMove(int x, int y)
     {
-        Mouse.MoveAbsolute(content.x, content.y);
+        Mouse.MoveAbsolute(x, y);
     }
 
-    public static void MouseScroll(YummiPacketContent content)
+    private static void MouseScroll(int scrollQuant)
     {
-        Mouse.ScrollWheel(content.quant);
+        Mouse.ScrollWheel(scrollQuant);
     }
 
-    public static void MouseClick(YummiPacketContent content)
+    private static void MouseClick(PressedState pressedState, MouseButtons mouseButton)
     {
-        MouseButtonExplicit.Click(content.pressedState, content.mouseButton);
+        MouseButtonExplicit.Click(pressedState, mouseButton);
     }
 
-    public static void MouseDoubleClick(YummiPacketContent content)
+    private static void MouseDoubleClick(PressedState pressedState, MouseButtons mouseButton, int numberOfClicks)
     {
-        MouseButtonExplicit.Click(content.pressedState, content.mouseButton, content.quant);
+        MouseButtonExplicit.Click(pressedState, mouseButton, numberOfClicks);
     }
 
-    public static void Key(YummiPacketContent content)
+    private static void Key(PressedState pressedState, Keys key)
     {
-        if (content.pressedState == PressedState.Down)
-            KeyboardVK.SendKeyDown(content.keys);
-        else if (content.pressedState == PressedState.Up)
-            KeyboardVK.SendKeyUp(content.keys);
+        if (pressedState == PressedState.Down)
+            KeyboardVK.SendKeyDown(key);
+        else if (pressedState == PressedState.Up)
+            KeyboardVK.SendKeyUp(key);
         else
-            KeyboardVK.SendFull(content.keys);
+            KeyboardVK.SendFull(key);
     }
 
     public override void Dispose()

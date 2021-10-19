@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using YuumiInstrumentation.Scripts.ConfigFile;
+﻿using Others;
 
 namespace MouseKeyboard.Network
 {
@@ -11,22 +8,20 @@ namespace MouseKeyboard.Network
 
         public string ip = "127.0.0.1";
         public int port = 7777;
-        public bool sender;
-        public bool listener;
+        public bool isReceiver;
 
         public static ConfigXML Default => new ConfigXML()
         {
             ip = "127.0.0.1",
             port = 7777,
-            sender = false,
-            listener = false,
+            isReceiver = false,
         };
 
         public static string GetPath() => XMLerialization.CurrentDirectory() + FILE_NAME;
 
         public override string ToString()
         {
-            string str = $"{base.ToString()} | {ip} | {port} | {sender} | {listener}";
+            string str = $"{base.ToString()} | {ip} | {port} | {isReceiver}";
             return str;
         }
 

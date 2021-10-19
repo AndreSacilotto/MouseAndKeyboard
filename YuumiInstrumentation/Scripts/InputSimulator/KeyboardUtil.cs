@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace InputSimulation.Keyboard
+namespace InputSimulation
 {
     public static class KeyboardUtil
     {

@@ -2,7 +2,7 @@
 using System.Text;
 using System.Windows.Forms;
 
-namespace MouseKeyboard
+namespace MouseKeyboard.MKInput
 {
     public static class MKEventHandleUtil
     {

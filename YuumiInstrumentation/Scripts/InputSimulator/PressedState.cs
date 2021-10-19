@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InputSimulation.Util
+namespace InputSimulation
 {
     [Flags]
     public enum PressedState : byte

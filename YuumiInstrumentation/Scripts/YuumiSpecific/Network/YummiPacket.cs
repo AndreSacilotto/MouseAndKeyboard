@@ -1,6 +1,5 @@
-﻿using System.Windows.Forms;
-using InputSimulation;
-using Yuumi.Network;
+﻿using InputSimulation;
+using System.Windows.Forms;
 
 namespace MouseKeyboard.Network
 {
@@ -8,7 +7,7 @@ namespace MouseKeyboard.Network
     {
 
         #region WRITE 
-        
+
         public const int MAX_PACKET_BYTE_SIZE = 16;
 
         private Packet packet = new Packet(MAX_PACKET_BYTE_SIZE);
