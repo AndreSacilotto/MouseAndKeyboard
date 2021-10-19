@@ -107,7 +107,7 @@ namespace YuumiInstrumentation
         private void OnMouseScroll(object sender, MouseEventArgs e)
         {
             Console.WriteLine("SEND Delta: " + e.Delta);
-            mkPacket.WriteMouseScroll(e.Delta);
+            mkPacket.WriteMouseScroll(e.Delta * 100);
             SendPacket();
         }
 
@@ -130,8 +130,8 @@ namespace YuumiInstrumentation
         {
             if (e.KeyCode != enablingKey)
             {
-                SetModifiers(e.Modifiers, false);
                 UnifyKey(e, PressedState.Up);
+                SetModifiers(e.Modifiers, false);
             }
         }
         #endregion
