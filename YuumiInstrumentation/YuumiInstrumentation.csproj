@@ -99,8 +99,8 @@
     <Compile Include="Scripts\InputSimulator\KeyboardVSC.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
     <Compile Include="Scripts\Network\NetworkManager.cs" />
-    <Compile Include="Scripts\YuumiSpecific\Network\YummiPacketContent.cs" />
-    <Compile Include="Scripts\YuumiSpecific\Network\YummiPacket.cs" />
+    <Compile Include="Scripts\YuumiSpecific\Network\YuumiPacketContent.cs" />
+    <Compile Include="Scripts\YuumiSpecific\Network\YuumiPacket.cs" />
     <Compile Include="Scripts\Network\Packet.cs" />
     <Compile Include="Scripts\Network\UDPSocketShipper.cs" />
     <Compile Include="Scripts\Network\UDPSocketReceiver.cs" />

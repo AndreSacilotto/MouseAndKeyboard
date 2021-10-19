@@ -81,6 +81,20 @@ namespace YuumiInstrumentation
             Console.WriteLine("Enabled: " + enabled);
         }
 
+        bool isCtrl = false;
+        //bool isShift = false;
+        //bool isAlt = false;
+        private void SetModifiers(Keys modifiers, bool enable)
+        {
+            if (modifiers == Keys.Control)
+                isCtrl = enable;
+            //if (modifiers == Keys.Shift)
+            //    isShift = enable;
+            //if(modifiers == Keys.Alt)
+            //    isAlt = enable;
+        }
+
+
         #endregion
 
         #region EVENTS
@@ -107,13 +121,19 @@ namespace YuumiInstrumentation
             if (e.KeyCode == enablingKey)
                 EnableFunc();
             else
+            {
+                SetModifiers(e.Modifiers, true);
                 UnifyKey(e, PressedState.Down);
+            }
         }
 
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != enablingKey)
+            {
+                SetModifiers(e.Modifiers, false);
                 UnifyKey(e, PressedState.Up);
+            }
         }
         #endregion
 
@@ -121,12 +141,7 @@ namespace YuumiInstrumentation
 
         private void UnifyMouse(MouseEventArgs e, PressedState pressed)
         {
-            if (MouseButtonExplicit.Ctrl && mouseWithControlToKey.TryGetValue(e.Button, out var key))
-            {
-                Console.WriteLine($"SEND M{pressed,5}: {e.Button} => {key} | Shift");
-                WriteKey(key, pressed);
-            }
-            if (mouseToKey.TryGetValue(e.Button, out key))
+            if (mouseToKey.TryGetValue(e.Button, out var key))
             {
                 Console.WriteLine($"SEND M{pressed,5}: {e.Button} => {key}");
                 WriteKey(key, pressed);
@@ -139,15 +154,9 @@ namespace YuumiInstrumentation
             }
         }
 
-
         private void UnifyKey(KeyEventArgs e, PressedState pressed)
         {
-            if (alwaysAllowedKeys.Contains(e.KeyCode))
-            {
-                Console.WriteLine($"SEND K{pressed,5}: {e.KeyCode}");
-                WriteKey(e.KeyCode, pressed);
-            }
-            else if (MouseButtonExplicit.Ctrl && allowedWithControlKeys.Contains(e.KeyCode))
+            if (isCtrl && allowedWithControlKeys.Contains(e.KeyCode))
             {
                 Console.WriteLine($"SEND K{pressed,5}: {e.KeyCode} | Shift");
                 WriteKey(e.KeyCode, pressed);
@@ -173,28 +182,17 @@ namespace YuumiInstrumentation
             { MouseButtons.XButton2, Keys.E },
         };
 
-        private static Dictionary<MouseButtons, Keys> mouseWithControlToKey = new Dictionary<MouseButtons, Keys> {
-            { MouseButtons.XButton1, Keys.D1 },
-            { MouseButtons.XButton2, Keys.D2 },
-        };
-
-        private static HashSet<Keys> alwaysAllowedKeys = new HashSet<Keys> {
-            Keys.LShiftKey,
-            Keys.LControlKey,
-            Keys.LMenu,
-        };
-
         private static Dictionary<Keys, Keys> allowedKeys = new Dictionary<Keys, Keys> {
             { Keys.D8, Keys.R },
             { Keys.D9, Keys.D4 },
+            { Keys.D0, Keys.D1 },
+            { Keys.OemBackslash, Keys.D2 },
         };
 
         private static HashSet<Keys> allowedWithControlKeys = new HashSet<Keys> {
             Keys.D,
             Keys.F,
-
             Keys.Space,
-
             Keys.B,
             Keys.Y,
             Keys.P,
