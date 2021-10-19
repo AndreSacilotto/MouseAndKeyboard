@@ -1,31 +1,34 @@
 ﻿using System.Net;
 
-public class NetworkManager
+namespace MouseKeyboard.Network
 {
-    public UDPSocketShipper Sender { get; }
-    public UDPSocketReceiver Listener { get; }
-
-    private IPEndPoint ep;
-
-    public NetworkManager(string ip, int port, bool isSender, bool isListener)
+    public class NetworkManager
     {
-        ep = new IPEndPoint(IPAddress.Parse(ip), port);
-        if (isSender)
-            Sender = new UDPSocketShipper();
+        public UDPSocketShipper Sender { get; }
+        public UDPSocketReceiver Listener { get; }
 
-        if (isListener)
-            Listener = new UDPSocketReceiver(true);
-    }
+        private IPEndPoint ep;
 
-    public void Start()
-    {
-        Sender?.Start(ep);
-        Listener?.Start(ep);
-    }
+        public NetworkManager(string ip, int port, bool isSender, bool isListener)
+        {
+            ep = new IPEndPoint(IPAddress.Parse(ip), port);
+            if (isSender)
+                Sender = new UDPSocketShipper();
 
-    public void Stop()
-    {
-        Sender?.Stop();
-        Listener?.Stop();
+            if (isListener)
+                Listener = new UDPSocketReceiver(true);
+        }
+
+        public void Start()
+        {
+            Sender?.Start(ep);
+            Listener?.Start(ep);
+        }
+
+        public void Stop()
+        {
+            Sender?.Stop();
+            Listener?.Stop();
+        }
     }
 }

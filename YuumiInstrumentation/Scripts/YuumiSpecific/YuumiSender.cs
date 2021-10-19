@@ -1,66 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using InputSimulation;
 using MouseKeyboard.Network;
+using Yuumi.Network;
 
-public class YuumiSender : MKInputSenderConfig
+public class YuumiSender : MKInputSender
 {
+    UDPSocketReceiver listener;
 
-    private void OnMouseDown(object sender, MouseEventArgs e)
+    private static Dictionary<Commands, Action<YummiPacketContent>> dict = new Dictionary<Commands, Action<YummiPacketContent>> {
+        { Commands.MouseMove, MouseMove },
+        { Commands.MouseScroll, MouseScroll },
+        { Commands.MouseClick, MouseClick },
+        { Commands.MouseDoubleClick, MouseDoubleClick },
+        { Commands.Key, Key },
+    };
+
+    public YuumiSender(UDPSocketReceiver listener)
     {
-        MKEventHandleUtil.Print(e);
-        Console.WriteLine("SEND: " + e.Button + " DOWN");
-
-        mkPacket.WriteMouseClick(e.Button, InputSimulation.PressedState.Down);
-        SendPacket();
+        this.listener = listener;
+        listener.OnReceive += OnReceive;
     }
 
-    private void OnMouseUp(object sender, MouseEventArgs e)
+    private void OnReceive(int bytes, byte[] data)
     {
-        //MKEventHandleUtil.Print(e);
-        Console.WriteLine("SEND: " + e.Button + " UP");
+        var mkContent = YummiPacket.ReadAll(data);
 
-        mkPacket.WriteMouseClick(e.Button, InputSimulation.PressedState.Up);
-        SendPacket();
+        Console.WriteLine("RECEIVE: " + mkContent.command);
+
+        dict[mkContent.command](mkContent);
     }
 
-    private void OnMouseDoubleClick(object sender, MouseEventArgs e)
+    public static void MouseMove(YummiPacketContent content)
     {
-        //MKEventHandleUtil.Print(e);
-        Console.WriteLine("SEND: " + e.Button + " 2");
-
-        mkPacket.WriteDoubleMouseClick(e.Button, 2);
-        SendPacket();
+        Mouse.MoveAbsolute(content.x, content.y);
     }
 
-    private void OnKeyDown(object sender, KeyEventArgs e)
+    public static void MouseScroll(YummiPacketContent content)
     {
-        //MKEventHandleUtil.Print(e);
-        Console.WriteLine("SEND: " + e.KeyCode + " DOWN");
+        Mouse.ScrollWheel(content.quant);
+    }
 
-        if (e.KeyCode == enablingKey)
-        {
-            if (enabled)
-                Unsubscribe();
-            else
-                Subscribe();
-            Console.WriteLine("Enabled: " + enabled);
-        }
+    public static void MouseClick(YummiPacketContent content)
+    {
+        MouseButtonExplicit.Click(content.pressedState, content.mouseButton);
+    }
+
+    public static void MouseDoubleClick(YummiPacketContent content)
+    {
+        MouseButtonExplicit.Click(content.pressedState, content.mouseButton, content.quant);
+    }
+
+    public static void Key(YummiPacketContent content)
+    {
+        if (content.pressedState == PressedState.Down)
+            KeyboardVK.SendKeyDown(content.keys);
+        else if (content.pressedState == PressedState.Up)
+            KeyboardVK.SendKeyUp(content.keys);
         else
-        {
-            MKEventHandleUtil.Print(e);
-        }
-
-        mkPacket.WriteKey(e.KeyCode, InputSimulation.PressedState.Down);
-        SendPacket();
+            KeyboardVK.SendFull(content.keys);
     }
 
-    private void OnKeyUp(object sender, KeyEventArgs e)
+    public override void Dispose()
     {
-        //MKEventHandleUtil.Print(e);
-        Console.WriteLine("SEND: " + e.KeyCode + " UP");
-
-        mkPacket.WriteKey(e.KeyCode, InputSimulation.PressedState.Up);
-        SendPacket();
+        listener.OnReceive -= OnReceive;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using static InputSimulation.InputSender;
 
-namespace InputSimulation
+namespace InputSimulation.Keyboard
 {
     public static class KeyboardVSC
     {

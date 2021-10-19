@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace InputSimulation
+namespace InputSimulation.Mouse
 {
     public static class MouseButtonExplicit
     {

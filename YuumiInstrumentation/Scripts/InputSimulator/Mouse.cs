@@ -1,8 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Yuumi.Others;
 using static InputSimulation.InputSender;
 
-namespace InputSimulation
+namespace InputSimulation.Mouse
 {
     public static class Mouse
     {

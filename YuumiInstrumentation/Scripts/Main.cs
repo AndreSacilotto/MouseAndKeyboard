@@ -2,10 +2,15 @@
 using System;
 using System.Text;
 using System.Windows.Forms;
+using Yuumi.Config;
+using Yuumi.Network;
+using YuumiInstrumentation.Scripts.ConfigFile;
 
 public class Main : ApplicationContext
 {
     private readonly NetworkManager networkManager;
+
+    private readonly MKInputSender mkSender;
     private readonly MKInputListen mkListener;
 
     public Main()
@@ -25,38 +30,21 @@ public class Main : ApplicationContext
         
         if (config.listener && !config.sender)
         {
-            networkManager.Listener.MySocket.SendBufferSize = MKPacketWriter.MAX_PACKET_BYTE_SIZE;
-            var senderConfig = new MKInputSenderConfig();
-
-            networkManager.Listener.OnReceive += OnReceive;
+            networkManager.Listener.MySocket.SendBufferSize = YummiPacket.MAX_PACKET_BYTE_SIZE;
+            MKInputSender listen = new YuumiSender(networkManager.Listener);
         }
 
         if (!config.listener && config.sender)
         {
-            bool scrollLock = Control.IsKeyLocked(Keys.Scroll);
-            mkListener = new MKInputListen(networkManager.Sender, scrollLock) {
-                enablingKey = Keys.Scroll,
-            };
+            MKInputListen listen = new YuumiListen(networkManager.Sender);
         }
 
         networkManager.Start();
     }
-
-    private void OnReceive(int bytes, byte[] data)
-    {
-        var mkContent = MKPacketReader.ReadAll(data);
-
-        Console.WriteLine("RECEIVE: " + mkContent.command);
-
-        //if(MKInputSender.TryGetFunc(mkContent.command, out var mkfunc))
-        //    mkfunc(mkContent);
-
-        MKInputSender.GetFunc(mkContent.command)(mkContent);
-    }
-
     private void OnExit(object sender, EventArgs e)
     {
         ThreadExit -= OnExit;
+        mkSender?.Dispose();
         mkListener?.Dispose();
         networkManager?.Stop();
     }

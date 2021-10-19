@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using YuumiInstrumentation.Scripts.ConfigFile;
 
-public class ConfigXML
+namespace MouseKeyboard.Network
 {
-    public const string FILE_NAME = "config.xml";
-
-    public string ip = "127.0.0.1";
-    public int port = 7777;
-    public bool sender;
-    public bool listener;
-
-    public static ConfigXML Default => new ConfigXML()
+    public class ConfigXML
     {
-        ip = "127.0.0.1",
-        port = 7777,
-        sender = false,
-        listener = false,
-    };
+        public const string FILE_NAME = "config.xml";
 
-    public static string GetPath() => XMLerialization.CurrentDirectory() + FILE_NAME;
+        public string ip = "127.0.0.1";
+        public int port = 7777;
+        public bool sender;
+        public bool listener;
 
-    public override string ToString()
-    {
-        string str = $"{base.ToString()} | {ip} | {port} | {sender} | {listener}";
-        return str;
+        public static ConfigXML Default => new ConfigXML()
+        {
+            ip = "127.0.0.1",
+            port = 7777,
+            sender = false,
+            listener = false,
+        };
+
+        public static string GetPath() => XMLerialization.CurrentDirectory() + FILE_NAME;
+
+        public override string ToString()
+        {
+            string str = $"{base.ToString()} | {ip} | {port} | {sender} | {listener}";
+            return str;
+        }
+
     }
-
 }
