@@ -61,11 +61,11 @@ namespace YuumiInstrumentation
         private static void Key(PressedState pressedState, Keys key)
         {
             if (pressedState == PressedState.Down)
-                KeyboardVK.SendKeyDown(key);
+                KeyboardVSC.SendKeyDown(key);
             else if (pressedState == PressedState.Up)
-                KeyboardVK.SendKeyUp(key);
+                KeyboardVSC.SendKeyUp(key);
             else
-                KeyboardVK.SendFull(key);
+                KeyboardVSC.SendFull(key);
         }
 
         public override void Dispose()

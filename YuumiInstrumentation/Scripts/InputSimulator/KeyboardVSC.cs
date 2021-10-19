@@ -65,13 +65,13 @@ namespace InputSimulation
             up = input;
         }
 
-        public static void Send(Keys key)
+        public static void SendFull(Keys key)
         {
             KeyFullInput(key, out var down, out var up);
             SendInput(down, up);
         }
 
-        public static void Send(params Keys[] keys)
+        public static void SendFull(params Keys[] keys)
         {
             var inputs = new InputStruct[keys.Length * 2];
             for (int i = 0, e = 0; i < keys.Length; i++)
@@ -90,26 +90,26 @@ namespace InputSimulation
         public static void SendWithModifier(Keys modifier, Keys key)
         {
             SendKeyDown(modifier);
-            Send(key);
+            SendFull(key);
             SendKeyUp(modifier);
         }
         public static void SendWithModifier(Keys modifier, params Keys[] keys)
         {
             SendKeyDown(modifier);
-            Send(keys);
+            SendFull(keys);
             SendKeyUp(modifier);
         }
 
         public static void SendWithModifiers(Keys[] modifiers, Keys key)
         {
             SendKeyDown(modifiers);
-            Send(key);
+            SendFull(key);
             SendKeyUp(modifiers);
         }
         public static void SendWithModifiers(Keys[] modifiers, params Keys[] keys)
         {
             SendKeyDown(modifiers);
-            Send(keys);
+            SendFull(keys);
             SendKeyUp(modifiers);
         }
 

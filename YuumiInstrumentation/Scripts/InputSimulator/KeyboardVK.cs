@@ -12,6 +12,7 @@ namespace InputSimulation
         {
             var input = NewKeyboardInput;
             input.union.ki.wVk = (ushort)key;
+            input.union.ki.dwFlags = 0;
             return input;
         }
 
