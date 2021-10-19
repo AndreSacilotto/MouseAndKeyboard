@@ -169,36 +169,36 @@ namespace YuumiInstrumentation
         #region Buttons Data
 
         private static Dictionary<MouseButtons, Keys> mouseToKey = new Dictionary<MouseButtons, Keys> {
-        { MouseButtons.XButton1, Keys.Q },
-        { MouseButtons.XButton2, Keys.E },
-    };
+            { MouseButtons.XButton1, Keys.Q },
+            { MouseButtons.XButton2, Keys.E },
+        };
 
         private static Dictionary<MouseButtons, Keys> mouseWithControlToKey = new Dictionary<MouseButtons, Keys> {
-        { MouseButtons.XButton1, Keys.D1 },
-        { MouseButtons.XButton2, Keys.D2 },
-    };
+            { MouseButtons.XButton1, Keys.D1 },
+            { MouseButtons.XButton2, Keys.D2 },
+        };
 
         private static HashSet<Keys> alwaysAllowedKeys = new HashSet<Keys> {
-        Keys.LShiftKey,
-        Keys.LControlKey,
-        Keys.LMenu,
-    };
+            Keys.LShiftKey,
+            Keys.LControlKey,
+            Keys.LMenu,
+        };
 
         private static Dictionary<Keys, Keys> allowedKeys = new Dictionary<Keys, Keys> {
-        { Keys.D8, Keys.R },
-        { Keys.D9, Keys.D4 },
-    };
+            { Keys.D8, Keys.R },
+            { Keys.D9, Keys.D4 },
+        };
 
         private static HashSet<Keys> allowedWithControlKeys = new HashSet<Keys> {
-        Keys.D,
-        Keys.F,
+            Keys.D,
+            Keys.F,
 
-        Keys.Space,
+            Keys.Space,
 
-        Keys.B,
-        Keys.Y,
-        Keys.P,
-    };
+            Keys.B,
+            Keys.Y,
+            Keys.P,
+        };
 
         #endregion
     }
