@@ -2,7 +2,7 @@
 using System.Text;
 using System.Windows.Forms;
 
-namespace MouseKeyboard.Network
+namespace YuumiInstrumentation
 {
     public struct YuumiPacketContent
     {

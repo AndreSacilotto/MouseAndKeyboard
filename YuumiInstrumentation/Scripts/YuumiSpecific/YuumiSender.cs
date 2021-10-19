@@ -1,81 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using InputSimulation;
+﻿using InputSimulation;
 using MouseKeyboard.MKInput;
 using MouseKeyboard.Network;
+using System;
+using System.Windows.Forms;
 
-public class YuumiSender : MKInputSender
+namespace YuumiInstrumentation
 {
-    private readonly UDPSocketReceiver listener;
-
-    public YuumiSender(UDPSocketReceiver listener)
+    public class YuumiSender : MKInputSender
     {
-        this.listener = listener;
-        listener.MySocket.SendBufferSize = YuumiPacket.MAX_PACKET_BYTE_SIZE;
-        listener.OnReceive += OnReceive;
-    }
+        private readonly UDPSocketReceiver listener;
 
-    private void OnReceive(int bytes, byte[] data)
-    {
-        var mkContent = YuumiPacket.ReadAll(data);
-
-        Console.WriteLine("RECEIVE: " + mkContent.command);
-
-        switch (mkContent.command)
+        public YuumiSender(UDPSocketReceiver listener)
         {
-            case Commands.None:
-                break;
-            case Commands.MouseMove:
-                MouseMove(mkContent.x, mkContent.y);
-                break;
-            case Commands.MouseScroll:
-                MouseScroll(mkContent.quant);
-                break;
-            case Commands.MouseClick:
-                MouseClick(mkContent.pressedState, mkContent.mouseButton);
-                break;
-            case Commands.MouseDoubleClick:
-                MouseDoubleClick(mkContent.pressedState, mkContent.mouseButton, mkContent.quant);
-                break;
-            case Commands.Key:
-                Key(mkContent.pressedState, mkContent.keys);
-                break;
+            this.listener = listener;
+            listener.MySocket.SendBufferSize = YuumiPacket.MAX_PACKET_BYTE_SIZE;
+            listener.OnReceive += OnReceive;
         }
-    }
 
-    private static void MouseMove(int x, int y)
-    {
-        Mouse.MoveAbsolute(x, y);
-    }
+        private static void OnReceive(int bytes, byte[] data)
+        {
+            var mkContent = YuumiPacket.ReadAll(data);
 
-    private static void MouseScroll(int scrollQuant)
-    {
-        Mouse.ScrollWheel(scrollQuant);
-    }
+            Console.WriteLine("RECEIVE: " + mkContent.command);
 
-    private static void MouseClick(PressedState pressedState, MouseButtons mouseButton)
-    {
-        MouseButtonExplicit.Click(pressedState, mouseButton);
-    }
+            switch (mkContent.command)
+            {
+                case Commands.MouseMove:
+                    MouseMove(mkContent.x, mkContent.y);
+                    break;
+                case Commands.MouseScroll:
+                    MouseScroll(mkContent.quant);
+                    break;
+                case Commands.MouseClick:
+                    MouseClick(mkContent.pressedState, mkContent.mouseButton);
+                    break;
+                case Commands.Key:
+                    Key(mkContent.pressedState, mkContent.keys);
+                    break;
+            }
+        }
 
-    private static void MouseDoubleClick(PressedState pressedState, MouseButtons mouseButton, int numberOfClicks)
-    {
-        MouseButtonExplicit.Click(pressedState, mouseButton, numberOfClicks);
-    }
+        private static void MouseMove(int x, int y)
+        {
+            Mouse.MoveAbsolute(x, y);
+        }
 
-    private static void Key(PressedState pressedState, Keys key)
-    {
-        if (pressedState == PressedState.Down)
-            KeyboardVK.SendKeyDown(key);
-        else if (pressedState == PressedState.Up)
-            KeyboardVK.SendKeyUp(key);
-        else
-            KeyboardVK.SendFull(key);
-    }
+        private static void MouseScroll(int scrollQuant)
+        {
+            Mouse.ScrollWheel(scrollQuant);
+        }
 
-    public override void Dispose()
-    {
-        listener.OnReceive -= OnReceive;
+        private static void MouseClick(PressedState pressedState, MouseButtons mouseButton)
+        {
+            MouseButtonExplicit.Click(pressedState, mouseButton);
+        }
+
+        private static void Key(PressedState pressedState, Keys key)
+        {
+            if (pressedState == PressedState.Down)
+                KeyboardVK.SendKeyDown(key);
+            else if (pressedState == PressedState.Up)
+                KeyboardVK.SendKeyUp(key);
+            else
+                KeyboardVK.SendFull(key);
+        }
+
+        public override void Dispose()
+        {
+            listener.OnReceive -= OnReceive;
+        }
     }
 }

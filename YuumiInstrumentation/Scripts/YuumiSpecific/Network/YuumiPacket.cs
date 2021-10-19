@@ -1,7 +1,8 @@
 ﻿using InputSimulation;
+using MouseKeyboard.Network;
 using System.Windows.Forms;
 
-namespace MouseKeyboard.Network
+namespace YuumiInstrumentation
 {
     public class YuumiPacket
     {
@@ -40,14 +41,6 @@ namespace MouseKeyboard.Network
             packet.Add((byte)pressedState);
         }
 
-        public void WriteDoubleMouseClick(MouseButtons mouseButton, int mouseClicks = 2)
-        {
-            packet.Add((byte)Commands.MouseDoubleClick);
-            packet.Add((int)mouseButton);
-            packet.Add(mouseClicks);
-            packet.Add((byte)PressedState.Click);
-        }
-
         public void WriteKey(Keys key, PressedState pressedState)
         {
             packet.Add((byte)Commands.Key);
@@ -81,11 +74,6 @@ namespace MouseKeyboard.Network
                     break;
                 case Commands.MouseClick:
                     response.mouseButton = (MouseButtons)packet.ReadInt();
-                    response.pressedState = (PressedState)packet.ReadByte();
-                    break;
-                case Commands.MouseDoubleClick:
-                    response.mouseButton = (MouseButtons)packet.ReadInt();
-                    response.quant = packet.ReadInt();
                     response.pressedState = (PressedState)packet.ReadByte();
                     break;
                 case Commands.Key:

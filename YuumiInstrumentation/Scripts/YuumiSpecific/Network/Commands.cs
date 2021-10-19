@@ -1,4 +1,4 @@
-﻿namespace MouseKeyboard.Network
+﻿namespace YuumiInstrumentation
 {
     public enum Commands : byte
     {
@@ -10,8 +10,6 @@
 
         /// <summary>Command [B] MouseButton [I] PressState [B]</summary>
         MouseClick,
-        /// <summary>Command [B] MouseButton [I] Quant [i]</summary>
-        MouseDoubleClick,
 
         /// <summary>Command [B] Key [I] PressState [B]</summary>
         Key,
