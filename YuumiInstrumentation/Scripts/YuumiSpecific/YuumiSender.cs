@@ -21,20 +21,23 @@ namespace YuumiInstrumentation
         {
             var mkContent = YuumiPacket.ReadAll(data);
 
-            Console.WriteLine("RECEIVE: " + mkContent.command);
 
             switch (mkContent.command)
             {
                 case Commands.MouseMove:
+                    Console.WriteLine($"RECEIVE: {mkContent.x} {mkContent.y}");
                     MouseMove(mkContent.x, mkContent.y);
                     break;
                 case Commands.MouseScroll:
+                    Console.WriteLine($"RECEIVE: {mkContent.command} {mkContent.quant}");
                     MouseScroll(mkContent.quant);
                     break;
                 case Commands.MouseClick:
+                    Console.WriteLine($"RECEIVE: {mkContent.command} {mkContent.mouseButton} {mkContent.pressedState}");
                     MouseClick(mkContent.pressedState, mkContent.mouseButton);
                     break;
                 case Commands.Key:
+                    Console.WriteLine($"RECEIVE: {mkContent.command} {mkContent.keys} {mkContent.pressedState}");
                     Key(mkContent.pressedState, mkContent.keys);
                     break;
             }

@@ -156,6 +156,9 @@ namespace YuumiInstrumentation
 
         private void UnifyKey(KeyEventArgs e, PressedState pressed)
         {
+            if (modifiersKeys.Contains(e.KeyCode))
+                WriteKey(e.KeyCode, pressed);
+
             if (isCtrl && allowedWithControlKeys.Contains(e.KeyCode))
             {
                 Console.WriteLine($"SEND K{pressed,5}: {e.KeyCode} | Shift");
@@ -182,11 +185,17 @@ namespace YuumiInstrumentation
             { MouseButtons.XButton2, Keys.E },
         };
 
+        private static HashSet<Keys> modifiersKeys = new HashSet<Keys> {
+            Keys.LControlKey,
+            Keys.LShiftKey,
+            Keys.LMenu,
+        };
+
         private static Dictionary<Keys, Keys> allowedKeys = new Dictionary<Keys, Keys> {
             { Keys.D8, Keys.R },
             { Keys.D9, Keys.D4 },
-            { Keys.D0, Keys.D1 },
-            { Keys.OemBackslash, Keys.D2 },
+            { Keys.D0, Keys.W },
+            { Keys.OemBackslash, Keys.D1 },
         };
 
         private static HashSet<Keys> allowedWithControlKeys = new HashSet<Keys> {
