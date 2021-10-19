@@ -3,11 +3,11 @@ using static InputSimulation.InputSender;
 
 namespace InputSimulation
 {
-    public static class KeyboardVSC
+    public static class Keyboard
     {
         #region Key Down
 
-        private static InputStruct KeyDownInput(Keys key)
+        internal static InputStruct KeyDownInput(Keys key)
         {
             var input = NewKeyboardInput;
             input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);
@@ -31,7 +31,7 @@ namespace InputSimulation
 
         #region Key Up
 
-        private static InputStruct KeyUpInput(Keys key)
+        internal static InputStruct KeyUpInput(Keys key)
         {
             var input = NewKeyboardInput;
             input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);
@@ -55,7 +55,7 @@ namespace InputSimulation
         #endregion
 
         #region Key Full
-        private static void KeyFullInput(Keys key, out InputStruct down, out InputStruct up)
+        internal static void KeyFullInput(Keys key, out InputStruct down, out InputStruct up)
         {
             var input = NewKeyboardInput;
             input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);

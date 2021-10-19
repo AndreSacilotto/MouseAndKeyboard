@@ -84,11 +84,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Scripts\ConfigFile\ConfigXML.cs" />
+    <Compile Include="Scripts\InputSimulator\KeyboardWithMod.cs" />
     <Compile Include="Scripts\MKInput\MkInputListenDefault.cs" />
     <Compile Include="Scripts\Others\XMLerialization.cs" />
     <Compile Include="Scripts\InputSimulator\InputSender.cs" />
     <Compile Include="Scripts\InputSimulator\InputSenderData.cs" />
-    <Compile Include="Scripts\InputSimulator\KeyboardVK.cs" />
     <Compile Include="Scripts\InputSimulator\MouseButtonExplicit.cs" />
     <Compile Include="Scripts\InputSimulator\PressedState.cs" />
     <Compile Include="Scripts\YuumiSpecific\Network\Commands.cs" />
@@ -96,11 +96,11 @@
     <Compile Include="Scripts\MKInput\MKInputListen.cs" />
     <Compile Include="Scripts\MKInput\MKInputSender.cs" />
     <Compile Include="Scripts\InputSimulator\KeyboardUtil.cs" />
-    <Compile Include="Scripts\InputSimulator\KeyboardVSC.cs" />
+    <Compile Include="Scripts\InputSimulator\Keyboard.cs" />
     <Compile Include="Scripts\InputSimulator\Mouse.cs" />
     <Compile Include="Scripts\Network\NetworkManager.cs" />
-    <Compile Include="Scripts\YuumiSpecific\Network\YuumiPacketContent.cs" />
-    <Compile Include="Scripts\YuumiSpecific\Network\YuumiPacket.cs" />
+    <Compile Include="Scripts\YuumiSpecific\Network\YuumiPacketRead.cs" />
+    <Compile Include="Scripts\YuumiSpecific\Network\YuumiPacketWrite.cs" />
     <Compile Include="Scripts\Network\Packet.cs" />
     <Compile Include="Scripts\Network\UDPSocketShipper.cs" />
     <Compile Include="Scripts\Network\UDPSocketReceiver.cs" />

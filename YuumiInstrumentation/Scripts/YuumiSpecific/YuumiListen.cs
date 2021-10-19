@@ -1,23 +1,23 @@
-﻿using InputSimulation;
-using MouseKeyboard.MKInput;
-using MouseKeyboard.Network;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+using InputSimulation;
+using MouseKeyboard.Network;
+
 namespace YuumiInstrumentation
 {
-    public class YuumiListen : MKInputListen
+    public class YuumiListen : MouseKeyboard.MKInput.MKInputListen
     {
-        private readonly YuumiPacket mkPacket;
+        private readonly YuumiPacketWrite mkPacket;
         private readonly UDPSocketShipper client;
 
-        private Keys enablingKey = Keys.Scroll;
+        private readonly Keys enablingKey = Keys.Scroll;
 
         public YuumiListen(UDPSocketShipper client) : base()
         {
             this.client = client;
-            mkPacket = new YuumiPacket();
+            mkPacket = new YuumiPacketWrite();
 
             inputEvents.KeyDown += OnKeyDown;
             if (Control.IsKeyLocked(enablingKey))
@@ -156,12 +156,9 @@ namespace YuumiInstrumentation
 
         private void UnifyKey(KeyEventArgs e, PressedState pressed)
         {
-            if (modifiersKeys.Contains(e.KeyCode))
-                WriteKey(e.KeyCode, pressed);
-
             if (isCtrl && allowedWithControlKeys.Contains(e.KeyCode))
             {
-                Console.WriteLine($"SEND K{pressed,5}: {e.KeyCode} | Shift");
+                Console.WriteLine($"SEND K{pressed,5}: {e.KeyCode} | Control");
                 WriteKey(e.KeyCode, pressed);
             }
             else if (allowedKeys.TryGetValue(e.KeyCode, out var key))
@@ -173,22 +170,17 @@ namespace YuumiInstrumentation
 
         #endregion
 
+
+        #region Buttons Data
+
         //Q W E R - Skills 4
         //D F - Spells 2
         //Space D1 D2 D4 - Itens 4
         //Y P B - Util 2
 
-        #region Buttons Data
-
         private static Dictionary<MouseButtons, Keys> mouseToKey = new Dictionary<MouseButtons, Keys> {
             { MouseButtons.XButton1, Keys.Q },
             { MouseButtons.XButton2, Keys.E },
-        };
-
-        private static HashSet<Keys> modifiersKeys = new HashSet<Keys> {
-            Keys.LControlKey,
-            Keys.LShiftKey,
-            Keys.LMenu,
         };
 
         private static Dictionary<Keys, Keys> allowedKeys = new Dictionary<Keys, Keys> {

@@ -6,6 +6,7 @@ using MouseKeyboard.MKInput;
 using MouseKeyboard.Network;
 using YuumiInstrumentation;
 using Others;
+using System.Threading.Tasks;
 
 public class Main : ApplicationContext
 {
@@ -16,6 +17,14 @@ public class Main : ApplicationContext
 
     public Main()
     {
+        if (true)
+        {
+            Task.Delay(1500).ContinueWith(t =>
+            InputSimulation.Keyboard.SendFull(Keys.Control, Keys.A));
+            return;
+        }
+
+
         ThreadExit += OnExit;
 
         var filePath = ConfigXML.GetPath();
