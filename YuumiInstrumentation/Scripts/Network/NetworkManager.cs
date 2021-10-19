@@ -14,7 +14,7 @@ namespace MouseKeyboard.Network
             ep = new IPEndPoint(IPAddress.Parse(ip), port);
 
             if (isReceiver)
-                Listener = new UDPSocketReceiver(true);
+                Listener = new UDPSocketReceiver(false);
 
             if (isShipper)
                 Sender = new UDPSocketShipper();

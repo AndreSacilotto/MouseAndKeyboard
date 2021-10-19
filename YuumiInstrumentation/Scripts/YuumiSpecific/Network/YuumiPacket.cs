@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace MouseKeyboard.Network
 {
-    public class YummiPacket
+    public class YuumiPacket
     {
 
         #region WRITE 
@@ -59,13 +59,13 @@ namespace MouseKeyboard.Network
 
         #region READ
 
-        public static YummiPacketContent ReadAll(byte[] data) =>
+        public static YuumiPacketContent ReadAll(byte[] data) =>
             ReadAll(new Packet(data));
 
-        public static YummiPacketContent ReadAll(Packet packet)
+        public static YuumiPacketContent ReadAll(Packet packet)
         {
             var cmd = (Commands)packet.ReadByte();
-            var response = new YummiPacketContent
+            var response = new YuumiPacketContent
             {
                 command = cmd
             };

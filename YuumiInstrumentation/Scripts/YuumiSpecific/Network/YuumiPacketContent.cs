@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace MouseKeyboard.Network
 {
-    public struct YummiPacketContent
+    public struct YuumiPacketContent
     {
         public Commands command;
         public int x, y;

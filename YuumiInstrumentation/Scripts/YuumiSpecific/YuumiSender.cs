@@ -7,18 +7,18 @@ using MouseKeyboard.Network;
 
 public class YuumiSender : MKInputSender
 {
-    UDPSocketReceiver listener;
+    private readonly UDPSocketReceiver listener;
 
     public YuumiSender(UDPSocketReceiver listener)
     {
         this.listener = listener;
-        listener.MySocket.SendBufferSize = YummiPacket.MAX_PACKET_BYTE_SIZE;
+        listener.MySocket.SendBufferSize = YuumiPacket.MAX_PACKET_BYTE_SIZE;
         listener.OnReceive += OnReceive;
     }
 
     private void OnReceive(int bytes, byte[] data)
     {
-        var mkContent = YummiPacket.ReadAll(data);
+        var mkContent = YuumiPacket.ReadAll(data);
 
         Console.WriteLine("RECEIVE: " + mkContent.command);
 

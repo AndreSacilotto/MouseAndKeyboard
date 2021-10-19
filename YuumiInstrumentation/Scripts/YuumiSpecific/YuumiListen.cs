@@ -8,7 +8,7 @@ using InputSimulation;
 
 public class YuumiListen : MKInputListen
 {
-    private readonly YummiPacket mkPacket;
+    private readonly YuumiPacket mkPacket;
     private readonly UDPSocketShipper client;
 
     private Keys enablingKey = Keys.Scroll;
@@ -16,7 +16,7 @@ public class YuumiListen : MKInputListen
     public YuumiListen(UDPSocketShipper client) : base()
     {
         this.client = client;
-        this.mkPacket = new YummiPacket();
+        this.mkPacket = new YuumiPacket();
 
         inputEvents.KeyDown += OnKeyDown;
         if (Control.IsKeyLocked(enablingKey))
@@ -67,12 +67,6 @@ public class YuumiListen : MKInputListen
         mkPacket.Reset();
     }
 
-    private void WriteMouse(MouseButtons mouseButtons, PressedState pressedState)
-    {
-        mkPacket.WriteMouseClick(mouseButtons, pressedState);
-        SendPacket();
-    }
-
     private void WriteKey(Keys key, PressedState pressedState)
     {
         mkPacket.WriteKey(key, pressedState);
@@ -93,34 +87,21 @@ public class YuumiListen : MKInputListen
     #region EVENTS
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        //MKEventHandleUtil.Print(e);
-        //Console.WriteLine("SEND: " + e.X + " " + e.Y);
-
+        Console.WriteLine("SEND Move: " + e.X + " " + e.Y);
         mkPacket.WriteMouseMove(e.X, e.Y);
         SendPacket();
     }
 
     private void OnMouseScroll(object sender, MouseEventArgs e)
     {
-        //MKEventHandleUtil.Print(e);
-        //Console.WriteLine("SEND Delta: " + e.Delta);
-
+        Console.WriteLine("SEND Delta: " + e.Delta);
         mkPacket.WriteMouseScroll(e.Delta);
         SendPacket();
     }
 
-    private void OnMouseDown(object sender, MouseEventArgs e)
-    {
-        Console.WriteLine(Control.ModifierKeys);
-        //MKEventHandleUtil.Print(e);
-        UnifyMouse(e, PressedState.Down);
-    }
+    private void OnMouseDown(object sender, MouseEventArgs e) => UnifyMouse(e, PressedState.Down);
 
-    private void OnMouseUp(object sender, MouseEventArgs e)
-    {
-        //MKEventHandleUtil.Print(e);
-        UnifyMouse(e, PressedState.Up);
-    }
+    private void OnMouseUp(object sender, MouseEventArgs e) => UnifyMouse(e, PressedState.Up);
 
     private void OnMouseDoubleClick(object sender, MouseEventArgs e)
     {
@@ -132,7 +113,6 @@ public class YuumiListen : MKInputListen
 
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
-        //MKEventHandleUtil.Print(e);
         if (e.KeyCode == enablingKey)
             EnableFunc();
         else
@@ -141,9 +121,7 @@ public class YuumiListen : MKInputListen
 
     private void OnKeyUp(object sender, KeyEventArgs e)
     {
-        if (e.KeyCode == enablingKey)
-            return;
-        else
+        if (e.KeyCode != enablingKey)
             UnifyKey(e, PressedState.Up);    
     }
     #endregion
@@ -165,7 +143,8 @@ public class YuumiListen : MKInputListen
         else
         {
             Console.WriteLine($"SEND M{pressed,5}: {e.Button}");
-            WriteMouse(e.Button, pressed);
+            mkPacket.WriteMouseClick(e.Button, pressed);
+            SendPacket();
         }
     }
 
