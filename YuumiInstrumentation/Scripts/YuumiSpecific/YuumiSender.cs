@@ -1,6 +1,7 @@
 ﻿using InputSimulation;
 using MouseKeyboard.Network;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace YuumiInstrumentation
@@ -44,12 +45,27 @@ namespace YuumiInstrumentation
             MouseButtonExplicit.Click(pressedState, mouseButton);
         }
 
+
+        private static HashSet<Keys> focusKeys = new HashSet<Keys> {
+            Keys.F1, Keys.F2, Keys.F3, Keys.F4, Keys.F5,
+        };
+        private Keys currentFocusKey = Keys.None;
+
         public void Key(Keys keys, PressedState pressedState)
         {
             Console.WriteLine($"RECEIVE: Key {keys} {pressedState}");
 
-            if (pressedState == PressedState.Down)
+            if (focusKeys.Contains(keys)){
+                Keyboard.SendKeyUp(currentFocusKey);
+                currentFocusKey = keys;
                 Keyboard.SendKeyDown(keys);
+                return;
+            }
+
+            if (pressedState == PressedState.Down)
+            {
+                Keyboard.SendKeyDown(keys);
+            }
             else if (pressedState == PressedState.Up)
                 Keyboard.SendKeyUp(keys);
             else
