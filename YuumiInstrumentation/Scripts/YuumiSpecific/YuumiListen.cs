@@ -11,8 +11,6 @@ namespace YuumiInstrumentation
         private readonly YuumiPacketWrite mkPacket;
         private readonly UDPSocketShipper client;
 
-        private readonly Keys enablingKey = Keys.Scroll;
-
         public YuumiListen(UDPSocketShipper client) : base()
         {
             this.client = client;
@@ -118,7 +116,7 @@ namespace YuumiInstrumentation
                     Subscribe();
                 Console.WriteLine("Enabled: " + enabled);
             }
-            else
+            else if(enabled)
             {
                 SetModifiers(e.Modifiers, true);
                 UnifyKey(e, PressedState.Down);
@@ -127,7 +125,7 @@ namespace YuumiInstrumentation
 
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode != enablingKey)
+            if (enabled && e.KeyCode != enablingKey)
             {
                 UnifyKey(e, PressedState.Up);
                 SetModifiers(e.Modifiers, false);
@@ -187,12 +185,14 @@ namespace YuumiInstrumentation
         //Space D1 D2 D4 - Itens 4
         //Y P B - Util 2
 
-        private static Dictionary<MouseButtons, Keys> mouseToKey = new Dictionary<MouseButtons, Keys> {
+        private readonly Keys enablingKey = Keys.Scroll;
+
+        private readonly static Dictionary<MouseButtons, Keys> mouseToKey = new Dictionary<MouseButtons, Keys> {
             { MouseButtons.XButton1, Keys.F },
             { MouseButtons.XButton2, Keys.D },
         };
 
-        private static HashSet<Keys> mirrorKeys = new HashSet<Keys> {
+        private readonly static HashSet<Keys> mirrorKeys = new HashSet<Keys> {
             Keys.Escape,
             Keys.P,
 
@@ -203,7 +203,7 @@ namespace YuumiInstrumentation
             Keys.F5,
         };
 
-        private static HashSet<Keys> mirrorWhenControlShiftKeys = new HashSet<Keys>
+        private readonly static HashSet<Keys> mirrorWhenControlShiftKeys = new HashSet<Keys>
         {
             Keys.Q,
             Keys.W,
@@ -211,7 +211,7 @@ namespace YuumiInstrumentation
             Keys.R,
         };
 
-        private static HashSet<Keys> mirrorWhenShiftKeys = new HashSet<Keys> {
+        private readonly static HashSet<Keys> mirrorWhenShiftKeys = new HashSet<Keys> {
             Keys.Q,
             Keys.W,
             Keys.E,

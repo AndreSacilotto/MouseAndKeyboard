@@ -70,7 +70,6 @@ namespace YuumiInstrumentation
 
         private void ReadKeyModifier(Packet packet)
         {
-            ReadKeyModifier(packet);
             var keys = (Keys)packet.ReadInt();
             var mods = (Keys)packet.ReadInt();
             var pressedState = (PressedState)packet.ReadByte();

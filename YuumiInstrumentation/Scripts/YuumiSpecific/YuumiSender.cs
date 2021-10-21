@@ -46,7 +46,7 @@ namespace YuumiInstrumentation
         }
 
 
-        private static HashSet<Keys> focusKeys = new HashSet<Keys> {
+        private readonly static HashSet<Keys> focusKeys = new HashSet<Keys> {
             Keys.F1, Keys.F2, Keys.F3, Keys.F4, Keys.F5,
         };
         private Keys currentFocusKey = Keys.None;
@@ -63,9 +63,7 @@ namespace YuumiInstrumentation
             }
 
             if (pressedState == PressedState.Down)
-            {
                 Keyboard.SendKeyDown(keys);
-            }
             else if (pressedState == PressedState.Up)
                 Keyboard.SendKeyUp(keys);
             else
