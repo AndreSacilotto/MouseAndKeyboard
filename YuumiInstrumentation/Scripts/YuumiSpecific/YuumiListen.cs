@@ -69,13 +69,13 @@ namespace YuumiInstrumentation
             SendPacket();
         }
 
-        bool isCtrl = false;
+        //bool isCtrl = false;
         bool isShift = false;
         //bool isAlt = false;
         private void SetModifiers(Keys modifiers, bool enable)
         {
-            if (modifiers == Keys.Control)
-                isCtrl = enable;
+            //if (modifiers == Keys.Control)
+            //    isCtrl = enable;
             if (modifiers == Keys.Shift)
                 isShift = enable;
             //if(modifiers == Keys.Alt)
@@ -108,6 +108,7 @@ namespace YuumiInstrumentation
         #region KEYS EVENTS
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
+            //MouseKeyboard.MKInput.MKEventHandleUtil.Print(e);
             if (e.KeyCode == enablingKey)
             {
                 if (enabled)
@@ -152,26 +153,16 @@ namespace YuumiInstrumentation
 
         private void UnifyKey(KeyEventArgs e, PressedState pressed)
         {
-            if (isShift)
+            if (isShift && mirrorWhenShiftKeys.Contains(e.KeyCode))
             {
-                if (isCtrl && mirrorWhenControlShiftKeys.Contains(e.KeyCode))
-                {
-                    Console.WriteLine($"SEND K{pressed,-5}: {e.KeyCode} | ShiftControl");
-                    WriteKey(e.KeyCode, pressed);
-
-                    mkPacket.WriteKeyModifier(e.KeyCode, Keys.LControlKey, pressed);
-                    SendPacket();
-                }
-                else if (mirrorWhenShiftKeys.Contains(e.KeyCode))
-                {
-                    Console.WriteLine($"SEND K{pressed,-5}: {e.KeyCode} | Shift");
-                    WriteKey(e.KeyCode, pressed);
-                }
-            }
-            else if (mirrorKeys.Contains(e.KeyCode))
-            {
-                Console.WriteLine($"SEND K{pressed,-5}: {e.KeyCode}");
+                Console.WriteLine($"SEND K{pressed,-5}: {e.KeyCode} | Shift");
                 WriteKey(e.KeyCode, pressed);
+            }
+            else if (skillUpKeys.TryGetValue(e.KeyCode, out var key))
+            {
+                Console.WriteLine($"SEND K{pressed,-5}: {e.KeyCode} => {key} | Control");
+                mkPacket.WriteKeyModifier(key, Keys.LControlKey, pressed);
+                SendPacket();
             }
         }
 
@@ -192,40 +183,33 @@ namespace YuumiInstrumentation
             { MouseButtons.XButton2, Keys.D },
         };
 
-        private readonly static HashSet<Keys> mirrorKeys = new HashSet<Keys> {
-            Keys.Escape,
-            Keys.P,
-
-            Keys.F1,
-            Keys.F2,
-            Keys.F3,
-            Keys.F4,
-            Keys.F5,
-        };
-
-        private readonly static HashSet<Keys> mirrorWhenControlShiftKeys = new HashSet<Keys>
-        {
-            Keys.Q,
-            Keys.W,
-            Keys.E,
-            Keys.R,
+        private readonly static Dictionary<Keys, Keys> skillUpKeys = new Dictionary<Keys, Keys> {
+            { Keys.D8, Keys.Q },
+            { Keys.D9, Keys.W },
+            { Keys.D0, Keys.E },
+            { Keys.OemMinus, Keys.R },
         };
 
         private readonly static HashSet<Keys> mirrorWhenShiftKeys = new HashSet<Keys> {
+            Keys.F1, Keys.F2, Keys.F3, Keys.F4, Keys.F5,
+
             Keys.Q,
             Keys.W,
             Keys.E,
             Keys.R,
+            Keys.Space,
             Keys.D1,
             Keys.D2,
             Keys.D3,
             Keys.D4,
-            Keys.Space,
             Keys.D,
             Keys.F,
 
             Keys.Y,
             Keys.B,
+
+            Keys.Escape,
+            Keys.P,
         };
 
         #endregion

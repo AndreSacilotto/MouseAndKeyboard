@@ -45,19 +45,19 @@ namespace YuumiInstrumentation
             MouseButtonExplicit.Click(pressedState, mouseButton);
         }
 
-
         private readonly static HashSet<Keys> focusKeys = new HashSet<Keys> {
-            Keys.F1, Keys.F2, Keys.F3, Keys.F4, Keys.F5,
+            Keys.F1, Keys.F2, Keys.F3, Keys.F4, Keys.F5, 
         };
-        private Keys currentFocusKey = Keys.None;
+        private Keys currentFocus = Keys.None;
 
         public void Key(Keys keys, PressedState pressedState)
         {
             Console.WriteLine($"RECEIVE: Key {keys} {pressedState}");
 
-            if (focusKeys.Contains(keys)){
-                Keyboard.SendKeyUp(currentFocusKey);
-                currentFocusKey = keys;
+            if (focusKeys.Contains(keys))
+            {
+                Keyboard.SendKeyUp(currentFocus);
+                currentFocus = keys;
                 Keyboard.SendKeyDown(keys);
                 return;
             }
