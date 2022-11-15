@@ -126,14 +126,14 @@ public class YuumiMaster : IMKInput, IDisposable
 	#region MOUSE EVENTS
 	private void OnMouseMove(object sender, MouseEventArgs e)
 	{
-		LoggerEvents.WriteLine("SEND: MMove" + e.X + " " + e.Y);
+		LoggerEvents.WriteLine($"SEND: MMove {e.X} {e.Y}");
 		mkPacket.WriteMouseMove(e.X, e.Y);
 		SendPacket();
 	}
 
 	private void OnMouseScroll(object sender, MouseEventArgs e)
 	{
-		LoggerEvents.WriteLine("SEND: MScroll" + e.Delta);
+		LoggerEvents.WriteLine("SEND: MScroll " + e.Delta);
 		mkPacket.WriteMouseScroll(e.Delta);
 		SendPacket();
 	}
@@ -156,12 +156,12 @@ public class YuumiMaster : IMKInput, IDisposable
 	{
 		if (mouseToKey.TryGetValue(e.Button, out var key))
 		{
-			LoggerEvents.WriteLine($"SEND Mouse: {pressed,-5}: {e.Button} => {key}");
+			LoggerEvents.WriteLine($"SEND: MClick {pressed,-5}: {e.Button} => {key}");
 			WriteKey(key, pressed);
 		}
 		else
 		{
-			LoggerEvents.WriteLine($"SEND Mouse: {pressed,-5}: {e.Button}");
+			LoggerEvents.WriteLine($"SEND: MClick {pressed,-5}: {e.Button}");
 			mkPacket.WriteMouseClick(e.Button, pressed);
 			SendPacket();
 		}
@@ -171,12 +171,12 @@ public class YuumiMaster : IMKInput, IDisposable
 	{
 		if (e.Shift && mirrorWhenShiftKeys.Contains(e.KeyCode))
 		{
-			LoggerEvents.WriteLine($"SEND Key: {pressed,-5}: {e.KeyCode} | Shift");
+			LoggerEvents.WriteLine($"SEND: KKey {pressed,-5}: {e.KeyCode} | Shift");
 			WriteKey(e.KeyCode, pressed);
 		}
-		else if (skillUpKeys.TryGetValue(e.KeyCode, out var key))
+		else if (e.Control && skillUpKeys.TryGetValue(e.KeyCode, out var key))
 		{
-			LoggerEvents.WriteLine($"SEND Key: {pressed,-5}: {e.KeyCode} => {key} | Control");
+			LoggerEvents.WriteLine($"SEND: KKey {pressed,-5}: {e.KeyCode} => {key} | Control");
 			mkPacket.WriteKeyModifier(key, Keys.LControlKey, pressed);
 			SendPacket();
 		}

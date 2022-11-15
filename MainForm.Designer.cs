@@ -128,6 +128,7 @@ namespace MouseAndKeyboard
 			this.chbReceiver.TabIndex = 6;
 			this.chbReceiver.Text = "Is Receiver";
 			this.chbReceiver.UseVisualStyleBackColor = true;
+			this.chbReceiver.CheckStateChanged += new System.EventHandler(this.ChbReceiver_CheckStateChanged);
 			// 
 			// btnStart
 			// 

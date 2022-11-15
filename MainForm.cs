@@ -1,5 +1,4 @@
 using System.Net;
-using System.Windows.Input;
 using MouseAndKeyboard.Network;
 using MouseAndKeyboard.Util;
 using YuumiInstrumentation;
@@ -45,10 +44,11 @@ public partial class MainForm : Form
 		var isReceiver = chbReceiver.Checked;
 
 		IPEndPoint address;
+		address = NetworkUtil.ToAddress(ip, port);
 		if (isReceiver)
 		{
 			var ys = new YuumiSlave();
-			address = new(IPAddress.Any, port);
+			//address = new(IPAddress.Any, port);
 			ys.Socket.Start(address);
 			ys.Enabled = true;
 
@@ -57,7 +57,7 @@ public partial class MainForm : Form
 		else
 		{
 			var ym = new YuumiMaster();
-			address = NetworkUtil.ToAddress(ip, port);
+			//address = NetworkUtil.ToAddress(ip, port);
 			ym.Socket.Start(address);
 
 			ym.EnabledMM = chbMMove.Checked;
@@ -68,13 +68,20 @@ public partial class MainForm : Form
 			connection = ym;
 		}
 
-		chbMMove.Visible = chbMScroll.Visible = chbMClick.Visible = chbKKey.Visible = !isReceiver;
-		SetButtons(true);
+		SetControlServerInput(false);
+		SetControlButtons(true);
 
 		LoggerEvents.WriteLine("START");
 	}
 
-	private void SetButtons(bool isRunning) 
+	private void SetControlServerInput(bool enable) 
+	{
+		txtIP.Enabled = enable;
+		txtPort.Enabled = enable;
+		chbReceiver.Enabled = enable;
+	}
+
+	private void SetControlButtons(bool isRunning) 
 	{
 		btnStart.Enabled = !isRunning;
 		btnStop.Enabled = isRunning;
@@ -84,7 +91,7 @@ public partial class MainForm : Form
 	{
 		MainForm_FormClosing(null, null);
 
-		SetButtons(false);
+		SetControlButtons(false);
 
 		LoggerEvents.WriteLine("STOP");
 	}
@@ -93,6 +100,7 @@ public partial class MainForm : Form
 	{
 		connection?.Stop();
 		connection = null;
+		SetControlServerInput(true);
 	}
 
 	private void ChbConsole_CheckedChanged(object sender, EventArgs e)
@@ -102,25 +110,30 @@ public partial class MainForm : Form
 
 	private void ChbMMove_CheckedChanged(object sender, EventArgs e)
 	{
-		if (connection != null && connection is YuumiMaster master)
+		if (connection is not null and YuumiMaster master)
 			master.EnabledMM = chbMMove.Checked;
 	}
 
 	private void ChbMScroll_CheckedChanged(object sender, EventArgs e)
 	{
-		if (connection != null && connection is YuumiMaster master)
-			master.EnabledMS = chbMMove.Checked;
+		if (connection is not null and YuumiMaster master)
+			master.EnabledMS = chbMScroll.Checked;
 	}
 
 	private void ChbMClick_CheckedChanged(object sender, EventArgs e)
 	{
-		if (connection != null && connection is YuumiMaster master)
-			master.EnabledMC = chbMMove.Checked;
+		if (connection is not null and YuumiMaster master)
+			master.EnabledMC = chbMClick.Checked;
 	}
 
 	private void ChbKKey_CheckedChanged(object sender, EventArgs e)
 	{
-		if (connection != null && connection is YuumiMaster master)
-			master.EnabledKK = chbMMove.Checked;
+		if (connection is not null and YuumiMaster master)
+			master.EnabledKK = chbKKey.Checked;
+	}
+
+	private void ChbReceiver_CheckStateChanged(object sender, EventArgs e)
+	{
+		chbMMove.Visible = chbMScroll.Visible = chbMClick.Visible = chbKKey.Visible = !chbReceiver.Checked;
 	}
 }
