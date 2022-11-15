@@ -44,11 +44,10 @@ public partial class MainForm : Form
 		var isReceiver = chbReceiver.Checked;
 
 		IPEndPoint address;
-		address = NetworkUtil.ToAddress(ip, port);
 		if (isReceiver)
 		{
 			var ys = new YuumiSlave();
-			//address = new(IPAddress.Any, port);
+			address = new(IPAddress.Any, port);
 			ys.Socket.Start(address);
 			ys.Enabled = true;
 
@@ -57,7 +56,7 @@ public partial class MainForm : Form
 		else
 		{
 			var ym = new YuumiMaster();
-			//address = NetworkUtil.ToAddress(ip, port);
+			address = NetworkUtil.ToAddress(ip, port);
 			ym.Socket.Start(address);
 
 			ym.EnabledMM = chbMMove.Checked;
@@ -134,6 +133,7 @@ public partial class MainForm : Form
 
 	private void ChbReceiver_CheckStateChanged(object sender, EventArgs e)
 	{
+		txtIP.Enabled = !chbReceiver.Checked;
 		chbMMove.Visible = chbMScroll.Visible = chbMClick.Visible = chbKKey.Visible = !chbReceiver.Checked;
 	}
 }
