@@ -5,7 +5,7 @@ namespace YuumiInstrumentation;
 public interface IMKInput
 {
 	UDPSocket Socket { get; }
-	bool Enabled { get; set; }
+	bool Enabled { get; }
 
 	void Stop();
 }

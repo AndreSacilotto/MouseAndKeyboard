@@ -7,27 +7,11 @@ namespace YuumiInstrumentation;
 public class YuumiSlave : IMKInput
 {
 	private UDPSocketReceiver socket;
-
 	public UDPSocket Socket => socket;
 
 	private readonly YuumiPacketRead yuumiRead;
 
-	private bool enabled = false;
-	public bool Enabled
-	{
-		get => enabled;
-		set {
-			if (value == enabled)
-				return;
-
-			if (value)
-				socket.OnReceive += OnReceive;
-			else
-				socket.OnReceive -= OnReceive;
-			enabled = value;
-		}
-	}
-
+	private bool enabled;
 
 	public YuumiSlave()
 	{
@@ -48,13 +32,7 @@ public class YuumiSlave : IMKInput
 		yuumiRead.OnKeyModifierPress += KeyModifier;
 	}
 
-	private void OnReceive(int bytes, byte[] data)
-	{
-		if (!Enabled)
-			return;
-
-		yuumiRead.ReadAll(data);
-	}
+	private void OnReceive(int bytes, byte[] data) => yuumiRead.ReadAll(data);
 
 	#region Read
 
@@ -105,9 +83,24 @@ public class YuumiSlave : IMKInput
 
 	#region Enable
 
+	public bool Enabled
+	{
+		get => enabled;
+		set {
+			if (value == enabled)
+				return;
+
+			enabled = value;
+			if (enabled)
+				socket.OnReceive += OnReceive;
+			else
+				socket.OnReceive -= OnReceive;
+		}
+	}
+
 	public void Stop()
 	{
-		socket?.Stop();
+		Enabled = false;
 
 		yuumiRead.OnMouseMove -= MouseMove;
 		yuumiRead.OnMouseScroll -= MouseScroll;
@@ -115,7 +108,7 @@ public class YuumiSlave : IMKInput
 		yuumiRead.OnKeyPress -= Key;
 		yuumiRead.OnKeyModifierPress -= KeyModifier;
 
-		Enabled = false;
+		socket?.Stop();
 	}
 
 	#endregion

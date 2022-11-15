@@ -8,15 +8,21 @@ public class UDPSocketShipper : UDPSocket
 	protected override void InternalStart(IPEndPoint hostEndPoint)
 	{
 		MySocket.Connect(hostEndPoint);
-		//Receive();
 	}
 
-	public void Send(Packet packet, Action<int> callback = null)
+	public async void Send(Packet packet, Action<int> callback)
 	{
 		if (MySocket.Connected)
-			MySocket.BeginSend(packet.GetBuffer, 0, packet.Length, SocketFlags.None, (aResult) => {
-				int bytes = MySocket.EndSend(aResult);
-				callback?.Invoke(bytes);
-			}, null);
+		{
+			var bytes = await MySocket.SendAsync(packet.GetBuffer, SocketFlags.None);
+			callback?.Invoke(bytes);
+		}
 	}
+
+	public async void Send(Packet packet)
+	{
+		if (MySocket.Connected)
+			await MySocket.SendAsync(packet.GetBuffer, SocketFlags.None);
+	}
+
 }

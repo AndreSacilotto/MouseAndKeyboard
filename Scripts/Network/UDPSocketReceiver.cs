@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace MouseAndKeyboard.Network;
 
@@ -23,16 +24,16 @@ public class UDPSocketReceiver : UDPSocket
 		BeginReceiveNextPacket();
 	}
 
-	void BeginReceiveNextPacket() =>
-		MySocket.BeginReceive(stateBuffer, 0, stateBuffer.Length, SocketFlags.None, EndReceiveNextPacket, stateBuffer);
-
-	void EndReceiveNextPacket(IAsyncResult result)
+	private async void BeginReceiveNextPacket()
 	{
 		try
 		{
-			int bytes = MySocket.EndReceive(result);
-			OnReceive?.Invoke(bytes, (byte[])result.AsyncState);
-			BeginReceiveNextPacket();
+			while (!closed)
+			{
+				//var buffer = new byte[MySocket.SendBufferSize];
+				var received = await MySocket.ReceiveAsync(stateBuffer, SocketFlags.None);
+				OnReceive?.Invoke(received, stateBuffer);
+			}
 		}
 		catch (SocketException)
 		{

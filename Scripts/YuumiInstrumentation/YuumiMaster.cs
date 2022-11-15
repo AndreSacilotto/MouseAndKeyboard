@@ -8,13 +8,10 @@ namespace YuumiInstrumentation;
 public class YuumiMaster : IMKInput, IDisposable
 {
 	private UDPSocketShipper socket;
-
 	public UDPSocket Socket => socket;
 
 	private readonly IKeyboardMouseEvents inputEvents;
 	private readonly YuumiPacketWrite mkPacket;
-
-	private bool enabled = false;
 
 	public YuumiMaster() : base()
 	{
@@ -22,51 +19,90 @@ public class YuumiMaster : IMKInput, IDisposable
 		socket = new UDPSocketShipper();
 		mkPacket = new YuumiPacketWrite();
 	}
+
 	public void Stop() => Dispose();
-
-	#region Events
-
-	public bool Enabled
-	{
-		get => enabled;
-		set {
-			if (value != enabled)
-			{
-				enabled = value;
-				if (enabled)
-					Subscribe();
-				else
-					Unsubscribe();
-			}
-		}
-	}
-
 	public void Dispose()
 	{
-		Enabled = false;
+		EnabledMM = false;
+		EnabledMS = false;
+		EnabledMC = false;
+		EnabledKK = false;
 		socket.Stop();
 		GC.SuppressFinalize(this);
 	}
 
-	private void Subscribe()
-	{
-		inputEvents.MouseMove += OnMouseMove;
-		inputEvents.MouseDown += OnMouseDown;
-		inputEvents.MouseUp += OnMouseUp;
-		inputEvents.MouseWheel += OnMouseScroll;
+	#region Events/Enable
 
-		inputEvents.KeyDown += OnKeyDown;
-		inputEvents.KeyUp += OnKeyUp;
+	private bool enabledMM, enabledMS, enabledMC, enabledKK;
+
+	public bool Enabled => enabledMM || enabledMS || enabledMC || enabledKK;
+
+	public bool EnabledMM
+	{
+		get => enabledMM;
+		set {
+			if (value == enabledMM)
+				return;
+			enabledMM = value;
+			if (enabledMM)
+				inputEvents.MouseMove += OnMouseMove;
+			else
+				inputEvents.MouseMove -= OnMouseMove;
+		}
 	}
 
-	private void Unsubscribe()
+	public bool EnabledMS
 	{
-		inputEvents.MouseMove -= OnMouseMove;
-		inputEvents.MouseDown -= OnMouseDown;
-		inputEvents.MouseWheel -= OnMouseScroll;
+		get => enabledMS;
+		set {
+			if (value == enabledMS)
+				return;
+			enabledMS = value;
+			if (enabledMS)
+				inputEvents.MouseWheel += OnMouseScroll;
+			else
+				inputEvents.MouseWheel -= OnMouseScroll;
+		}
+	}
 
-		inputEvents.KeyDown -= OnKeyDown;
-		inputEvents.KeyUp -= OnKeyUp;
+	public bool EnabledMC
+	{
+		get => enabledMC;
+		set {
+			if (value == enabledMC)
+				return;
+			enabledMC = value;
+			if (enabledMC)
+			{
+				inputEvents.MouseDown += OnMouseDown;
+				inputEvents.MouseUp += OnMouseUp;
+			}
+			else
+			{
+				inputEvents.MouseDown -= OnMouseDown;
+				inputEvents.MouseUp -= OnMouseUp;
+			}
+		}
+	}
+
+	public bool EnabledKK
+	{
+		get => enabledKK;
+		set {
+			if (value == enabledKK)
+				return;
+			enabledKK = value;
+			if (enabledKK)
+			{
+				inputEvents.KeyDown += OnKeyDown;
+				inputEvents.KeyUp += OnKeyUp;
+			}
+			else
+			{
+				inputEvents.KeyDown -= OnKeyDown;
+				inputEvents.KeyUp -= OnKeyUp;
+			}
+		}
 	}
 
 	#endregion
@@ -90,8 +126,6 @@ public class YuumiMaster : IMKInput, IDisposable
 	#region MOUSE EVENTS
 	private void OnMouseMove(object sender, MouseEventArgs e)
 	{
-		if (!enabled)
-			return;
 		LoggerEvents.WriteLine("SEND: MMove" + e.X + " " + e.Y);
 		mkPacket.WriteMouseMove(e.X, e.Y);
 		SendPacket();
@@ -99,8 +133,6 @@ public class YuumiMaster : IMKInput, IDisposable
 
 	private void OnMouseScroll(object sender, MouseEventArgs e)
 	{
-		if (!enabled)
-			return;
 		LoggerEvents.WriteLine("SEND: MScroll" + e.Delta);
 		mkPacket.WriteMouseScroll(e.Delta);
 		SendPacket();
@@ -122,9 +154,6 @@ public class YuumiMaster : IMKInput, IDisposable
 
 	private void UnifyMouse(MouseEventArgs e, PressedState pressed)
 	{
-		if (!enabled)
-			return;
-
 		if (mouseToKey.TryGetValue(e.Button, out var key))
 		{
 			LoggerEvents.WriteLine($"SEND Mouse: {pressed,-5}: {e.Button} => {key}");
@@ -140,9 +169,6 @@ public class YuumiMaster : IMKInput, IDisposable
 
 	private void UnifyKey(KeyEventArgs e, PressedState pressed)
 	{
-		if (!enabled)
-			return;
-
 		if (e.Shift && mirrorWhenShiftKeys.Contains(e.KeyCode))
 		{
 			LoggerEvents.WriteLine($"SEND Key: {pressed,-5}: {e.KeyCode} | Shift");
