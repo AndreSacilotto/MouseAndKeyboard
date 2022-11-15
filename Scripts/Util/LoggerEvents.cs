@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using Microsoft.VisualBasic.Logging;
-
-namespace MouseAndKeyboard.Util;
+﻿namespace MouseAndKeyboard.Util;
 
 public static class LoggerEvents
 {

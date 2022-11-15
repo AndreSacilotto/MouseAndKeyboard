@@ -1,4 +1,4 @@
-using System.Diagnostics.Metrics;
+using System.Net;
 using MouseAndKeyboard.Network;
 using MouseAndKeyboard.Util;
 using YuumiInstrumentation;
@@ -32,12 +32,17 @@ public partial class MainForm : Form
 		var port = int.Parse(txtPort.Text);
 		var isReceiver = chbReceiver.Checked;
 
-		var address = UDPSocket.ToAddress(ip, port);
-
+		System.Net.IPEndPoint address;
 		if (isReceiver)
+		{
 			connection = new YuumiSlave();
+			address = new(IPAddress.Any, port);
+		}
 		else
+		{ 
 			connection = new YuumiMaster();
+			address = NetworkUtil.ToAddress(ip, port);
+		}
 
 		connection.Socket.Start(address);
 		connection.Enabled = true;

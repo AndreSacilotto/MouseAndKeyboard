@@ -1,5 +1,4 @@
-﻿using System.Net.Sockets;
-using MouseAndKeyboard.InputSimulation;
+﻿using MouseAndKeyboard.InputSimulation;
 using MouseAndKeyboard.Network;
 using MouseAndKeyboard.Util;
 
@@ -16,7 +15,7 @@ public class YuumiSlave : IMKInput
 	private bool enabled = false;
 	public bool Enabled
 	{
-		get => enabled; 
+		get => enabled;
 		set {
 			if (value == enabled)
 				return;
@@ -32,11 +31,11 @@ public class YuumiSlave : IMKInput
 
 	public YuumiSlave()
 	{
-		#if DEBUG
+#if DEBUG
 		socket = new UDPSocketReceiver(true);
-		#else
+#else
 		socket = new UDPSocketReceiver(false);
-		#endif
+#endif
 
 		socket.MySocket.SendBufferSize = YuumiPacketWrite.MAX_PACKET_BYTE_SIZE;
 
@@ -106,7 +105,7 @@ public class YuumiSlave : IMKInput
 
 	#region Enable
 
-	public void Stop() 
+	public void Stop()
 	{
 		socket?.Stop();
 

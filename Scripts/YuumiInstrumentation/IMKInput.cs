@@ -1,5 +1,4 @@
 ﻿using MouseAndKeyboard.Network;
-using MouseAndKeyboard.Util;
 
 namespace YuumiInstrumentation;
 

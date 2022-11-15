@@ -1,5 +1,4 @@
-﻿using System.Net.Sockets;
-using MouseAndKeyboard.InputSimulation;
+﻿using MouseAndKeyboard.InputSimulation;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;

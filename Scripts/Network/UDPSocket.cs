@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace MouseAndKeyboard.Network;
 
@@ -39,8 +38,4 @@ public abstract class UDPSocket
 	}
 
 	protected abstract void InternalStart(IPEndPoint hostEndPoint);
-
-	public static IPAddress ToAddress(string ip) => IPAddress.Parse(ip);
-	public static IPEndPoint ToAddress(string ip, int port) => new(IPAddress.Parse(ip), port);
-
 }
