@@ -13,12 +13,12 @@ public class YuumiSlave : IMKInput
 
 	private readonly YuumiPacketRead yuumiRead;
 
-	private bool enabled;
+	private bool enabled = false;
 	public bool Enabled
 	{
 		get => enabled; 
 		set {
-			if (value != enabled)
+			if (value == enabled)
 				return;
 
 			if (value)
@@ -32,7 +32,12 @@ public class YuumiSlave : IMKInput
 
 	public YuumiSlave()
 	{
+		#if DEBUG
+		socket = new UDPSocketReceiver(true);
+		#else
 		socket = new UDPSocketReceiver(false);
+		#endif
+
 		socket.MySocket.SendBufferSize = YuumiPacketWrite.MAX_PACKET_BYTE_SIZE;
 
 		yuumiRead = new YuumiPacketRead();
@@ -42,8 +47,6 @@ public class YuumiSlave : IMKInput
 		yuumiRead.OnMouseClick += MouseClick;
 		yuumiRead.OnKeyPress += Key;
 		yuumiRead.OnKeyModifierPress += KeyModifier;
-
-		Enabled = true;
 	}
 
 	private void OnReceive(int bytes, byte[] data)

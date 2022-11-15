@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using MouseAndKeyboard.Util;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace MouseAndKeyboard.Network;
 
@@ -20,23 +22,25 @@ public class UDPSocketReceiver : UDPSocket
 	{
 		stateBuffer = new byte[MySocket.SendBufferSize];
 		MySocket.Bind(hostEndPoint);
-		StartReceiving();
+		BeginReceiveNextPacket();
 	}
 
-	protected void StartReceiving()
+	void BeginReceiveNextPacket() =>
+		MySocket.BeginReceive(stateBuffer, 0, stateBuffer.Length, SocketFlags.None, EndReceiveNextPacket, stateBuffer);
+
+	void EndReceiveNextPacket(IAsyncResult result)
 	{
-		MySocket.BeginReceive(stateBuffer, 0, stateBuffer.Length, SocketFlags.None, recv = (aResult) => {
-			var ar = (byte[])aResult.AsyncState;
-			try
-			{
-				int bytes = MySocket.EndReceive(aResult);
-				OnReceive?.Invoke(bytes, ar);
-				MySocket.BeginReceive(stateBuffer, 0, stateBuffer.Length, SocketFlags.None, recv, ar);
-			}
-			catch
-			{
-				return;
-			}
-		}, stateBuffer);
+		try
+		{
+			int bytes = MySocket.EndReceive(result);
+			OnReceive?.Invoke(bytes, (byte[])result.AsyncState);
+			BeginReceiveNextPacket();
+		}
+		catch (SocketException)
+		{
+			if (!closed)
+				throw;
+		}
 	}
+
 }

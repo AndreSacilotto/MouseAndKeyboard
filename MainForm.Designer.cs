@@ -40,6 +40,7 @@ namespace MouseAndKeyboard
 			this.btnStart = new System.Windows.Forms.Button();
 			this.btnStop = new System.Windows.Forms.Button();
 			this.txtConsole = new System.Windows.Forms.TextBox();
+			this.chbConsole = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -52,6 +53,7 @@ namespace MouseAndKeyboard
 			this.flowLayoutPanel1.Controls.Add(this.chbReceiver);
 			this.flowLayoutPanel1.Controls.Add(this.btnStart);
 			this.flowLayoutPanel1.Controls.Add(this.btnStop);
+			this.flowLayoutPanel1.Controls.Add(this.chbConsole);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
 			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -144,6 +146,19 @@ namespace MouseAndKeyboard
 			this.txtConsole.TabStop = false;
 			this.txtConsole.Text = "Console\r\n";
 			// 
+			// chbConsole
+			// 
+			this.chbConsole.AutoSize = true;
+			this.chbConsole.Checked = true;
+			this.chbConsole.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chbConsole.Location = new System.Drawing.Point(18, 189);
+			this.chbConsole.Name = "chbConsole";
+			this.chbConsole.Size = new System.Drawing.Size(114, 19);
+			this.chbConsole.TabIndex = 5;
+			this.chbConsole.Text = "Console Enabled";
+			this.chbConsole.UseVisualStyleBackColor = true;
+			this.chbConsole.CheckedChanged += new System.EventHandler(this.ChbConsole_CheckedChanged);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -174,5 +189,6 @@ namespace MouseAndKeyboard
 		private Label lblPort;
 		private TextBox txtConsole;
 		private CheckBox chbReceiver;
+		private CheckBox chbConsole;
 	}
 }

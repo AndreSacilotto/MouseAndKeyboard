@@ -63,5 +63,8 @@ public partial class MainForm : Form
 		connection?.Stop();
 	}
 
-
+	private void ChbConsole_CheckedChanged(object sender, EventArgs e)
+	{
+		LoggerEvents.Enabled = chbConsole.Checked;
+	}
 }

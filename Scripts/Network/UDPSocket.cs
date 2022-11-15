@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace MouseAndKeyboard.Network;
 
@@ -8,13 +9,19 @@ namespace MouseAndKeyboard.Network;
 
 public abstract class UDPSocket
 {
+	protected bool closed = false;
+
 	public Socket MySocket { get; } = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 	public IPEndPoint HostEndPoint { get; private set; }
 
 	protected EndPoint senderEndPoint = new IPEndPoint(IPAddress.Any, 0);
 	protected AsyncCallback recv = null;
 
-	public void Stop() => MySocket.Close();
+	public void Stop()
+	{
+		closed = true;
+		MySocket.Close();
+	}
 
 	public void Start(IPEndPoint endPoint)
 	{
