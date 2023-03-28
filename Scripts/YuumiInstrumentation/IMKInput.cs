@@ -2,10 +2,8 @@
 
 namespace YuumiInstrumentation;
 
-public interface IMKInput
+public interface IMKInput : IDisposable
 {
-	UDPSocket Socket { get; }
-	bool Enabled { get; }
-
-	void Stop();
+    UDPSocket Socket { get; }
+    bool Enabled { get; }
 }

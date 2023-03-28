@@ -4,10 +4,8 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net7.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
-		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
 	</PropertyGroup>
 
@@ -16,6 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="MouseKeyHook" Version="5.6.0" />
 		<PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
 	</ItemGroup>
 
