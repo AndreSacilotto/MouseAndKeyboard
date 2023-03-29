@@ -5,7 +5,7 @@
 /// </summary>
 public class KeyPressEventArgsExt : KeyPressEventArgs
 {
-    internal KeyPressEventArgsExt(char keyChar, uint timestamp) : base(keyChar)
+    internal KeyPressEventArgsExt(char keyChar, int timestamp) : base(keyChar)
     {
         IsNonChar = keyChar == (char)0x0;
         Timestamp = timestamp;
@@ -16,7 +16,7 @@ public class KeyPressEventArgsExt : KeyPressEventArgs
     ///     Character corresponding to the key pressed. 
     ///     0 char if represents a system or functional non char key.
     /// </param>
-    public KeyPressEventArgsExt(char keyChar = (char)0x0) : this(keyChar, (uint)Environment.TickCount)
+    public KeyPressEventArgsExt(char keyChar = (char)0x0) : this(keyChar, Environment.TickCount)
     {
     }
 
@@ -28,9 +28,6 @@ public class KeyPressEventArgsExt : KeyPressEventArgs
     /// <summary>
     ///     The system tick count of when the event occurred.
     /// </summary>
-    public uint Timestamp { get; }
-
-
-
+    public int Timestamp { get; }
 
 }

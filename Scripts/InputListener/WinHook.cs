@@ -12,6 +12,7 @@ public class WinHook : IDisposable
 
     public class HookProcedureHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
+        public HookProcedureHandle() : base(true) { }
         public HookProcedureHandle(IntPtr handle) : base(true)
         {
             SetHandle(handle);
@@ -28,8 +29,6 @@ public class WinHook : IDisposable
         }
     }
 
-
-
     public event NextHookProcedure? Callback;
     private HookProcedureHandle? hookProc;
 
@@ -39,15 +38,36 @@ public class WinHook : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private IntPtr HookCallback(CbtHookAction nCode, IntPtr wParam, IntPtr lParam)
+    private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
-        if (nCode >= 0)
+        if (nCode == 0) 
             Callback?.Invoke(wParam, lParam);
         return HookNativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
     }
 
     private static int swapButtonThreshold;
     public static int SwapButtonThreshold => swapButtonThreshold;
+
+    public static T MarshalHookParam<T>(IntPtr lParam) where T : struct => (T)Marshal.PtrToStructure(lParam, typeof(T))!;
+
+    private static WinHook CreateHook(HookType hookType, IntPtr process, uint thread = 0)
+    {
+        var hook = new WinHook();
+
+        var hookHandle = HookNativeMethods.SetWindowsHookExW(hookType, hook.HookCallback, process, thread);
+        var hookProcHandle = new HookProcedureHandle(hookHandle);
+        hook.hookProc = hookProcHandle;
+
+        if (hookProcHandle.IsInvalid)
+        {
+            var errorCode = Marshal.GetLastWin32Error();
+            throw new Win32Exception(errorCode);
+        }
+
+        swapButtonThreshold = SystemMetrics.GetSwapButtonThreshold();
+
+        return hook;
+    }
 
     #region MK Hooks
     public static WinHook HookAppMouse() => CreateHook(HookType.WH_MOUSE, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
@@ -66,25 +86,5 @@ public class WinHook : IDisposable
     }
     #endregion
 
-    private static WinHook CreateHook(HookType hookId, IntPtr process, uint thread = 0)
-    {
-        var hook = new WinHook();
 
-        var hookHandle = HookNativeMethods.SetWindowsHookExW(hookId, hook.HookCallback, process, thread);
-        var hookProcHandle = new HookProcedureHandle(hookHandle);
-
-        if (hookProcHandle.IsInvalid)
-        {
-            var errorCode = Marshal.GetLastWin32Error();
-            throw new Win32Exception(errorCode);
-        }
-
-        swapButtonThreshold = SystemMetrics.GetSwapButtonThreshold();
-
-        hook.hookProc = hookProcHandle;
-
-        return hook;
-    }
-
-    public static T MarshalHookParam<T>(IntPtr lParam) where T : struct => (T)Marshal.PtrToStructure(lParam, typeof(T))!;
 }

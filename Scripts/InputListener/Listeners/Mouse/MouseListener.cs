@@ -60,7 +60,6 @@ public abstract class MouseListener : BaseListener
 
         if (e.IsScroll)
         {
-            LoggerEvents.WriteLine("Whell");
             if (e.IsHorizontalWheel)
                 ProcessHWheel(e);
             else

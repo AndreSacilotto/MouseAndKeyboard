@@ -2,6 +2,10 @@
 using MouseAndKeyboard.InputSimulation;
 using MouseAndKeyboard.Network;
 
+using Gma.System.MouseKeyHook.Implementation;
+using Gma.System.MouseKeyHook.WinApi;
+using Gma.System.MouseKeyHook;
+
 namespace YuumiInstrumentation;
 
 public sealed partial class YuumiMaster : IMKInput, IDisposable
@@ -10,12 +14,14 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
 
     private readonly YuumiPacketWrite mkPacket = new();
     private readonly MKListener inputEvents;
+    //private readonly IKeyboardMouseEvents inputEvents;
 
     public UDPSocket Socket => socket;
 
     public YuumiMaster()
     {
         inputEvents = MKListener.FactoryGlobal();
+        //inputEvents = Hook.GlobalEvents();
     }
 
     public void Dispose()
@@ -117,7 +123,6 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
             }
         }
     }
-
     #endregion
 
     #region Event Funcs

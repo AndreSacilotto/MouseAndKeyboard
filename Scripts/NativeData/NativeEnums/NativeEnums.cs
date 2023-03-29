@@ -29,7 +29,7 @@ public enum MapType : uint
 #region Mouse Input
 
 [Flags]
-public enum MouseDataXButton : short
+public enum MouseDataXButton : int
 {
     None = 0x0,
     /// <summary>Set if the first X button is pressed or released</summary>
@@ -69,7 +69,7 @@ public enum MouseEventF : uint
     /// <summary>Maps coordinates to the entire desktop. Must be used with MOUSEEVENTF_ABSOLUTE.</summary>
     VirtualDesk = 0x4000,
     /// <summary>
-    /// The dx and dy members contain normalized absolute coordinates. 
+    /// The pt and dy members contain normalized absolute coordinates. 
     /// If the flag is not set, dxand dy contain relative data (the change in position since the last reported position).
     /// </summary>
     Absolute = 0x8000,
@@ -109,17 +109,3 @@ public enum KeyEventF : uint
 }
 
 #endregion
-
-public enum CbtHookAction : int
-{
-    HCBT_MOVESIZE = 0,
-    HCBT_MINMAX = 1,
-    HCBT_QS = 2,
-    HCBT_CREATEWND = 3,
-    HCBT_DESTROYWND = 4,
-    HCBT_ACTIVATE = 5,
-    HCBT_CLICKSKIPPED = 6,
-    HCBT_KEYSKIPPED = 7,
-    HCBT_SYSCOMMAND = 8,
-    HCBT_SETFOCUS = 9
-}

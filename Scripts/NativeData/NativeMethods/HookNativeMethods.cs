@@ -43,7 +43,7 @@ internal static partial class HookNativeMethods
     ///     </para>
     /// </remarks>
     [LibraryImport("user32.dll")]
-    internal static partial IntPtr CallNextHookEx(IntPtr hhk, CbtHookAction nCode, IntPtr wParam, IntPtr lParam);
+    internal static partial IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
     /// <summary>
     ///     The SetWindowsHookEx function installs an application-defined hook procedure into a hook chain.
@@ -77,7 +77,7 @@ internal static partial class HookNativeMethods
     /// </remarks>
     [LibraryImport("user32.dll", SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
-    internal static partial IntPtr SetWindowsHookExW(HookType hookType, HookProcedure lpfn, IntPtr hMod, uint dwThreadId);
+    internal static partial IntPtr SetWindowsHookExW(HookType hookType, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
 
     /// <summary>
     ///     The UnhookWindowsHookEx function removes a hook procedure installed in a hook chain by the SetWindowsHookEx
@@ -127,7 +127,10 @@ internal static partial class HookNativeMethods
     /// <returns>The return value is the identifier of the thread that created the window. </returns>
     [LibraryImport("user32.dll", SetLastError = true)]
     internal static partial uint GetWindowThreadProcessId(IntPtr handle, out uint processId);
+
     [LibraryImport("user32.dll")]
     internal static partial uint GetWindowThreadProcessId(IntPtr handle, IntPtr processId);
 
+    [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    public static partial IntPtr GetModuleHandleW([MarshalAs(UnmanagedType.LPWStr)] string lpModuleName);
 }

@@ -11,8 +11,7 @@ internal static partial class KeyNativeMethods
     /// </summary>
     /// <param name="wVirtKey">[in] The virtual-key code to be translated.</param>
     /// <param name="wScanCode">
-    ///     [in] The hardware scan code of the key to be translated. The high-order bit of this value is
-    ///     set if the key is up.
+    ///     [in] The hardware scan code of the key to be translated. The high-order bit of this value is set if the key is up.
     /// </param>
     /// <param name="lpKeyState">
     ///     [in, optional] A pointer to a 256-byte array that contains the current keyboard state. Each
@@ -24,34 +23,26 @@ internal static partial class KeyNativeMethods
     ///     null-terminated.
     /// </param>
     /// <param name="cchBuff">[in] The size, in characters, of the buffer pointed to by the pwszBuff parameter.</param>
-    /// <param name="wFlags">
-    ///     [in] The behavior of the function. If bit 0 is set, a menu is active. Bits 1 through 31 are
-    ///     reserved.
-    /// </param>
+    /// <param name="wFlags">[in] The behavior of the function. If bit 0 is set, a menu is active. Bits 1 through 31 are reserved</param>
     /// <param name="dwhkl">The input locale identifier used to translate the specified code.</param>
     /// <returns>
-    ///     -1 &lt;= return &lt;= n
-    ///     <list type="bullet">
-    ///         <item>
-    ///             -1    = The specified virtual key is a dead-key character (accent or diacritic). This value is returned
-    ///             regardless of the keyboard layout, even if several characters have been typed and are stored in the
-    ///             keyboard state. If possible, even with Unicode keyboard layouts, the function has written a spacing version
-    ///             of the dead-key character to the buffer specified by pwszBuff. For example, the function writes the
-    ///             character SPACING ACUTE (0x00B4), rather than the character NON_SPACING ACUTE (0x0301).
-    ///         </item>
-    ///         <item>
-    ///             0    = The specified virtual key has no translation for the current state of the keyboard. Nothing was
-    ///             written to the buffer specified by pwszBuff.
-    ///         </item>
-    ///         <item> 1    = One character was written to the buffer specified by pwszBuff.</item>
-    ///         <item>
-    ///             n    = Two or more characters were written to the buffer specified by pwszBuff. The most common cause
-    ///             for this is that a dead-key character (accent or diacritic) stored in the keyboard layout could not be
-    ///             combined with the specified virtual key to form a single character. However, the buffer may contain more
-    ///             characters than the return value specifies. When this happens, any extra characters are invalid and should
-    ///             be ignored.
-    ///         </item>
-    ///     </list>
+    ///     Range: -1..N
+    ///     <br/><br/>
+    ///     -1 = The specified virtual key is a dead-key character (accent or diacritic). This value is returned
+    ///     regardless of the keyboard layout, even if several characters have been typed and are stored in the
+    ///     keyboard state. If possible, even with Unicode keyboard layouts, the function has written a spacing version
+    ///     of the dead-key character to the buffer specified by pwszBuff. For example, the function writes the
+    ///     character SPACING ACUTE (0x00B4), rather than the character NON_SPACING ACUTE (0x0301).
+    ///     <br/><br/>
+    ///     0 = The specified virtual key has no translation for the current state of the keyboard. Nothing was
+    ///     written to the buffer specified by pwszBuff.
+    ///     <br/><br/>
+    ///     1 = One character was written to the buffer specified by pwszBuff
+    ///     <br/><br/>
+    ///     N = Two or more characters were written to the buffer specified by pwszBuff. The most common cause for 
+    ///     this is that a dead-key character (accent or diacritic) stored in the keyboard layout could not be combined 
+    ///     with the specified virtual key to form a single character. However, the buffer may contain more characters 
+    ///     than the return value specifies. When this happens, any extra characters are invalid and should be ignored.
     /// </returns>
     [DllImport("user32.dll")]
     internal static extern int ToUnicodeEx(VirtualKeyShort wVirtKey, ScanCodeShort wScanCode, byte[] lpKeyState,

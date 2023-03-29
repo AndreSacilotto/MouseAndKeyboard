@@ -9,7 +9,7 @@ internal class GlobalMouseListener : MouseListener
     private readonly int doubleClickThresholdY;
     private MouseButtons previousClicked;
     private Point previousClickedPosition;
-    private uint previousClickedTime;
+    private int previousClickedTime;
 
     public GlobalMouseListener() : base(WinHook.HookGlobalMouse())
     {
@@ -55,6 +55,6 @@ internal class GlobalMouseListener : MouseListener
 
     protected override MouseEventExtArgs GetEventArgs(ref nint wParam, ref nint lParam)
     {
-        return MouseEventExtArgs.FromRawData(ref wParam, ref lParam);
+        return MouseEventExtArgs.FromRawDataGlobal(ref wParam, ref lParam);
     }
 }

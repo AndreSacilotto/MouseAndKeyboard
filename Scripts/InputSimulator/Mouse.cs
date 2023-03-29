@@ -11,41 +11,44 @@ public static partial class Mouse
         x = point.X;
         y = point.Y;
     }
+    private static Point GetAbsoluteScreenPoint(int x, int y)
+    {
+        var screen = ScreenUtil.PrimaryScreenSize;
+        return new(x * screen.Ratio.X + 1, y * screen.Ratio.Y + 1);
+    }
 
     #region Inputs
     internal static InputStruct MoveRelativeInput(int x, int y)
     {
-        var union = new InputUnion(mi: new(x, y, MouseEventF.Move));
+        var union = new InputUnion(mi: new(new(x, y), MouseEventF.Move));
         var input = new InputStruct(InputType.Mouse, union);
         return input;
     }
     internal static InputStruct MoveAbsoluteInput(int x, int y)
     {
-        var screen = ScreenUtil.PrimaryScreenSize;
-        var union = new InputUnion(mi: new(x * screen.Ratio.X + 1, y * screen.Ratio.Y + 1, MouseEventF.Move | MouseEventF.Absolute));
+        var union = new InputUnion(mi: new(GetAbsoluteScreenPoint(x, y), MouseEventF.Move | MouseEventF.Absolute));
         //MouseEventF.VirtualDesk - Dont worth the trouble
         return new InputStruct(InputType.Mouse, union);
     }
     internal static InputStruct ScrollInput(short scroll)
     {
-        var union = new InputUnion(mi: new(0, 0, MouseEventF.Wheel, scroll));
+        var union = new InputUnion(mi: new(Point.Zero, MouseEventF.Wheel, scroll));
         return new InputStruct(InputType.Mouse, union);
     }
     internal static InputStruct ClickInput(MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
     {
-        var union = new InputUnion(mi: new(0, 0, dwFlags, (short)mouseData));
+        var union = new InputUnion(mi: new(Point.Zero, dwFlags, (short)mouseData));
         return new InputStruct(InputType.Mouse, union);
     }
     internal static InputStruct MoveAndClickRelativeInput(int x, int y, MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
     {
-        var union = new InputUnion(mi: new(x, y, MouseEventF.Move | dwFlags, (short)mouseData));
+        var union = new InputUnion(mi: new(new(x, y), MouseEventF.Move | dwFlags, (short)mouseData));
         var input = new InputStruct(InputType.Mouse, union);
         return input;
     }
     internal static InputStruct MoveAndClickAbsoluteInput(int x, int y, MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
     {
-        var screen = ScreenUtil.PrimaryScreenSize;
-        var union = new InputUnion(mi: new(x * screen.Ratio.X + 1, y * screen.Ratio.Y + 1, MouseEventF.Move | MouseEventF.Absolute | dwFlags, (short)mouseData));
+        var union = new InputUnion(mi: new(GetAbsoluteScreenPoint(x, y), MouseEventF.Move | MouseEventF.Absolute | dwFlags, (short)mouseData));
         return new InputStruct(InputType.Mouse, union);
     }
     #endregion

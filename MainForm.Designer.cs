@@ -211,7 +211,6 @@ namespace MouseAndKeyboard
             // txtConsole
             // 
             txtConsole.BackColor = Color.Black;
-            txtConsole.CausesValidation = false;
             txtConsole.Dock = DockStyle.Fill;
             txtConsole.ForeColor = SystemColors.Window;
             txtConsole.Location = new Point(169, 0);
@@ -221,7 +220,6 @@ namespace MouseAndKeyboard
             txtConsole.PlaceholderText = "Console";
             txtConsole.ReadOnly = true;
             txtConsole.ScrollBars = ScrollBars.Vertical;
-            txtConsole.ShortcutsEnabled = false;
             txtConsole.Size = new Size(268, 357);
             txtConsole.TabIndex = 0;
             txtConsole.TabStop = false;

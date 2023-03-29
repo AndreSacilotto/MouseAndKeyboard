@@ -7,13 +7,13 @@ public static partial class Keyboard
 {
     internal static InputStruct KeyDownInput(Keys key)
     {
-        var union = new InputUnion(ki: new((VirtualKeyShort)key, (ScanCodeShort)KeyUtil.KeyCodeToScanCode(key), KeyEventF.ScanCode, 0, 0));
+        var union = new InputUnion(ki: new((VirtualKeyShort)key, (ScanCodeShort)KeyUtil.KeyCodeToScanCode(key), KeyEventF.ScanCode, Environment.TickCount, 0));
         var input = new InputStruct(InputType.Keyboard, union);
         return input;
     }
     internal static InputStruct KeyUpInput(Keys key)
     {
-        var union = new InputUnion(ki: new((VirtualKeyShort)key, (ScanCodeShort)KeyUtil.KeyCodeToScanCode(key), KeyEventF.KeyUp | KeyEventF.ScanCode, 0, 0));
+        var union = new InputUnion(ki: new((VirtualKeyShort)key, (ScanCodeShort)KeyUtil.KeyCodeToScanCode(key), KeyEventF.KeyUp | KeyEventF.ScanCode, Environment.TickCount, 0));
         var input = new InputStruct(InputType.Keyboard, union);
         return input;
     }

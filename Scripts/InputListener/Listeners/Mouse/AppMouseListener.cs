@@ -8,6 +8,6 @@ internal class AppMouseListener : MouseListener
 
     protected override MouseEventExtArgs GetEventArgs(ref nint wParam, ref nint lParam)
     {
-        return MouseEventExtArgs.FromRawData(ref wParam, ref lParam);
+        return MouseEventExtArgs.FromRawDataApp(ref wParam, ref lParam);
     }
 }

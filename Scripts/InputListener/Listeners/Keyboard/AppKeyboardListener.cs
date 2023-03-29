@@ -65,7 +65,7 @@ internal class AppKeyboardListener : KeyboardListener
         var isKeyDown = !isKeyReleased;
         var isKeyUp = wasKeyDown && isKeyReleased;
 
-        return new KeyEventArgsExt(keyData, (ScanCodeShort)scanCode, (uint)timestamp, isKeyDown, isKeyUp, isExtendedKey);
+        return new KeyEventArgsExt(keyData, (ScanCodeShort)scanCode, timestamp, isKeyDown, isKeyUp, isExtendedKey);
     }
 
 }

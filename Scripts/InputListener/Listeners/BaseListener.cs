@@ -1,4 +1,5 @@
 namespace MouseAndKeyboard.InputListener;
+
 public abstract class BaseListener : IDisposable
 {
     protected WinHook Handle { get; }

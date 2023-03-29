@@ -28,8 +28,8 @@
 ///     procedure does not call CallNextHookEx, the return value should be zero.
 /// </returns>
 /// <remarks>
-///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/callwndproc.asp
+///    https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644986(v=vs.85)
 /// </remarks>
-public delegate IntPtr HookProcedure(CbtHookAction nCode, IntPtr wParam, IntPtr lParam);
+public delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
 
 

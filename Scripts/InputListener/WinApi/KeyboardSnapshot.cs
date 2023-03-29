@@ -41,10 +41,13 @@ public class KeyboardSnapshot
     public bool IsDown(Keys key)
     {
         if ((int)key <= byte.MaxValue) return IsDownRaw(key);
-        if (key == Keys.Alt) return IsDownRaw(Keys.LMenu) || IsDownRaw(Keys.RMenu);
-        if (key == Keys.Shift) return IsDownRaw(Keys.LShiftKey) || IsDownRaw(Keys.RShiftKey);
-        if (key == Keys.Control) return IsDownRaw(Keys.LControlKey) || IsDownRaw(Keys.RControlKey);
-        return false;
+        return key switch
+        {
+            Keys.Alt => IsDownRaw(Keys.LMenu) || IsDownRaw(Keys.RMenu),
+            Keys.Shift => IsDownRaw(Keys.LShiftKey) || IsDownRaw(Keys.RShiftKey),
+            Keys.Control => IsDownRaw(Keys.LControlKey) || IsDownRaw(Keys.RControlKey),
+            _ => false
+        };
     }
 
     private bool IsDownRaw(Keys key)

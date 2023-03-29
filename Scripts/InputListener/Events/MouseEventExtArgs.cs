@@ -8,9 +8,7 @@ namespace MouseAndKeyboard.InputListener;
 /// </summary>
 public class MouseEventExtArgs : MouseEventArgs
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="MouseEventExtArgs" /> class.
-    /// </summary>
+
     /// <param name="buttons">One of the MouseButtons values indicating which mouse button was pressed.</param>
     /// <param name="clicks">The number of times a mouse button was pressed.</param>
     /// <param name="point">The X and Y coordinate of a mouse click, in pixels.</param>
@@ -19,7 +17,7 @@ public class MouseEventExtArgs : MouseEventArgs
     /// <param name="isMouseButtonDown">True if event signals mouse button down.</param>
     /// <param name="isMouseButtonUp">True if event signals mouse button up.</param>
     /// <param name="isHorizontalWheel">True if event signals horizontal wheel action.</param>
-    internal MouseEventExtArgs(MouseButtons buttons, int clicks, Point point, int delta, uint timestamp, bool isMouseButtonDown, bool isMouseButtonUp, bool isHorizontalWheel)
+    internal MouseEventExtArgs(MouseButtons buttons, int clicks, Point point, int delta, int timestamp, bool isMouseButtonDown, bool isMouseButtonUp, bool isHorizontalWheel)
         : base(buttons, clicks, point.X, point.Y, delta)
     {
         IsMouseButtonDown = isMouseButtonDown;
@@ -62,9 +60,21 @@ public class MouseEventExtArgs : MouseEventArgs
     /// <summary>
     ///     The system tick count of when the event occurred.
     /// </summary>
-    public uint Timestamp { get; }
+    public int Timestamp { get; }
 
     internal Point Point => new(X, Y);
+
+    internal static MouseEventExtArgs FromRawDataApp(ref nint wParam, ref nint lParam)
+    {
+        var mouseHookStruct = (MouseInput)WinHook.MarshalHookParam<AppMouseInput>(lParam);
+        return FromRawData((WindowsMessages)wParam, ref mouseHookStruct);
+    }
+
+    internal static MouseEventExtArgs FromRawDataGlobal(ref nint wParam, ref nint lParam)
+    {
+        var mouseHookStruct = WinHook.MarshalHookParam<MouseInput>(lParam);
+        return FromRawData((WindowsMessages)wParam, ref mouseHookStruct);
+    }
 
     /// <summary>
     ///     Creates <see cref="MouseEventExtArgs" /> from relevant mouse data.
@@ -72,48 +82,46 @@ public class MouseEventExtArgs : MouseEventArgs
     /// <param name="wParam">First Windows Message parameter.</param>
     /// <param name="mouseInfo">A MouseInput containing information from which to construct MouseEventExtArgs.</param>
     /// <returns>A new MouseEventExtArgs object.</returns>
-    internal static MouseEventExtArgs FromRawData(ref nint wParam, ref nint lParam)
+    private static MouseEventExtArgs FromRawData(WindowsMessages WM, ref MouseInput mouseHookStruct)
     {
-        var mouseHookStruct = WinHook.MarshalHookParam<MouseInput>(lParam);
-
         var button = MouseButtons.None;
-        short mouseDelta = 0;
+        var mouseDelta = 0;
         var clickCount = 0;
 
         var isMouseButtonDown = false;
         var isMouseButtonUp = false;
         var isHorizontalWheel = false;
 
-        switch ((WindowsMessages)wParam)
+        switch (WM)
         {
             case WindowsMessages.LBUTTONDOWN:
                 isMouseButtonDown = true;
-                button = MouseButtons.Left;
+                button = GetLeft();
                 clickCount = 1;
                 break;
             case WindowsMessages.LBUTTONUP:
                 isMouseButtonUp = true;
-                button = MouseButtons.Left;
+                button = GetLeft();
                 clickCount = 1;
                 break;
             case WindowsMessages.LBUTTONDBLCLK:
                 isMouseButtonDown = true;
-                button = MouseButtons.Left;
+                button = GetLeft();
                 clickCount = 2;
                 break;
             case WindowsMessages.RBUTTONDOWN:
                 isMouseButtonDown = true;
-                button = MouseButtons.Right;
+                button = GetRight();
                 clickCount = 1;
                 break;
             case WindowsMessages.RBUTTONUP:
                 isMouseButtonUp = true;
-                button = MouseButtons.Right;
+                button = GetRight();
                 clickCount = 1;
                 break;
             case WindowsMessages.RBUTTONDBLCLK:
                 isMouseButtonDown = true;
-                button = MouseButtons.Right;
+                button = GetRight();
                 clickCount = 2;
                 break;
             case WindowsMessages.MBUTTONDOWN:
@@ -133,37 +141,28 @@ public class MouseEventExtArgs : MouseEventArgs
                 break;
             case WindowsMessages.MOUSEWHEEL:
                 isHorizontalWheel = false;
-                mouseDelta = mouseHookStruct.mouseData;
+                mouseDelta = mouseHookStruct.GetWheelDelta();
                 break;
             case WindowsMessages.MOUSEHWHEEL:
                 isHorizontalWheel = true;
-                mouseDelta = mouseHookStruct.mouseData;
+                mouseDelta = mouseHookStruct.GetWheelDelta();
                 break;
             case WindowsMessages.XBUTTONDOWN:
-                button = mouseHookStruct.AsXButton() == MouseDataXButton.XButton1
-                    ? MouseButtons.XButton1
-                    : MouseButtons.XButton2;
                 isMouseButtonDown = true;
+                button = GetXButton(mouseHookStruct.AsXButton());
                 clickCount = 1;
                 break;
             case WindowsMessages.XBUTTONUP:
-                button = mouseHookStruct.AsXButton() == MouseDataXButton.XButton1
-                    ? MouseButtons.XButton1
-                    : MouseButtons.XButton2;
                 isMouseButtonUp = true;
+                button = GetXButton(mouseHookStruct.AsXButton());
                 clickCount = 1;
                 break;
             case WindowsMessages.XBUTTONDBLCLK:
                 isMouseButtonDown = true;
-                button = mouseHookStruct.AsXButton() == MouseDataXButton.XButton1
-                    ? MouseButtons.XButton1
-                    : MouseButtons.XButton2;
+                button = GetXButton(mouseHookStruct.AsXButton());
                 clickCount = 2;
                 break;
         }
-
-        if (WinHook.SwapButtonThreshold > 0)
-            button = button == MouseButtons.Left ? MouseButtons.Right : MouseButtons.Left;
 
         var e = new MouseEventExtArgs(
             button,
@@ -176,10 +175,25 @@ public class MouseEventExtArgs : MouseEventArgs
             isHorizontalWheel);
 
         return e;
+
+        static MouseButtons GetXButton(MouseDataXButton mx) => mx == MouseDataXButton.XButton1 ? MouseButtons.XButton1 : MouseButtons.XButton2;
+        static MouseButtons GetLeft() 
+        {
+            var mb = MouseButtons.Left;
+            if (WinHook.SwapButtonThreshold > 0)
+                mb = MouseButtons.Right;
+            return mb;
+        }
+        static MouseButtons GetRight()      
+        {
+            var mb = MouseButtons.Right;
+            if (WinHook.SwapButtonThreshold > 0)
+                mb = MouseButtons.Left;
+            return mb;
+        }
+
     }
 
-    internal MouseEventExtArgs ToDoubleClickEventArgs()
-    {
-        return new MouseEventExtArgs(Button, 2, Point, Delta, Timestamp, IsMouseButtonDown, IsMouseButtonUp, IsHorizontalWheel);
-    }
+    internal MouseEventExtArgs ToDoubleClickEventArgs() => 
+        new(Button, 2, Point, Delta, Timestamp, IsMouseButtonDown, IsMouseButtonUp, IsHorizontalWheel);
 }

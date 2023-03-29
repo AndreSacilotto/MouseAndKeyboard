@@ -1,6 +1,5 @@
 namespace MouseAndKeyboard.InputListener;
 
-
 public class KeyDownTxtEventArgs : EventArgs
 {
     public KeyEventArgsExt KeyEvent { get; }
