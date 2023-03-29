@@ -1,0 +1,90 @@
+﻿using Microsoft.Win32.SafeHandles;
+using MouseAndKeyboard.Native;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+namespace MouseAndKeyboard.InputListener;
+
+public class WinHook : IDisposable
+{
+    public delegate void NextHookProcedure(IntPtr wParam, IntPtr lParam);
+
+    public class HookProcedureHandle : SafeHandleZeroOrMinusOneIsInvalid
+    {
+        public HookProcedureHandle(IntPtr handle) : base(true)
+        {
+            SetHandle(handle);
+        }
+        protected override bool ReleaseHandle()
+        {
+            if (!IsInvalid)
+            {
+                if (HookNativeMethods.UnhookWindowsHookEx(handle))
+                    Dispose();
+                handle = IntPtr.Zero;
+            }
+            return true;
+        }
+    }
+
+
+
+    public event NextHookProcedure? Callback;
+    private HookProcedureHandle? hookProc;
+
+    public void Dispose()
+    {
+        hookProc?.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    private IntPtr HookCallback(CbtHookAction nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if (nCode >= 0)
+            Callback?.Invoke(wParam, lParam);
+        return HookNativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+    }
+
+    private static int swapButtonThreshold;
+    public static int SwapButtonThreshold => swapButtonThreshold;
+
+    #region MK Hooks
+    public static WinHook HookAppMouse() => CreateHook(HookType.WH_MOUSE, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
+    public static WinHook HookAppKeyboard() => CreateHook(HookType.WH_KEYBOARD, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
+    public static WinHook HookGlobalMouse()
+    {
+        using Process p = Process.GetCurrentProcess();
+        using ProcessModule curModule = p.MainModule!;
+        return CreateHook(HookType.WH_MOUSE_LL, curModule.BaseAddress, 0);
+    }
+    public static WinHook HookGlobalKeyboard()
+    {
+        using Process p = Process.GetCurrentProcess();
+        using ProcessModule curModule = p.MainModule!;
+        return CreateHook(HookType.WH_KEYBOARD_LL, curModule.BaseAddress, 0);
+    }
+    #endregion
+
+    private static WinHook CreateHook(HookType hookId, IntPtr process, uint thread = 0)
+    {
+        var hook = new WinHook();
+
+        var hookHandle = HookNativeMethods.SetWindowsHookExW(hookId, hook.HookCallback, process, thread);
+        var hookProcHandle = new HookProcedureHandle(hookHandle);
+
+        if (hookProcHandle.IsInvalid)
+        {
+            var errorCode = Marshal.GetLastWin32Error();
+            throw new Win32Exception(errorCode);
+        }
+
+        swapButtonThreshold = SystemMetrics.GetSwapButtonThreshold();
+
+        hook.hookProc = hookProcHandle;
+
+        return hook;
+    }
+
+    public static T MarshalHookParam<T>(IntPtr lParam) where T : struct => (T)Marshal.PtrToStructure(lParam, typeof(T))!;
+}

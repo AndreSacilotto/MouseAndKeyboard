@@ -1,15 +1,17 @@
 ﻿using System.Runtime.InteropServices;
 
+namespace MouseAndKeyboard.Native;
+
 internal static partial class SystemMetrics
 {
     /// <summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics</summary>
     //[DllImport("user32.dll")]
     //internal static extern int GetSystemMetrics([In] int smIndex);
     [LibraryImport("user32.dll")]
-    internal static partial int GetSystemMetrics(int smIndex);
+    internal static partial int GetSystemMetrics(SystemMetric smIndex);
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1069:Enums values should not be duplicated", Justification = "Not made by me")]
-    public enum SM : int
+    /// <summary>https://pinvoke.net/default.aspx/Enums.SystemMetric</summary>
+    internal enum SystemMetric : int
     {
         SM_CXSCREEN = 0,
         SM_CYSCREEN = 1,
@@ -108,11 +110,10 @@ internal static partial class SystemMetrics
         SM_SYSTEMDOCKED = 0x2004,
     }
 
-    public static int GetSystemMetrics(SM metrics) => GetSystemMetrics((int)metrics);
-
-    public static int GetXDragThreshold() => GetSystemMetrics(SM.SM_CXDRAG);
-    public static int GetYDragThreshold() => GetSystemMetrics(SM.SM_CYDRAG);
-    public static int GetXDoubleClickThreshold() => GetSystemMetrics(SM.SM_CXDOUBLECLK) / 2 + 1;
-    public static int GetYDoubleClickThreshold() => GetSystemMetrics(SM.SM_CYDOUBLECLK) / 2 + 1;
+    public static int GetSwapButtonThreshold() => GetSystemMetrics(SystemMetric.SM_SWAPBUTTON);
+    public static int GetXDragThreshold() => GetSystemMetrics(SystemMetric.SM_CXDRAG);
+    public static int GetYDragThreshold() => GetSystemMetrics(SystemMetric.SM_CYDRAG);
+    public static int GetXDoubleClickThreshold() => GetSystemMetrics(SystemMetric.SM_CXDOUBLECLK) / 2 + 1;
+    public static int GetYDoubleClickThreshold() => GetSystemMetrics(SystemMetric.SM_CYDOUBLECLK) / 2 + 1;
 
 }

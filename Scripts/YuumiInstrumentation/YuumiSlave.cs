@@ -1,6 +1,5 @@
 ﻿using MouseAndKeyboard.InputSimulation;
 using MouseAndKeyboard.Network;
-using MouseAndKeyboard.Util;
 
 namespace YuumiInstrumentation;
 
@@ -45,7 +44,7 @@ public sealed class YuumiSlave : IMKInput, IDisposable
     public static void MouseScroll(int scrollDelta)
     {
         LoggerEvents.WriteLine($"RECEIVE: MScroll {scrollDelta}");
-        Mouse.ScrollWheel(scrollDelta);
+        Mouse.ScrollWheel((short)scrollDelta);
     }
 
     public static void MouseClick(MouseButtons mouseButton, PressedState pressedState)

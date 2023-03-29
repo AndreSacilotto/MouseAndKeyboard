@@ -1,4 +1,4 @@
-﻿namespace MouseAndKeyboard.Util;
+﻿namespace MouseAndKeyboard.Util.Log;
 
 public static class LoggerEvents
 {

@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using MouseAndKeyboard.Native;
+using System.Runtime.InteropServices;
 
 namespace MouseAndKeyboard.InputSimulation;
 
@@ -9,9 +10,5 @@ internal static partial class InputSender
     [LibraryImport("user32.dll")]
     internal static partial uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray)] InputStruct[] pInputs, int cbSize);
 
-    internal static InputStruct NewMouseInput => new(InputType.Mouse);
-    internal static InputStruct NewKeyboardInput => new(InputType.Keyboard);
-    internal static InputStruct NewHardwareInput => new(InputType.Hardware);
-
-    public static int SendInput(params InputStruct[] inputs) => (int)SendInput((uint)inputs.Length, inputs, InputStruct.Size);
+    public static uint SendInput(params InputStruct[] inputs) => SendInput((uint)inputs.Length, inputs, InputStruct.Size);
 }

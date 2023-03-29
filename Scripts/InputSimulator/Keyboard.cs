@@ -1,22 +1,25 @@
-﻿
+﻿using MouseAndKeyboard.Native;
+using MouseAndKeyboard.Util;
+
 namespace MouseAndKeyboard.InputSimulation;
 
-public static class Keyboard
+public static partial class Keyboard
 {
-    #region Key Down
-
     internal static InputStruct KeyDownInput(Keys key)
     {
-        var input = InputSender.NewKeyboardInput;
-        input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);
-        input.union.ki.dwFlags = KeyEventF.ScanCode;
+        var union = new InputUnion(ki: new((VirtualKeyShort)key, (ScanCodeShort)KeyUtil.KeyCodeToScanCode(key), KeyEventF.ScanCode, 0, 0));
+        var input = new InputStruct(InputType.Keyboard, union);
+        return input;
+    }
+    internal static InputStruct KeyUpInput(Keys key)
+    {
+        var union = new InputUnion(ki: new((VirtualKeyShort)key, (ScanCodeShort)KeyUtil.KeyCodeToScanCode(key), KeyEventF.KeyUp | KeyEventF.ScanCode, 0, 0));
+        var input = new InputStruct(InputType.Keyboard, union);
         return input;
     }
 
-    public static void SendKeyDown(Keys key)
-    {
-        InputSender.SendInput(KeyDownInput(key));
-    }
+    #region Down
+    public static void SendKeyDown(Keys key) => InputSender.SendInput(KeyDownInput(key));
     public static void SendKeyDown(params Keys[] keys)
     {
         var inputs = new InputStruct[keys.Length];
@@ -24,23 +27,20 @@ public static class Keyboard
             inputs[i] = KeyDownInput(keys[i]);
         InputSender.SendInput(inputs);
     }
-
+    public static void SendKeyDown(Keys key, Keys modifier)
+    {
+        SendKeyDown(modifier);
+        SendKeyDown(key);
+    }
+    public static void SendKeyDown(Keys key, params Keys[] modifiers)
+    {
+        SendKeyDown(modifiers);
+        SendKeyDown(key);
+    }
     #endregion
 
-    #region Key Up
-
-    internal static InputStruct KeyUpInput(Keys key)
-    {
-        var input = InputSender.NewKeyboardInput;
-        input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);
-        input.union.ki.dwFlags = KeyEventF.KeyUp | KeyEventF.ScanCode;
-        return input;
-    }
-
-    public static void SendKeyUp(Keys key)
-    {
-        InputSender.SendInput(KeyUpInput(key));
-    }
+    #region Up
+    public static void SendKeyUp(Keys key) => InputSender.SendInput(KeyUpInput(key));
     public static void SendKeyUp(params Keys[] keys)
     {
         var inputs = new InputStruct[keys.Length];
@@ -48,83 +48,44 @@ public static class Keyboard
             inputs[i] = KeyUpInput(keys[i]);
         InputSender.SendInput(inputs);
     }
-
+    public static void SendKeyUp(Keys key, Keys modifier)
+    {
+        SendKeyUp(modifier);
+        SendKeyUp(key);
+    }
+    public static void SendKeyUp(Keys key, params Keys[] modifiers)
+    {
+        SendKeyUp(modifiers);
+        SendKeyUp(key);
+    }
     #endregion
 
-    #region Key Full
-    internal static void KeyFullInput(Keys key, out InputStruct down, out InputStruct up)
-    {
 
-        var input = InputSender.NewKeyboardInput;
-        input.union.ki.wScan = KeyboardUtil.KeyCodeToScanCode(key);
-        input.union.ki.dwFlags = KeyEventF.ScanCode;
-        down = input;
-        input.union.ki.dwFlags = KeyEventF.KeyUp | KeyEventF.ScanCode;
-        up = input;
-    }
-
-    public static void SendFull(Keys key)
-    {
-        KeyFullInput(key, out var down, out var up);
-        InputSender.SendInput(down, up);
-    }
-
+    #region Full
+    public static void SendFull(Keys key) => InputSender.SendInput(KeyDownInput(key), KeyUpInput(key));
     public static void SendFull(params Keys[] keys)
     {
-        var inputs = new InputStruct[keys.Length * 2];
-        for (int i = 0, e = 0; i < keys.Length; i++)
+        var len = keys.Length;
+        var inputs = new InputStruct[len * 2];
+        for (int i = 0; i < len; i++)
         {
-            KeyFullInput(keys[i], out var down, out var up);
-            inputs[e++] = down;
-            inputs[e++] = up;
+            var key = keys[i];
+            inputs[i] = KeyDownInput(key);
+            inputs[len + i] = KeyUpInput(key);
         }
         InputSender.SendInput(inputs);
     }
-
-    #endregion
-
-    #region Key Down - Modifiers
-
-    public static void SendKeyDown(Keys key, Keys mod)
+    public static void SendFull(Keys key, Keys modifier)
     {
-        SendKeyDown(mod);
-        SendKeyDown(key);
-    }
-    public static void SendKeyDown(Keys key, params Keys[] mods)
-    {
-        SendKeyDown(mods);
-        SendKeyDown(key);
-    }
-
-    #endregion
-
-    #region Key Up - Modifiers
-
-    public static void SendKeyUp(Keys key, Keys mod)
-    {
-        SendKeyUp(mod);
-        SendKeyUp(key);
-    }
-    public static void SendKeyUp(Keys key, params Keys[] mods)
-    {
-        SendKeyUp(mods);
-        SendKeyUp(key);
-    }
-
-
-    #endregion
-
-    #region Key Full - Modifiers
-
-    public static void SendFull(Keys key, Keys mod)
-    {
-        SendFull(mod);
+        SendKeyDown(modifier);
         SendFull(key);
+        SendKeyUp(modifier);
     }
-    public static void SendFull(Keys key, params Keys[] mods)
+    public static void SendFull(Keys key, params Keys[] modifiers)
     {
-        SendFull(mods);
+        SendKeyDown(modifiers);
         SendFull(key);
+        SendKeyUp(modifiers);
     }
 
     #endregion

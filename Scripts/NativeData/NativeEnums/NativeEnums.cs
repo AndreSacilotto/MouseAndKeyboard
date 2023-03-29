@@ -1,56 +1,37 @@
-﻿using System.Runtime.InteropServices;
+﻿namespace MouseAndKeyboard.Native;
 
-namespace MouseAndKeyboard.InputSimulation;
-
-#region Inputs Merge
 //https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input
-internal enum InputType : uint
+public enum InputType : uint
 {
     Mouse = 0,
     Keyboard = 1,
     Hardware = 2
 }
 
-[StructLayout(LayoutKind.Sequential)]
-public struct InputStruct
+public enum MapType : uint
 {
-    internal readonly InputType type;
-    internal InputUnion union;
-    internal InputStruct(InputType type)
-    {
-        this.type = type;
-        union = new InputUnion();
-    }
-    internal static int Size => Marshal.SizeOf(typeof(InputStruct));
+    /// <summary>VirtualKey to ScanCode</summary>
+    VK_TO_VSC = 0x00,
+    /// <summary>ScanCode to VirtualKey</summary>
+    VSC_TO_VK = 0x01,
+    /// <summary>VirtualKey to Undefined Char</summary>
+    VK_TO_CHAR = 0x02,
+    /// <summary>
+    /// Windows NT/2000/XP: uCode is a scan code and is translated into a
+    /// virtual-key code that distinguishes between left- and right-hand keys. If
+    /// there is no translation, the function returns 0.
+    /// </summary>
+    MAPVK_VSC_TO_VK_EX = 0x03,
+    /// <summary>Not currently documented</summary>
+    MAPVK_VK_TO_VSC_EX = 0x04
 }
-
-[StructLayout(LayoutKind.Explicit)]
-internal struct InputUnion
-{
-    [FieldOffset(0)] internal MouseInput mi;
-    [FieldOffset(0)] internal KeyboardInput ki;
-    [FieldOffset(0)] internal HardwareInput hi;
-}
-
-#endregion
 
 #region Mouse Input
 
-///<summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput</summary>
-[StructLayout(LayoutKind.Sequential)]
-internal struct MouseInput
-{
-    internal int dx;
-    internal int dy;
-    internal int mouseData; //MouseDataXButton
-    internal MouseEventF dwFlags;
-    internal uint time;
-    internal UIntPtr dwExtraInfo;
-}
-
 [Flags]
-internal enum MouseDataXButton : int
+public enum MouseDataXButton : short
 {
+    None = 0x0,
     /// <summary>Set if the first X button is pressed or released</summary>
     XButton1 = 0x00000001,
     /// <summary>Set if the second X button is pressed or released</summary>
@@ -58,8 +39,9 @@ internal enum MouseDataXButton : int
 }
 
 [Flags]
-internal enum MouseEventF : uint
+public enum MouseEventF : uint
 {
+    None = 0x000,
     /// <summary>Movement occurred.</summary>
     Move = 0x0001,
     /// <summary>The left button was pressed.</summary>
@@ -102,17 +84,15 @@ internal enum MouseEventF : uint
 
 #region Keyboard Input
 
-[StructLayout(LayoutKind.Sequential)]
-/// <summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput</summary>
-internal struct KeyboardInput
+[Flags]
+public enum WHHotkey
 {
-    /// <summary>https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes</summary>
-    internal ushort wVk;
-    /// <summary>https://www.millisecond.com/support/docs/v6/html/language/scancodes.htm</summary>
-    internal ushort wScan;
-    internal KeyEventF dwFlags;
-    internal uint time;
-    internal UIntPtr dwExtraInfo;
+    None = 0x0000,
+    Alt = 0x0001,
+    Control = 0x0002,
+    Shift = 0x0004,
+    Windows = 0x0008,
+    NoRepeat = 0x4000,
 }
 
 [Flags]
@@ -130,15 +110,16 @@ public enum KeyEventF : uint
 
 #endregion
 
-#region Hardware Input
-
-/// <summary>Define HardwareInput struct</summary>
-[StructLayout(LayoutKind.Sequential)]
-internal struct HardwareInput
+public enum CbtHookAction : int
 {
-    internal uint uMsg;
-    internal ushort wParamL;
-    internal ushort wParamH;
+    HCBT_MOVESIZE = 0,
+    HCBT_MINMAX = 1,
+    HCBT_QS = 2,
+    HCBT_CREATEWND = 3,
+    HCBT_DESTROYWND = 4,
+    HCBT_ACTIVATE = 5,
+    HCBT_CLICKSKIPPED = 6,
+    HCBT_KEYSKIPPED = 7,
+    HCBT_SYSCOMMAND = 8,
+    HCBT_SETFOCUS = 9
 }
-
-#endregion

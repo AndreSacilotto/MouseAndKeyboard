@@ -1,29 +1,19 @@
-﻿namespace MouseAndKeyboard.InputSimulation;
+﻿using MouseAndKeyboard.Native;
+using static MouseAndKeyboard.Native.SystemMetrics;
 
-/*
-1600 x 900
-1360 x 768
-=
-2960 x 900
-*/
+namespace MouseAndKeyboard.InputSimulation;
 
 public static class ScreenUtil
 {
+    private const int ABSOLUTE_MAX = ushort.MaxValue;
 
-    public readonly struct ScreenSize
+    public readonly record struct ScreenSize(int Width, int Height, Point Ratio)
     {
-        internal readonly int width;
-        internal readonly int height;
-        internal ScreenSize(int width, int height)
-        {
-            this.width = width;
-            this.height = height;
-        }
-        public override string ToString() => $"W: {width}, H: {height}";
+        public override string ToString() => $"W: {Width}, H: {Height}";
     }
 
-    public static ScreenSize GetPrimaryScreenSize { get; private set; }
-    public static ScreenSize GetVirtualScreenSize { get; private set; }
+    public static ScreenSize PrimaryScreenSize { get; private set; }
+    public static ScreenSize VirtualScreenSize { get; private set; }
 
     static ScreenUtil()
     {
@@ -33,18 +23,20 @@ public static class ScreenUtil
 
     public static void UpdatePrimaryScreenSize()
     {
-        int width = SystemMetrics.GetSystemMetrics(SystemMetrics.SM.SM_CXSCREEN);
-        int height = SystemMetrics.GetSystemMetrics(SystemMetrics.SM.SM_CYSCREEN);
-        GetPrimaryScreenSize = new ScreenSize(width, height);
+        int width = GetSystemMetrics(SystemMetric.SM_CXSCREEN);
+        int height = GetSystemMetrics(SystemMetric.SM_CYSCREEN);
+        var ratio = new Point(ABSOLUTE_MAX / width, ABSOLUTE_MAX / height);
+        PrimaryScreenSize = new ScreenSize(width, height, ratio);
     }
 
     public static void UpdateVirtualScreenSize()
     {
-        int width = SystemMetrics.GetSystemMetrics(SystemMetrics.SM.SM_CXVIRTUALSCREEN);
-        int height = SystemMetrics.GetSystemMetrics(SystemMetrics.SM.SM_CYVIRTUALSCREEN);
-        GetVirtualScreenSize = new ScreenSize(width, height);
+        int width = GetSystemMetrics(SystemMetric.SM_CXVIRTUALSCREEN);
+        int height = GetSystemMetrics(SystemMetric.SM_CYVIRTUALSCREEN);
+        var ratio = new Point(ABSOLUTE_MAX / width, ABSOLUTE_MAX / height);
+        VirtualScreenSize = new ScreenSize(width, height, ratio);
     }
 
-    public static int CountVisibleMonitors() => SystemMetrics.GetSystemMetrics(SystemMetrics.SM.SM_CMONITORS);
+    public static int CountVisibleMonitors() => GetSystemMetrics(SystemMetric.SM_CMONITORS);
 
 }

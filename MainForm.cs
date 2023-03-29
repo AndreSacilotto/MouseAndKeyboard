@@ -1,5 +1,4 @@
 using MouseAndKeyboard.Network;
-using MouseAndKeyboard.Util;
 using System.Net;
 using YuumiInstrumentation;
 
@@ -77,7 +76,7 @@ public partial class MainForm : Form
     {
         txtPort.Enabled = enable;
         chbReceiver.Enabled = enable;
-        ChbReceiver_CheckStateChanged(null, null!);
+        ChbReceiver_CheckStateChanged(null, null);
     }
 
     private void SetControlButtons(bool isRunning)
@@ -93,7 +92,7 @@ public partial class MainForm : Form
         SetControlServerInput(true);
     }
 
-    private void BtnStop_Click(object? sender, EventArgs e)
+    private void BtnStop_Click(object? sender, EventArgs? e)
     {
         MainForm_FormClosing(null, null);
 
@@ -102,36 +101,36 @@ public partial class MainForm : Form
         LoggerEvents.WriteLine("STOP");
     }
 
-    private void ChbConsole_CheckedChanged(object? sender, EventArgs e)
+    private void ChbConsole_CheckedChanged(object? sender, EventArgs? e)
     {
         LoggerEvents.Enabled = chbConsole.Checked;
     }
 
-    private void ChbMMove_CheckedChanged(object? sender, EventArgs e)
+    private void ChbMMove_CheckedChanged(object? sender, EventArgs? e)
     {
         if (connection is not null and YuumiMaster master)
             master.EnabledMM = chbMMove.Checked;
     }
 
-    private void ChbMScroll_CheckedChanged(object? sender, EventArgs e)
+    private void ChbMScroll_CheckedChanged(object? sender, EventArgs? e)
     {
         if (connection is not null and YuumiMaster master)
             master.EnabledMS = chbMScroll.Checked;
     }
 
-    private void ChbMClick_CheckedChanged(object? sender, EventArgs e)
+    private void ChbMClick_CheckedChanged(object? sender, EventArgs? e)
     {
         if (connection is not null and YuumiMaster master)
             master.EnabledMC = chbMClick.Checked;
     }
 
-    private void ChbKKey_CheckedChanged(object? sender, EventArgs e)
+    private void ChbKKey_CheckedChanged(object? sender, EventArgs? e)
     {
         if (connection is not null and YuumiMaster master)
             master.EnabledKK = chbKKey.Checked;
     }
 
-    private void ChbReceiver_CheckStateChanged(object? sender, EventArgs e)
+    private void ChbReceiver_CheckStateChanged(object? sender, EventArgs? e)
     {
         txtIP.Enabled = !chbReceiver.Checked && txtPort.Enabled;
         chbMMove.Visible = chbMScroll.Visible = chbMClick.Visible = chbKKey.Visible = !chbReceiver.Checked;

@@ -13,9 +13,4 @@
 		<Content Include="favicon.ico" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="MouseKeyHook" Version="5.6.0" />
-		<PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
-	</ItemGroup>
-
 </Project>

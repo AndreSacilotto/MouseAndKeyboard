@@ -1,177 +1,60 @@
-﻿using MouseAndKeyboard.Util;
-using System.Runtime.InteropServices;
+﻿using MouseAndKeyboard.Native;
 using System.Threading.Tasks;
 
 namespace MouseAndKeyboard.InputSimulation;
 
 public static partial class Mouse
 {
-    #region Get Mouse Position
-
-    [LibraryImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool GetCursorPos(out MousePoint lpMousePoint);
-
-    [StructLayout(LayoutKind.Sequential)]
-    private struct MousePoint
-    {
-        internal int x;
-        internal int y;
-    }
     public static void GetCursorPosition(out int x, out int y)
     {
-        GetCursorPos(out var point);
-        x = point.x;
-        y = point.y;
+        MouseNativeMethods.GetCursorPos(out var point);
+        x = point.X;
+        y = point.Y;
     }
 
-    #endregion
-
-    private static InputStruct MouseInput => new(InputType.Mouse);
-
-    #region Movement
-    private const int ABSOLUTE_MAX = ushort.MaxValue + 1;
-
-    public static int PositionToAbsolute(int coord, int widthOrHeight)
+    #region Inputs
+    internal static InputStruct MoveRelativeInput(int x, int y)
     {
-        return coord * ABSOLUTE_MAX / widthOrHeight + (coord < 0 ? -1 : 1);
-    }
-
-    public static string PositionToAbsolutePrint(int x, int y)
-    {
-        var screen = ScreenUtil.GetPrimaryScreenSize;
-        return $"{PositionToAbsolute(x, screen.width)} : {PositionToAbsolute(y, screen.height)}";
-    }
-
-    /// <summary>Move based on current mouse position</summary>
-    public static InputStruct MoveRelativeInput(int x, int y)
-    {
-        var input = MouseInput;
-        input.union.mi.dx = x;
-        input.union.mi.dy = y;
-        input.union.mi.dwFlags = MouseEventF.Move;
+        var union = new InputUnion(mi: new(x, y, MouseEventF.Move));
+        var input = new InputStruct(InputType.Mouse, union);
         return input;
     }
-
-    private static InputStruct MoveAbsoluteInput(int x, int y)
+    internal static InputStruct MoveAbsoluteInput(int x, int y)
     {
-        var screen = ScreenUtil.GetPrimaryScreenSize;
-        var input = MouseInput;
-        input.union.mi.dx = x * ABSOLUTE_MAX / screen.width + 1;
-        input.union.mi.dy = y * ABSOLUTE_MAX / screen.height + 1;
-        input.union.mi.dwFlags = MouseEventF.Move | MouseEventF.Absolute;
+        var screen = ScreenUtil.PrimaryScreenSize;
+        var union = new InputUnion(mi: new(x * screen.Ratio.X + 1, y * screen.Ratio.Y + 1, MouseEventF.Move | MouseEventF.Absolute));
         //MouseEventF.VirtualDesk - Dont worth the trouble
+        return new InputStruct(InputType.Mouse, union);
+    }
+    internal static InputStruct ScrollInput(short scroll)
+    {
+        var union = new InputUnion(mi: new(0, 0, MouseEventF.Wheel, scroll));
+        return new InputStruct(InputType.Mouse, union);
+    }
+    internal static InputStruct ClickInput(MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
+    {
+        var union = new InputUnion(mi: new(0, 0, dwFlags, (short)mouseData));
+        return new InputStruct(InputType.Mouse, union);
+    }
+    internal static InputStruct MoveAndClickRelativeInput(int x, int y, MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
+    {
+        var union = new InputUnion(mi: new(x, y, MouseEventF.Move | dwFlags, (short)mouseData));
+        var input = new InputStruct(InputType.Mouse, union);
         return input;
     }
+    internal static InputStruct MoveAndClickAbsoluteInput(int x, int y, MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
+    {
+        var screen = ScreenUtil.PrimaryScreenSize;
+        var union = new InputUnion(mi: new(x * screen.Ratio.X + 1, y * screen.Ratio.Y + 1, MouseEventF.Move | MouseEventF.Absolute | dwFlags, (short)mouseData));
+        return new InputStruct(InputType.Mouse, union);
+    }
+    #endregion
 
     public static void MoveRelative(int x, int y) => InputSender.SendInput(MoveRelativeInput(x, y));
     public static void MoveAbsolute(int x, int y) => InputSender.SendInput(MoveAbsoluteInput(x, y));
-    public static void MoveAbsolute(float x, float y) => InputSender.SendInput(MoveAbsoluteInput((int)x, (int)y));
 
-    #endregion
-
-    #region Gradual Movement
-
-    public static Task GradualMoveLinear(int x1, int y1, int steps = 32, int delay = 10)
-    {
-        GetCursorPosition(out var x0, out var y0);
-        return Task.Run(async () =>
-        {
-            float N = steps;
-            for (int i = 0; i < steps; i++)
-            {
-                var v = i / N;
-                var x = x1 * v + x0 * (1f - v);
-                var y = y1 * v + y0 * (1f - v);
-                MoveAbsolute(x, y);
-                await Task.Delay(delay);
-            }
-        });
-    }
-
-    public static Task GradualMoveLerp(int x1, int y1, int steps = 32, int delay = 10)
-    {
-        GetCursorPosition(out var x0, out var y0);
-        return Task.Run(async () =>
-        {
-            float N = steps;
-            for (int i = 0; i < steps; i++)
-            {
-                var v = Interpolation.Lerp(0, 1, i / N);
-                var x = x1 * v + x0 * (1f - v);
-                var y = y1 * v + y0 * (1f - v);
-                MoveAbsolute(x, y);
-                await Task.Delay(delay);
-            }
-        });
-    }
-
-    public static Task GradualMoveSmoothStep(int x1, int y1, int steps = 32, int delay = 10)
-    {
-        GetCursorPosition(out var x0, out var y0);
-        return Task.Run(async () =>
-        {
-            float N = steps;
-            for (int i = 0; i < steps; i++)
-            {
-                var v = Interpolation.SmoothStep(0, 1, i / N);
-                var x = x1 * v + x0 * (1f - v);
-                var y = y1 * v + y0 * (1f - v);
-                MoveAbsolute(x, y);
-                await Task.Delay(delay);
-            }
-        });
-    }
-
-    public static Task GradualMoveSlerp(int x1, int y1, int steps = 32, int delay = 10)
-    {
-        GetCursorPosition(out var x0, out var y0);
-        return Task.Run(async () =>
-        {
-            float N = steps;
-            for (int i = 0; i < steps; i++)
-            {
-                var v = Interpolation.Slerp(0, 1, i / N);
-                var x = x1 * v + x0 * (1f - v);
-                var y = y1 * v + y0 * (1f - v);
-                MoveAbsolute(x, y);
-                await Task.Delay(delay);
-            }
-        });
-    }
-
-    #endregion
-
-    #region MButton (Click)
-
-    private static InputStruct ClickInput(MouseEventF dwFlags)
-    {
-        var input = MouseInput;
-        input.union.mi.dwFlags = dwFlags;
-        return input;
-    }
-    /// <param name="dwFlags">Need to be XDown or XUp</param>
-    private static InputStruct ClickInput(MouseEventF dwFlags, MouseDataXButton mouseData)
-    {
-        var input = MouseInput;
-        input.union.mi.mouseData = (int)mouseData;
-        input.union.mi.dwFlags = dwFlags;
-        return input;
-    }
-
-    internal static void Click(MouseEventF dwFlags) => InputSender.SendInput(ClickInput(dwFlags));
-    internal static void Click(MouseEventF dwFlags, int numberOfClicks = 2)
-    {
-        var inputs = new InputStruct[numberOfClicks];
-        var input = ClickInput(dwFlags);
-        for (int i = 0; i < numberOfClicks; i++)
-            inputs[i] = input;
-        InputSender.SendInput(inputs);
-    }
-    /// <param name="dwFlags">Need to be XDown or XUp</param>
-    internal static void Click(MouseEventF dwFlags, MouseDataXButton mouseData) => InputSender.SendInput(ClickInput(dwFlags, mouseData));
-    /// <param name="dwFlags">Need to be XDown or XUp</param>
-    internal static void Click(MouseEventF dwFlags, MouseDataXButton mouseData, int numberOfClicks = 2)
+    internal static void MouseClick(MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None) => InputSender.SendInput(ClickInput(dwFlags, mouseData));
+    internal static void MouseMultClick(MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None, int numberOfClicks = 2)
     {
         var inputs = new InputStruct[numberOfClicks];
         var input = ClickInput(dwFlags, mouseData);
@@ -180,44 +63,24 @@ public static partial class Mouse
         InputSender.SendInput(inputs);
     }
 
-    #endregion
-
-    #region Wheel
-
-    private static InputStruct ScrollWheelInput(int wheelDelta = 120)
-    {
-        var input = MouseInput;
-        input.union.mi.dwFlags = MouseEventF.Wheel;
-        input.union.mi.mouseData = wheelDelta;
-        return input;
-    }
-
     /// <param name="wheelDelta">Scroll quantity. 120 is the Windows default</param>
-    public static void ScrollWheel(int wheelDelta = 120) =>
-        InputSender.SendInput(ScrollWheelInput(wheelDelta));
-
-    #endregion
+    public static void ScrollWheel(short wheelDelta = 120) => InputSender.SendInput(ScrollInput(wheelDelta));
 
     #region Combinations
     public static void DragAndDrop(int endX, int endY)
     {
         Task.Run(async () =>
         {
-            Click(MouseEventF.LeftDown);
+            MouseClick(MouseEventF.LeftDown);
             await Task.Delay(15);
             MoveAbsolute(endX, endY);
             await Task.Delay(15);
-            Click(MouseEventF.LeftUp);
+            MouseClick(MouseEventF.LeftUp);
         });
     }
 
-    internal static void MoveAndClick(MouseEventF dwFlags, int x, int y)
-    {
-        var input = MoveAbsoluteInput(x, y);
-        input.union.mi.dwFlags |= dwFlags;
-        InputSender.SendInput(input);
-    }
-    internal static void MoveAndClick(MouseEventF dwFlags, int x, int y, int numberOfClicks = 2)
+    internal static void MoveAndClick(int x, int y, MouseEventF dwFlags) => InputSender.SendInput(MoveAndClickAbsoluteInput(x, y, dwFlags));
+    internal static void MoveAndClick(int x, int y, MouseEventF dwFlags, int numberOfClicks = 2)
     {
         var inputs = new InputStruct[numberOfClicks + 1];
         inputs[0] = MoveAbsoluteInput(x, y);
@@ -237,43 +100,43 @@ public static partial class Mouse
         {
             case MouseButtons.Left:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.LeftClick);
+                    MouseClick(MouseEventF.LeftClick);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.LeftDown);
+                    MouseClick(MouseEventF.LeftDown);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.LeftUp);
+                    MouseClick(MouseEventF.LeftUp);
                 break;
             case MouseButtons.Middle:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.MiddleClick);
+                    MouseClick(MouseEventF.MiddleClick);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.MiddleDown);
+                    MouseClick(MouseEventF.MiddleDown);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.MiddleUp);
+                    MouseClick(MouseEventF.MiddleUp);
                 break;
             case MouseButtons.Right:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.RightClick);
+                    MouseClick(MouseEventF.RightClick);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.RightDown);
+                    MouseClick(MouseEventF.RightDown);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.RightUp);
+                    MouseClick(MouseEventF.RightUp);
                 break;
             case MouseButtons.XButton1:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.XClick, MouseDataXButton.XButton1);
+                    MouseClick(MouseEventF.XClick, MouseDataXButton.XButton1);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.XDown, MouseDataXButton.XButton1);
+                    MouseClick(MouseEventF.XDown, MouseDataXButton.XButton1);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.XUp, MouseDataXButton.XButton1);
+                    MouseClick(MouseEventF.XUp, MouseDataXButton.XButton1);
                 break;
             case MouseButtons.XButton2:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.XClick, MouseDataXButton.XButton2);
+                    MouseClick(MouseEventF.XClick, MouseDataXButton.XButton2);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.XDown, MouseDataXButton.XButton2);
+                    MouseClick(MouseEventF.XDown, MouseDataXButton.XButton2);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.XUp, MouseDataXButton.XButton2);
+                    MouseClick(MouseEventF.XUp, MouseDataXButton.XButton2);
                 break;
         }
     }
@@ -284,43 +147,43 @@ public static partial class Mouse
         {
             case MouseButtons.Left:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.LeftClick, numberOfClicks);
+                    MouseMultClick(MouseEventF.LeftClick, MouseDataXButton.None, numberOfClicks);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.LeftDown, numberOfClicks);
+                    MouseMultClick(MouseEventF.LeftDown, MouseDataXButton.None, numberOfClicks);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.LeftUp, numberOfClicks);
+                    MouseMultClick(MouseEventF.LeftUp, MouseDataXButton.None, numberOfClicks);
                 break;
             case MouseButtons.Middle:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.MiddleClick, numberOfClicks);
+                    MouseMultClick(MouseEventF.MiddleClick, MouseDataXButton.None, numberOfClicks);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.MiddleDown, numberOfClicks);
+                    MouseMultClick(MouseEventF.MiddleDown, MouseDataXButton.None, numberOfClicks);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.MiddleUp, numberOfClicks);
+                    MouseMultClick(MouseEventF.MiddleUp, MouseDataXButton.None, numberOfClicks);
                 break;
             case MouseButtons.Right:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.RightClick, numberOfClicks);
+                    MouseMultClick(MouseEventF.RightClick, MouseDataXButton.None, numberOfClicks);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.RightDown, numberOfClicks);
+                    MouseMultClick(MouseEventF.RightDown, MouseDataXButton.None, numberOfClicks);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.RightUp, numberOfClicks);
+                    MouseMultClick(MouseEventF.RightUp, MouseDataXButton.None, numberOfClicks);
                 break;
             case MouseButtons.XButton1:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.XClick, MouseDataXButton.XButton1, numberOfClicks);
+                    MouseMultClick(MouseEventF.XClick, MouseDataXButton.XButton1, numberOfClicks);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.XDown, MouseDataXButton.XButton1, numberOfClicks);
+                    MouseMultClick(MouseEventF.XDown, MouseDataXButton.XButton1, numberOfClicks);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.XUp, MouseDataXButton.XButton1, numberOfClicks);
+                    MouseMultClick(MouseEventF.XUp, MouseDataXButton.XButton1, numberOfClicks);
                 break;
             case MouseButtons.XButton2:
                 if (pressState == PressedState.Click)
-                    Click(MouseEventF.XClick, MouseDataXButton.XButton2, numberOfClicks);
+                    MouseMultClick(MouseEventF.XClick, MouseDataXButton.XButton2, numberOfClicks);
                 else if (pressState == PressedState.Down)
-                    Click(MouseEventF.XDown, MouseDataXButton.XButton2, numberOfClicks);
+                    MouseMultClick(MouseEventF.XDown, MouseDataXButton.XButton2, numberOfClicks);
                 else if (pressState == PressedState.Up)
-                    Click(MouseEventF.XUp, MouseDataXButton.XButton2, numberOfClicks);
+                    MouseMultClick(MouseEventF.XUp, MouseDataXButton.XButton2, numberOfClicks);
                 break;
         }
     }

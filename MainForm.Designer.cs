@@ -2,265 +2,264 @@
 
 namespace MouseAndKeyboard
 {
-	partial class MainForm
-	{
-		/// <summary>
-		///  Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+    partial class MainForm
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		///  Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		///  Required method for Designer support - do not modify
-		///  the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
-			System.Windows.Forms.Label lblIP;
-			System.Windows.Forms.Label lblPort;
-			System.Windows.Forms.Label labelSeparator;
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-			this.txtIP = new System.Windows.Forms.TextBox();
-			this.txtPort = new System.Windows.Forms.TextBox();
-			this.chbReceiver = new System.Windows.Forms.CheckBox();
-			this.btnStart = new System.Windows.Forms.Button();
-			this.btnStop = new System.Windows.Forms.Button();
-			this.chbConsole = new System.Windows.Forms.CheckBox();
-			this.chbMMove = new System.Windows.Forms.CheckBox();
-			this.chbMScroll = new System.Windows.Forms.CheckBox();
-			this.chbMClick = new System.Windows.Forms.CheckBox();
-			this.chbKKey = new System.Windows.Forms.CheckBox();
-			this.txtConsole = new System.Windows.Forms.TextBox();
-			lblIP = new System.Windows.Forms.Label();
-			lblPort = new System.Windows.Forms.Label();
-			labelSeparator = new System.Windows.Forms.Label();
-			this.flowLayoutPanel1.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// lblIP
-			// 
-			lblIP.AutoSize = true;
-			lblIP.Location = new System.Drawing.Point(18, 15);
-			lblIP.Name = "lblIP";
-			lblIP.Size = new System.Drawing.Size(17, 15);
-			lblIP.TabIndex = 5;
-			lblIP.Text = "IP";
-			lblIP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// lblPort
-			// 
-			lblPort.AutoSize = true;
-			lblPort.Location = new System.Drawing.Point(18, 59);
-			lblPort.Name = "lblPort";
-			lblPort.Size = new System.Drawing.Size(29, 15);
-			lblPort.TabIndex = 3;
-			lblPort.Text = "Port";
-			lblPort.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelSeparator
-			// 
-			labelSeparator.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			labelSeparator.Location = new System.Drawing.Point(18, 211);
-			labelSeparator.Name = "labelSeparator";
-			labelSeparator.Size = new System.Drawing.Size(115, 2);
-			labelSeparator.TabIndex = 7;
-			// 
-			// flowLayoutPanel1
-			// 
-			this.flowLayoutPanel1.Controls.Add(lblIP);
-			this.flowLayoutPanel1.Controls.Add(this.txtIP);
-			this.flowLayoutPanel1.Controls.Add(lblPort);
-			this.flowLayoutPanel1.Controls.Add(this.txtPort);
-			this.flowLayoutPanel1.Controls.Add(this.chbReceiver);
-			this.flowLayoutPanel1.Controls.Add(this.btnStart);
-			this.flowLayoutPanel1.Controls.Add(this.btnStop);
-			this.flowLayoutPanel1.Controls.Add(this.chbConsole);
-			this.flowLayoutPanel1.Controls.Add(labelSeparator);
-			this.flowLayoutPanel1.Controls.Add(this.chbMMove);
-			this.flowLayoutPanel1.Controls.Add(this.chbMScroll);
-			this.flowLayoutPanel1.Controls.Add(this.chbMClick);
-			this.flowLayoutPanel1.Controls.Add(this.chbKKey);
-			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
-			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(15);
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(169, 357);
-			this.flowLayoutPanel1.TabIndex = 0;
-			// 
-			// txtIP
-			// 
-			this.txtIP.Location = new System.Drawing.Point(18, 33);
-			this.txtIP.Name = "txtIP";
-			this.txtIP.Size = new System.Drawing.Size(128, 23);
-			this.txtIP.TabIndex = 0;
-			this.txtIP.Text = "127.0.0.1";
-			// 
-			// txtPort
-			// 
-			this.txtPort.Location = new System.Drawing.Point(18, 77);
-			this.txtPort.Name = "txtPort";
-			this.txtPort.Size = new System.Drawing.Size(128, 23);
-			this.txtPort.TabIndex = 1;
-			this.txtPort.Text = "7777";
-			// 
-			// chbReceiver
-			// 
-			this.chbReceiver.AutoSize = true;
-			this.chbReceiver.Location = new System.Drawing.Point(18, 106);
-			this.chbReceiver.Name = "chbReceiver";
-			this.chbReceiver.Size = new System.Drawing.Size(81, 19);
-			this.chbReceiver.TabIndex = 6;
-			this.chbReceiver.Text = "Is Receiver";
-			this.chbReceiver.UseVisualStyleBackColor = true;
-			this.chbReceiver.CheckStateChanged += new System.EventHandler(this.ChbReceiver_CheckStateChanged);
-			// 
-			// btnStart
-			// 
-			this.btnStart.Location = new System.Drawing.Point(18, 131);
-			this.btnStart.Name = "btnStart";
-			this.btnStart.Size = new System.Drawing.Size(75, 23);
-			this.btnStart.TabIndex = 2;
-			this.btnStart.Text = "Start";
-			this.btnStart.UseVisualStyleBackColor = true;
-			this.btnStart.Click += new System.EventHandler(this.BtnStart_Click);
-			// 
-			// btnStop
-			// 
-			this.btnStop.Enabled = false;
-			this.btnStop.Location = new System.Drawing.Point(18, 160);
-			this.btnStop.Name = "btnStop";
-			this.btnStop.Size = new System.Drawing.Size(75, 23);
-			this.btnStop.TabIndex = 3;
-			this.btnStop.Text = "Stop";
-			this.btnStop.UseVisualStyleBackColor = true;
-			this.btnStop.Click += new System.EventHandler(this.BtnStop_Click);
-			// 
-			// chbConsole
-			// 
-			this.chbConsole.AutoSize = true;
-			this.chbConsole.Checked = true;
-			this.chbConsole.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chbConsole.Location = new System.Drawing.Point(18, 189);
-			this.chbConsole.Name = "chbConsole";
-			this.chbConsole.Size = new System.Drawing.Size(114, 19);
-			this.chbConsole.TabIndex = 5;
-			this.chbConsole.Text = "Console Enabled";
-			this.chbConsole.UseVisualStyleBackColor = true;
-			this.chbConsole.CheckedChanged += new System.EventHandler(this.ChbConsole_CheckedChanged);
-			// 
-			// chbMMove
-			// 
-			this.chbMMove.AutoSize = true;
-			this.chbMMove.Location = new System.Drawing.Point(18, 216);
-			this.chbMMove.Name = "chbMMove";
-			this.chbMMove.Size = new System.Drawing.Size(112, 19);
-			this.chbMMove.TabIndex = 7;
-			this.chbMMove.Text = "MMove Enabled";
-			this.chbMMove.UseVisualStyleBackColor = true;
-			this.chbMMove.CheckedChanged += new System.EventHandler(this.ChbMMove_CheckedChanged);
-			// 
-			// chbMScroll
-			// 
-			this.chbMScroll.AutoSize = true;
-			this.chbMScroll.Location = new System.Drawing.Point(18, 241);
-			this.chbMScroll.Name = "chbMScroll";
-			this.chbMScroll.Size = new System.Drawing.Size(111, 19);
-			this.chbMScroll.TabIndex = 8;
-			this.chbMScroll.Text = "MScroll Enabled";
-			this.chbMScroll.UseVisualStyleBackColor = true;
-			this.chbMScroll.CheckedChanged += new System.EventHandler(this.ChbMScroll_CheckedChanged);
-			// 
-			// chbMClick
-			// 
-			this.chbMClick.AutoSize = true;
-			this.chbMClick.Location = new System.Drawing.Point(18, 266);
-			this.chbMClick.Name = "chbMClick";
-			this.chbMClick.Size = new System.Drawing.Size(108, 19);
-			this.chbMClick.TabIndex = 9;
-			this.chbMClick.Text = "MClick Enabled";
-			this.chbMClick.UseVisualStyleBackColor = true;
-			this.chbMClick.CheckedChanged += new System.EventHandler(this.ChbMClick_CheckedChanged);
-			// 
-			// chbKKey
-			// 
-			this.chbKKey.AutoSize = true;
-			this.chbKKey.Location = new System.Drawing.Point(18, 291);
-			this.chbKKey.Name = "chbKKey";
-			this.chbKKey.Size = new System.Drawing.Size(97, 19);
-			this.chbKKey.TabIndex = 10;
-			this.chbKKey.Text = "KKey Enabled";
-			this.chbKKey.UseVisualStyleBackColor = true;
-			this.chbKKey.CheckedChanged += new System.EventHandler(this.ChbKKey_CheckedChanged);
-			// 
-			// txtConsole
-			// 
-			this.txtConsole.BackColor = System.Drawing.Color.Black;
-			this.txtConsole.CausesValidation = false;
-			this.txtConsole.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtConsole.ForeColor = System.Drawing.SystemColors.Window;
-			this.txtConsole.Location = new System.Drawing.Point(169, 0);
-			this.txtConsole.Margin = new System.Windows.Forms.Padding(10);
-			this.txtConsole.Multiline = true;
-			this.txtConsole.Name = "txtConsole";
-			this.txtConsole.PlaceholderText = "Console";
-			this.txtConsole.ReadOnly = true;
-			this.txtConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtConsole.ShortcutsEnabled = false;
-			this.txtConsole.Size = new System.Drawing.Size(268, 357);
-			this.txtConsole.TabIndex = 0;
-			this.txtConsole.TabStop = false;
-			// 
-			// MainForm
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(437, 357);
-			this.Controls.Add(this.txtConsole);
-			this.Controls.Add(this.flowLayoutPanel1);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "MainForm";
-			this.Text = "MainForm";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-			this.Load += new System.EventHandler(this.MainForm_Load);
-			this.flowLayoutPanel1.ResumeLayout(false);
-			this.flowLayoutPanel1.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            Label lblIP;
+            Label lblPort;
+            Label labelSeparator;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            txtIP = new TextBox();
+            txtPort = new TextBox();
+            chbReceiver = new CheckBox();
+            btnStart = new Button();
+            btnStop = new Button();
+            chbConsole = new CheckBox();
+            chbMMove = new CheckBox();
+            chbMScroll = new CheckBox();
+            chbMClick = new CheckBox();
+            chbKKey = new CheckBox();
+            txtConsole = new TextBox();
+            lblIP = new Label();
+            lblPort = new Label();
+            labelSeparator = new Label();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
+            // 
+            // lblIP
+            // 
+            lblIP.AutoSize = true;
+            lblIP.Location = new Point(18, 15);
+            lblIP.Name = "lblIP";
+            lblIP.Size = new Size(17, 15);
+            lblIP.TabIndex = 5;
+            lblIP.Text = "IP";
+            lblIP.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblPort
+            // 
+            lblPort.AutoSize = true;
+            lblPort.Location = new Point(18, 59);
+            lblPort.Name = "lblPort";
+            lblPort.Size = new Size(29, 15);
+            lblPort.TabIndex = 3;
+            lblPort.Text = "Port";
+            lblPort.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // labelSeparator
+            // 
+            labelSeparator.BorderStyle = BorderStyle.Fixed3D;
+            labelSeparator.Location = new Point(18, 211);
+            labelSeparator.Name = "labelSeparator";
+            labelSeparator.Size = new Size(115, 2);
+            labelSeparator.TabIndex = 7;
+            // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.Controls.Add(lblIP);
+            flowLayoutPanel1.Controls.Add(txtIP);
+            flowLayoutPanel1.Controls.Add(lblPort);
+            flowLayoutPanel1.Controls.Add(txtPort);
+            flowLayoutPanel1.Controls.Add(chbReceiver);
+            flowLayoutPanel1.Controls.Add(btnStart);
+            flowLayoutPanel1.Controls.Add(btnStop);
+            flowLayoutPanel1.Controls.Add(chbConsole);
+            flowLayoutPanel1.Controls.Add(labelSeparator);
+            flowLayoutPanel1.Controls.Add(chbMMove);
+            flowLayoutPanel1.Controls.Add(chbMScroll);
+            flowLayoutPanel1.Controls.Add(chbMClick);
+            flowLayoutPanel1.Controls.Add(chbKKey);
+            flowLayoutPanel1.Dock = DockStyle.Left;
+            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Padding = new Padding(15);
+            flowLayoutPanel1.Size = new Size(169, 357);
+            flowLayoutPanel1.TabIndex = 0;
+            // 
+            // txtIP
+            // 
+            txtIP.Location = new Point(18, 33);
+            txtIP.Name = "txtIP";
+            txtIP.Size = new Size(128, 23);
+            txtIP.TabIndex = 0;
+            txtIP.Text = "127.0.0.1";
+            // 
+            // txtPort
+            // 
+            txtPort.Location = new Point(18, 77);
+            txtPort.Name = "txtPort";
+            txtPort.Size = new Size(128, 23);
+            txtPort.TabIndex = 1;
+            txtPort.Text = "7777";
+            // 
+            // chbReceiver
+            // 
+            chbReceiver.AutoSize = true;
+            chbReceiver.Location = new Point(18, 106);
+            chbReceiver.Name = "chbReceiver";
+            chbReceiver.Size = new Size(81, 19);
+            chbReceiver.TabIndex = 6;
+            chbReceiver.Text = "Is Receiver";
+            chbReceiver.UseVisualStyleBackColor = true;
+            chbReceiver.CheckStateChanged += ChbReceiver_CheckStateChanged;
+            // 
+            // btnStart
+            // 
+            btnStart.Location = new Point(18, 131);
+            btnStart.Name = "btnStart";
+            btnStart.Size = new Size(75, 23);
+            btnStart.TabIndex = 2;
+            btnStart.Text = "Start";
+            btnStart.UseVisualStyleBackColor = true;
+            btnStart.Click += BtnStart_Click;
+            // 
+            // btnStop
+            // 
+            btnStop.Enabled = false;
+            btnStop.Location = new Point(18, 160);
+            btnStop.Name = "btnStop";
+            btnStop.Size = new Size(75, 23);
+            btnStop.TabIndex = 3;
+            btnStop.Text = "Stop";
+            btnStop.UseVisualStyleBackColor = true;
+            btnStop.Click += BtnStop_Click;
+            // 
+            // chbConsole
+            // 
+            chbConsole.AutoSize = true;
+            chbConsole.Checked = true;
+            chbConsole.CheckState = CheckState.Checked;
+            chbConsole.Location = new Point(18, 189);
+            chbConsole.Name = "chbConsole";
+            chbConsole.Size = new Size(114, 19);
+            chbConsole.TabIndex = 5;
+            chbConsole.Text = "Console Enabled";
+            chbConsole.UseVisualStyleBackColor = true;
+            chbConsole.CheckedChanged += ChbConsole_CheckedChanged;
+            // 
+            // chbMMove
+            // 
+            chbMMove.AutoSize = true;
+            chbMMove.Location = new Point(18, 216);
+            chbMMove.Name = "chbMMove";
+            chbMMove.Size = new Size(112, 19);
+            chbMMove.TabIndex = 7;
+            chbMMove.Text = "MMove Enabled";
+            chbMMove.UseVisualStyleBackColor = true;
+            chbMMove.CheckedChanged += ChbMMove_CheckedChanged;
+            // 
+            // chbMScroll
+            // 
+            chbMScroll.AutoSize = true;
+            chbMScroll.Location = new Point(18, 241);
+            chbMScroll.Name = "chbMScroll";
+            chbMScroll.Size = new Size(111, 19);
+            chbMScroll.TabIndex = 8;
+            chbMScroll.Text = "MScroll Enabled";
+            chbMScroll.UseVisualStyleBackColor = true;
+            chbMScroll.CheckedChanged += ChbMScroll_CheckedChanged;
+            // 
+            // chbMClick
+            // 
+            chbMClick.AutoSize = true;
+            chbMClick.Location = new Point(18, 266);
+            chbMClick.Name = "chbMClick";
+            chbMClick.Size = new Size(108, 19);
+            chbMClick.TabIndex = 9;
+            chbMClick.Text = "MClick Enabled";
+            chbMClick.UseVisualStyleBackColor = true;
+            chbMClick.CheckedChanged += ChbMClick_CheckedChanged;
+            // 
+            // chbKKey
+            // 
+            chbKKey.AutoSize = true;
+            chbKKey.Location = new Point(18, 291);
+            chbKKey.Name = "chbKKey";
+            chbKKey.Size = new Size(97, 19);
+            chbKKey.TabIndex = 10;
+            chbKKey.Text = "KKey Enabled";
+            chbKKey.UseVisualStyleBackColor = true;
+            chbKKey.CheckedChanged += ChbKKey_CheckedChanged;
+            // 
+            // txtConsole
+            // 
+            txtConsole.BackColor = Color.Black;
+            txtConsole.CausesValidation = false;
+            txtConsole.Dock = DockStyle.Fill;
+            txtConsole.ForeColor = SystemColors.Window;
+            txtConsole.Location = new Point(169, 0);
+            txtConsole.Margin = new Padding(10);
+            txtConsole.Multiline = true;
+            txtConsole.Name = "txtConsole";
+            txtConsole.PlaceholderText = "Console";
+            txtConsole.ReadOnly = true;
+            txtConsole.ScrollBars = ScrollBars.Vertical;
+            txtConsole.ShortcutsEnabled = false;
+            txtConsole.Size = new Size(268, 357);
+            txtConsole.TabIndex = 0;
+            txtConsole.TabStop = false;
+            // 
+            // MainForm
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(437, 357);
+            Controls.Add(txtConsole);
+            Controls.Add(flowLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "MainForm";
+            Text = "MainForm";
+            FormClosing += MainForm_FormClosing;
+            Load += MainForm_Load;
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
+        }
 
-		}
+        #endregion
 
-		#endregion
-
-		private FlowLayoutPanel flowLayoutPanel1;
-		private TextBox txtPort;
-		private Button btnStart;
-		private Button btnStop;
-		private Label lblIP;
-		private TextBox txtIP;
-		private Label lblPort;
-		private CheckBox chbReceiver;
-		private CheckBox chbConsole;
-		internal TextBox txtConsole;
-		private CheckBox chbMMove;
-		private Label labelSeparator;
-		private CheckBox chbMScroll;
-		private CheckBox chbMClick;
-		private CheckBox chbKKey;
-	}
+        private FlowLayoutPanel flowLayoutPanel1;
+        private TextBox txtPort;
+        private Button btnStart;
+        private Button btnStop;
+        private Label lblIP;
+        private TextBox txtIP;
+        private Label lblPort;
+        private CheckBox chbConsole;
+        private TextBox txtConsole;
+        private CheckBox chbMMove;
+        private Label labelSeparator;
+        private CheckBox chbMScroll;
+        private CheckBox chbMClick;
+        private CheckBox chbKKey;
+        private CheckBox chbReceiver;
+    }
 }
