@@ -101,7 +101,7 @@ public readonly struct MouseInput
     public Point GetPoint() => pt;
     public MouseDataXButton AsXButton() => (MouseDataXButton)mouseData;
 
-    private int GetHighWORD() => mouseData >> 16;
+    private int GetHighWORD() => mouseData >> (sizeof(int) * 4);
     internal int GetWheelDelta() => GetHighWORD();
 }
 
@@ -147,6 +147,6 @@ public readonly struct AppMouseInput
     ///     Converts the current <see cref="AppMouseInput" /> into a <see cref="MouseInput" />.<br/>
     ///     The AppMouseInput does not have a timestamp, thus one is generated at the time of this call.
     /// </summary>
-    public static explicit operator MouseInput(AppMouseInput other) => 
+    public static explicit operator MouseInput(AppMouseInput other) =>
         new(other.Point, MouseEventF.None, IntPtr.Size == 4 ? other.MouseData_x86 : other.MouseData_x64, Environment.TickCount);
 }

@@ -2,13 +2,11 @@
 
 namespace MouseAndKeyboard.InputListener;
 
-
 /// <summary>
 ///     Provides extended data for the MouseClickExt and MouseMoveExt events.
 /// </summary>
 public class MouseEventExtArgs : MouseEventArgs
 {
-
     /// <param name="buttons">One of the MouseButtons values indicating which mouse button was pressed.</param>
     /// <param name="clicks">The number of times a mouse button was pressed.</param>
     /// <param name="point">The X and Y coordinate of a mouse click, in pixels.</param>
@@ -177,14 +175,14 @@ public class MouseEventExtArgs : MouseEventArgs
         return e;
 
         static MouseButtons GetXButton(MouseDataXButton mx) => mx == MouseDataXButton.XButton1 ? MouseButtons.XButton1 : MouseButtons.XButton2;
-        static MouseButtons GetLeft() 
+        static MouseButtons GetLeft()
         {
             var mb = MouseButtons.Left;
             if (WinHook.SwapButtonThreshold > 0)
                 mb = MouseButtons.Right;
             return mb;
         }
-        static MouseButtons GetRight()      
+        static MouseButtons GetRight()
         {
             var mb = MouseButtons.Right;
             if (WinHook.SwapButtonThreshold > 0)
@@ -194,6 +192,6 @@ public class MouseEventExtArgs : MouseEventArgs
 
     }
 
-    internal MouseEventExtArgs ToDoubleClickEventArgs() => 
+    internal MouseEventExtArgs ToDoubleClickEventArgs() =>
         new(Button, 2, Point, Delta, Timestamp, IsMouseButtonDown, IsMouseButtonUp, IsHorizontalWheel);
 }

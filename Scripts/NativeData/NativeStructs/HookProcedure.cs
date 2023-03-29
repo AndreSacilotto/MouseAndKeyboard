@@ -30,6 +30,6 @@
 /// <remarks>
 ///    https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644986(v=vs.85)
 /// </remarks>
-public delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
+public delegate IntPtr LowLevelMKProc(int nCode, IntPtr wParam, IntPtr lParam);
 
 

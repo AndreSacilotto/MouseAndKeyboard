@@ -32,15 +32,26 @@ public class WinHook : IDisposable
     public event NextHookProcedure? Callback;
     private HookProcedureHandle? hookProc;
 
+    private readonly LowLevelMKProc llmkProc;
+    private readonly GCHandle gc_llmkProc;
+
+    public WinHook() 
+    {
+        llmkProc = HookCallback;
+        //https://stackoverflow.com/a/69105090
+        gc_llmkProc = GCHandle.Alloc(llmkProc);
+    }
+
     public void Dispose()
     {
+        gc_llmkProc.Free();
         hookProc?.Dispose();
         GC.SuppressFinalize(this);
     }
 
     private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
-        if (nCode == 0) 
+        if (nCode == 0)
             Callback?.Invoke(wParam, lParam);
         return HookNativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
     }
@@ -54,7 +65,7 @@ public class WinHook : IDisposable
     {
         var hook = new WinHook();
 
-        var hookHandle = HookNativeMethods.SetWindowsHookExW(hookType, hook.HookCallback, process, thread);
+        var hookHandle = HookNativeMethods.SetWindowsHookExW(hookType, hook.llmkProc, process, thread);
         var hookProcHandle = new HookProcedureHandle(hookHandle);
         hook.hookProc = hookProcHandle;
 

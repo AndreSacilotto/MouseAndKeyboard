@@ -77,7 +77,7 @@ internal static partial class HookNativeMethods
     /// </remarks>
     [LibraryImport("user32.dll", SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
-    internal static partial IntPtr SetWindowsHookExW(HookType hookType, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
+    internal static partial IntPtr SetWindowsHookExW(HookType hookType, LowLevelMKProc lpfn, IntPtr hMod, uint dwThreadId);
 
     /// <summary>
     ///     The UnhookWindowsHookEx function removes a hook procedure installed in a hook chain by the SetWindowsHookEx

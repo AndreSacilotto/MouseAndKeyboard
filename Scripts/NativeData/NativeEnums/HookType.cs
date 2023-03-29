@@ -78,7 +78,7 @@ public enum HookType : int
     WH_KEYBOARD_LL = 13,
     /// <summary>
     /// Installs a hook procedure that monitors low-level mouse input events. For more information, see the
-    /// LowLevelMouseProc hook procedure.
+    /// LowLevelMKProc hook procedure.
     /// </summary>
     WH_MOUSE_LL = 14
 }

@@ -2,10 +2,6 @@
 using MouseAndKeyboard.InputSimulation;
 using MouseAndKeyboard.Network;
 
-using Gma.System.MouseKeyHook.Implementation;
-using Gma.System.MouseKeyHook.WinApi;
-using Gma.System.MouseKeyHook;
-
 namespace YuumiInstrumentation;
 
 public sealed partial class YuumiMaster : IMKInput, IDisposable
@@ -31,6 +27,7 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
         EnabledMC = false;
         EnabledKK = false;
         socket.Dispose();
+        inputEvents.Dispose();
     }
 
     #region Network
