@@ -38,19 +38,19 @@ public sealed class YuumiSlave : IMKInput, IDisposable
     public static void MouseMove(int x, int y)
     {
         LoggerEvents.WriteLine($"RECEIVE: MMove {x} {y}");
-        Mouse.MoveAbsolute(x, y);
+        MouseSender.MoveAbsolute(x, y);
     }
 
     public static void MouseScroll(int scrollDelta)
     {
         LoggerEvents.WriteLine($"RECEIVE: MScroll {scrollDelta}");
-        Mouse.ScrollWheel((short)scrollDelta);
+        MouseSender.ScrollWheel(scrollDelta);
     }
 
     public static void MouseClick(MouseButtons mouseButton, PressedState pressedState)
     {
         LoggerEvents.WriteLine($"RECEIVE: MClick {mouseButton} {pressedState}");
-        Mouse.Click(pressedState, mouseButton);
+        MouseSender.Click(pressedState, mouseButton);
     }
 
     public static void Key(Keys keys, PressedState pressedState)
@@ -58,11 +58,11 @@ public sealed class YuumiSlave : IMKInput, IDisposable
         LoggerEvents.WriteLine($"RECEIVE: KKey {keys} {pressedState}");
 
         if (pressedState == PressedState.Down)
-            Keyboard.SendKeyDown(keys);
+            KeyboardSender.SendKeyDown(keys);
         else if (pressedState == PressedState.Up)
-            Keyboard.SendKeyUp(keys);
+            KeyboardSender.SendKeyUp(keys);
         else
-            Keyboard.SendFull(keys);
+            KeyboardSender.SendFull(keys);
     }
 
     public static void KeyModifier(Keys keys, Keys modifier, PressedState pressedState)
@@ -70,11 +70,11 @@ public sealed class YuumiSlave : IMKInput, IDisposable
         LoggerEvents.WriteLine($"RECEIVE: KKeyMod {keys} {pressedState}");
 
         if (pressedState == PressedState.Down)
-            Keyboard.SendKeyDown(keys, modifier);
+            KeyboardSender.SendKeyDown(keys, modifier);
         else if (pressedState == PressedState.Up)
-            Keyboard.SendKeyUp(keys, modifier);
+            KeyboardSender.SendKeyUp(keys, modifier);
         else
-            Keyboard.SendFull(keys, modifier);
+            KeyboardSender.SendFull(keys, modifier);
     }
 
     #endregion

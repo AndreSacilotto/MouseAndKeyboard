@@ -1,4 +1,5 @@
 ﻿using MouseAndKeyboard.Native;
+using System.Text;
 
 namespace MouseAndKeyboard.Util;
 
@@ -45,19 +46,16 @@ public static class KeyUtil
     // # It is not possible to distinguish Keys.LControlKey and Keys.RControlKey when they are modifiers
     // Check for Keys.Control instead
     // Same for Shift and Alt(Menu)
-    public static bool CheckModifier(VirtualKeyShort vKey)
-    {
-        return (KeyboardNativeMethods.GetKeyState(vKey) & 0x8000) > 0;
-    }
+    public static bool CheckModifier(int vKey) => (KeyboardNativeMethods.GetKeyState(vKey) & 0x8000) > 0;
 
     public static Keys AppendModifierStates(Keys keyData)
     {
-        // Is Control being held down?
-        var control = CheckModifier(VirtualKeyShort.CONTROL);
         // Is Shift being held down?
-        var shift = CheckModifier(VirtualKeyShort.SHIFT);
+        var shift = CheckModifier((int)VirtualKey.SHIFT);
+        // Is Control being held down?
+        var control = CheckModifier((int)VirtualKey.CONTROL);
         // Is Alt being held down?
-        var alt = CheckModifier(VirtualKeyShort.MENU);
+        var alt = CheckModifier((int)VirtualKey.MENU);
 
         // Windows keys
         // # combine LWin and RWin key with other keys will potentially corrupt the data

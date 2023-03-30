@@ -1,13 +1,9 @@
 ﻿namespace MouseAndKeyboard.Native;
 
-//https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input
-public enum InputType : uint
-{
-    Mouse = 0,
-    Keyboard = 1,
-    Hardware = 2
-}
+// DWORD => 32b = int or uint | (I will use Int32 in this cases or UInt32 if the code needed it)
+// WORD => 16b = short or ushort | (I will use Int16 in this cases or UInt32 if the code needed it)
 
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyexw
 public enum MapType : uint
 {
     /// <summary>VirtualKey to ScanCode</summary>
@@ -28,8 +24,9 @@ public enum MapType : uint
 
 #region Mouse Input
 
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
 [Flags]
-public enum MouseDataXButton : int
+public enum MouseDataXButton : Int32
 {
     None = 0x0,
     /// <summary>Set if the first X button is pressed or released</summary>
@@ -38,8 +35,9 @@ public enum MouseDataXButton : int
     XButton2 = 0x00000002
 }
 
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
 [Flags]
-public enum MouseEventF : uint
+public enum MouseEventF : Int32
 {
     None = 0x000,
     /// <summary>Movement occurred.</summary>
@@ -84,8 +82,9 @@ public enum MouseEventF : uint
 
 #region Keyboard Input
 
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerhotkey
 [Flags]
-public enum WHHotkey
+public enum FsModifiers : uint
 {
     None = 0x0000,
     Alt = 0x0001,
@@ -95,8 +94,9 @@ public enum WHHotkey
     NoRepeat = 0x4000,
 }
 
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
 [Flags]
-public enum KeyEventF : uint
+public enum KeyEventF : Int32
 {
     /// <summary>If used, the scan code was preceded by a prefix byte that has the value 0xE0 (224)</summary>
     ExtendedKey = 0x0001,

@@ -41,7 +41,7 @@ public abstract class KeyboardListener : BaseListener
         KeyUp(e);
     }
 
-    protected override void CallbackInternal(ref nint wParam, ref nint lParam)
+    protected override void CallbackInternal(ref IntPtr wParam, ref IntPtr lParam)
     {
         var eDownUp = GetDownUpEventArgs(ref wParam, ref lParam);
 
@@ -68,6 +68,6 @@ public abstract class KeyboardListener : BaseListener
         return new(eDownUp, chars);
     }
 
-    protected abstract List<KeyPressEventArgsExt> GetPressEventArgs(ref nint wParam, ref nint lParam);
-    protected abstract KeyEventArgsExt GetDownUpEventArgs(ref nint wParam, ref nint lParam);
+    protected abstract List<KeyPressEventArgsExt> GetPressEventArgs(ref IntPtr wParam, ref IntPtr lParam);
+    protected abstract KeyEventArgsExt GetDownUpEventArgs(ref IntPtr wParam, ref IntPtr lParam);
 }

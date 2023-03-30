@@ -1,6 +1,7 @@
 ﻿namespace MouseAndKeyboard.Native;
 
-public enum HookType : int
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw
+public enum HookId : int
 {
     /// <summary>
     /// Installs a hook procedure that monitors messages generated as a result of an input event in a dialog box,

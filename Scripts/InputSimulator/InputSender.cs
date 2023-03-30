@@ -3,10 +3,10 @@ using System.Runtime.InteropServices;
 
 namespace MouseAndKeyboard.InputSimulation;
 
-//Base code: https://stackoverflow.com/questions/20482338/simulate-keyboard-input-in-c-sharp
+//Base code: https://stackoverflow.com/a/20493025
 internal static partial class InputSender
 {
-    /// <summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput</summary>
+    /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput
     [LibraryImport("user32.dll")]
     internal static partial uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray)] InputStruct[] pInputs, int cbSize);
 

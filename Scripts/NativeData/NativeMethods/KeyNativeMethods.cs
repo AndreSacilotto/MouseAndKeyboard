@@ -44,32 +44,21 @@ internal static partial class KeyNativeMethods
     ///     with the specified virtual key to form a single character. However, the buffer may contain more characters 
     ///     than the return value specifies. When this happens, any extra characters are invalid and should be ignored.
     /// </returns>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-tounicodeex
     [DllImport("user32.dll")]
-    internal static extern int ToUnicodeEx(VirtualKeyShort wVirtKey, ScanCodeShort wScanCode, byte[] lpKeyState,
-        [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder pwszBuff, int cchBuff, KeyEventF wFlags, IntPtr dwhkl);
+    internal static extern int ToUnicodeEx(uint wVirtKey, uint wScanCode, byte[] lpKeyState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder pwszBuff, int cchBuff, uint wFlags, IntPtr dwhkl);
+    [DllImport("user32.dll")]
+    internal static extern int ToUnicodeEx(VirtualKey wVirtKey, ScanCode wScanCode, byte[] lpKeyState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder pwszBuff, int cchBuff, KeyEventF wFlags, IntPtr dwhkl);
 
-    /// <summary>
-    ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code into a
-    ///     virtual-key code.
-    /// </summary>
-    /// <param name="uCode">
-    ///     [in] The virtual key code or scan code for a key. How this value is interpreted depends on the
-    ///     value of the uMapType parameter.
-    /// </param>
-    /// <param name="uMapType">
-    ///     [in] The translation to be performed. The value of this parameter depends on the value of the
-    ///     uCode parameter.
-    /// </param>
+    /// <summary>Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code into a virtual-key code.</summary>
+    /// <param name="uCode">[in] The virtual key code or scan code for a key. How this value is interpreted depends on the value of the uMapType parameter.</param>
+    /// <param name="uMapType">[in] The translation to be performed. The value of this parameter depends on the value of the uCode parameter.</param>
     /// <param name="dwhkl">[in] The input locale identifier used to translate the specified code.</param>
-    /// <returns></returns>
-    [LibraryImport("user32.dll")]
-    internal static partial uint MapVirtualKeyEx(uint uCode, MapType uMapType, IntPtr dwhkl);
-
-    /// <summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeya</summary>
+    // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyw
     [LibraryImport("user32.dll")]
     internal static partial uint MapVirtualKeyW(uint uCode, MapType uMapType);
-
-    /// <summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-vkkeyscana</summary>
+    
+    // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-vkkeyscana
     [LibraryImport("user32.dll", StringMarshalling = StringMarshalling.Utf16)]
     internal static partial short VkKeyScanW(char ch);
 }

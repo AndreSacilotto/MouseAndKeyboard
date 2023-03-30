@@ -5,20 +5,13 @@ namespace MouseAndKeyboard.Native;
 
 internal static partial class KeyboardNativeMethods
 {
-    /// <summary>
-    ///     The GetKeyboardState function copies the status of the 256 virtual keys to the
-    ///     specified buffer.
-    /// </summary>
-    /// <param name="pbKeyState">
-    ///     [in] Pointer to a 256-byte array that contains keyboard key states.
-    /// </param>
+    /// <summary>The GetKeyboardState function copies the status of the 256 virtual keys to the specified buffer</summary>
+    /// <param name="pbKeyState">[in] Pointer to a 256-byte array that contains keyboard key states</param>
     /// <returns>
     ///     If the function succeeds, the return value is nonzero.
     ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
     /// </returns>
-    /// <remarks>
-    ///     https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeyboardstate
-    /// </remarks>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeyboardstate
     [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool GetKeyboardState(byte[] pbKeyState);
@@ -40,22 +33,22 @@ internal static partial class KeyboardNativeMethods
     ///     key is off and untoggled if the low-order bit is 0. A toggle key's indicator light (if any) on the keyboard will be
     ///     on when the key is toggled, and off when the key is untoggled.
     /// </returns>
-    /// <remarks>http://msdn.microsoft.com/en-us/library/ms646301.aspx</remarks>
+    // http://msdn.microsoft.com/en-us/library/ms646301.aspx
     [LibraryImport("user32.dll")]
-    internal static partial short GetKeyState(VirtualKeyShort nVirtKey);
+    internal static partial short GetKeyState(int nVirtKey);
 
     /// <summary>
-    ///     Retrieves the active input locale identifier (formerly called the keyboard layout) for the specified thread.
-    ///     If the idThread parameter is zero, the input locale identifier for the active thread is returned.
+    /// Retrieves the active input locale identifier (formerly called the keyboard layout) for the specified thread.
+    /// If the idThread parameter is zero, the input locale identifier for the active thread is returned.
     /// </summary>
     /// <param name="dwLayout">[in] The identifier of the thread to query, or 0 for the current thread. </param>
     /// <returns>
-    ///     The return value is the input locale identifier for the thread. The low word contains a Language Identifier for the
-    ///     input
-    ///     language and the high word contains a device handle to the physical layout of the keyboard.
+    /// The return value is the input locale identifier for the thread. The low word contains a Language Identifier for the input
+    /// language and the high word contains a device handle to the physical layout of the keyboard.
     /// </returns>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeyboardlayout
     [LibraryImport("user32.dll")]
-    internal static partial IntPtr GetKeyboardLayout(uint dwLayout);
+    internal static partial IntPtr GetKeyboardLayout(Int32 dwLayout);
 
     /// <summary>
     ///     Defines a system-wide hot key.
@@ -80,9 +73,10 @@ internal static partial class KeyboardNativeMethods
     ///     If the function succeeds, the return value is nonzero.
     ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
     /// </returns>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerhotkey
     [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static partial bool RegisterHotKey(IntPtr hWnd, int id, WHHotkey fsModifiers, Keys vk);
+    internal static partial bool RegisterHotKey(IntPtr hWnd, int id, FsModifiers fsModifiers, uint vk);
 
     /// <summary>
     ///     Frees a hot key previously registered by the calling thread.
@@ -98,6 +92,7 @@ internal static partial class KeyboardNativeMethods
     ///     If the function succeeds, the return value is nonzero.
     ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
     /// </returns>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterhotkey
     [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool UnregisterHotKey(IntPtr hWnd, int id);

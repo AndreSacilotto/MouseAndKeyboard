@@ -1,6 +1,8 @@
 ﻿namespace MouseAndKeyboard.Native;
 
-public enum VirtualKeyShort : short
+//https://www.pinvoke.net/default.aspx/Structures/KEYBDINPUT.html
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
+public enum VirtualKey : Int16
 {
     ///<summary>
     ///Left mouse button

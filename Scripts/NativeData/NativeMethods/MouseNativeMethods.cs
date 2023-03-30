@@ -15,12 +15,11 @@ internal static partial class MouseNativeMethods
     /// <returns>
     ///     The return value specifies the current double-click time, in milliseconds.
     /// </returns>
-    /// <remarks>
-    ///     http://msdn.microsoft.com/en-us/library/ms646258(VS.85).aspx
-    /// </remarks>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdoubleclicktime
     [LibraryImport("user32")]
-    internal static partial int GetDoubleClickTime();
+    internal static partial uint GetDoubleClickTime();
 
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool GetCursorPos(out Point lpMousePoint);

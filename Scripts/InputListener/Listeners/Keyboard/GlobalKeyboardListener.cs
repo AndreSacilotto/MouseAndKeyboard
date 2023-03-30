@@ -9,7 +9,7 @@ internal class GlobalKeyboardListener : KeyboardListener
     {
     }
 
-    protected override List<KeyPressEventArgsExt> GetPressEventArgs(ref nint wParam, ref nint lParam)
+    protected override List<KeyPressEventArgsExt> GetPressEventArgs(ref IntPtr wParam, ref IntPtr lParam)
     {
         var WM = (WindowsMessages)wParam;
 
@@ -20,7 +20,7 @@ internal class GlobalKeyboardListener : KeyboardListener
 
         var keyboardHookStruct = WinHook.MarshalHookParam<KeyboardInput>(lParam);
 
-        if (keyboardHookStruct.wVk == VirtualKeyShort.PACKET)
+        if (keyboardHookStruct.wVk == VirtualKey.PACKET)
         {
             var ch = (char)keyboardHookStruct.wScan;
             list.Add(new KeyPressEventArgsExt(ch, keyboardHookStruct.time));
@@ -35,7 +35,7 @@ internal class GlobalKeyboardListener : KeyboardListener
         return list;
     }
 
-    protected override KeyEventArgsExt GetDownUpEventArgs(ref nint wParam, ref nint lParam)
+    protected override KeyEventArgsExt GetDownUpEventArgs(ref IntPtr wParam, ref IntPtr lParam)
     {
         var keyboardHookStruct = WinHook.MarshalHookParam<KeyboardInput>(lParam);
 

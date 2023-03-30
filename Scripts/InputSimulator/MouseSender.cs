@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace MouseAndKeyboard.InputSimulation;
 
-public static partial class Mouse
+public static partial class MouseSender
 {
     public static void GetCursorPosition(out int x, out int y)
     {
@@ -20,36 +20,34 @@ public static partial class Mouse
     #region Inputs
     internal static InputStruct MoveRelativeInput(int x, int y)
     {
-        var union = new InputUnion(mi: new(new(x, y), MouseEventF.Move));
-        var input = new InputStruct(InputType.Mouse, union);
-        return input;
+        MouseInput mi = new(x, y, MouseEventF.Move);
+        return InputStruct.NewInput(mi);
     }
     internal static InputStruct MoveAbsoluteInput(int x, int y)
     {
-        var union = new InputUnion(mi: new(GetAbsoluteScreenPoint(x, y), MouseEventF.Move | MouseEventF.Absolute));
+        MouseInput mi = new(GetAbsoluteScreenPoint(x, y), MouseEventF.Move | MouseEventF.Absolute);
         //MouseEventF.VirtualDesk - Dont worth the trouble
-        return new InputStruct(InputType.Mouse, union);
+        return InputStruct.NewInput(mi);
     }
-    internal static InputStruct ScrollInput(short scroll)
+    internal static InputStruct ScrollInput(int scroll)
     {
-        var union = new InputUnion(mi: new(Point.Zero, MouseEventF.Wheel, scroll));
-        return new InputStruct(InputType.Mouse, union);
+        MouseInput mi = new(Point.Zero, MouseEventF.Wheel, scroll);
+        return InputStruct.NewInput(mi);
     }
     internal static InputStruct ClickInput(MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
     {
-        var union = new InputUnion(mi: new(Point.Zero, dwFlags, (short)mouseData));
-        return new InputStruct(InputType.Mouse, union);
+        MouseInput mi = new(Point.Zero, dwFlags, (int)mouseData);
+        return InputStruct.NewInput(mi);
     }
     internal static InputStruct MoveAndClickRelativeInput(int x, int y, MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
     {
-        var union = new InputUnion(mi: new(new(x, y), MouseEventF.Move | dwFlags, (short)mouseData));
-        var input = new InputStruct(InputType.Mouse, union);
-        return input;
+        MouseInput mi = new(x, y, MouseEventF.Move | dwFlags, (int)mouseData);
+        return InputStruct.NewInput(mi);
     }
     internal static InputStruct MoveAndClickAbsoluteInput(int x, int y, MouseEventF dwFlags, MouseDataXButton mouseData = MouseDataXButton.None)
     {
-        var union = new InputUnion(mi: new(GetAbsoluteScreenPoint(x, y), MouseEventF.Move | MouseEventF.Absolute | dwFlags, (short)mouseData));
-        return new InputStruct(InputType.Mouse, union);
+        MouseInput mi = new(GetAbsoluteScreenPoint(x, y), MouseEventF.Move | MouseEventF.Absolute | dwFlags, (int)mouseData);
+        return InputStruct.NewInput(mi);
     }
     #endregion
 
@@ -67,7 +65,7 @@ public static partial class Mouse
     }
 
     /// <param name="wheelDelta">Scroll quantity. 120 is the Windows default</param>
-    public static void ScrollWheel(short wheelDelta = 120) => InputSender.SendInput(ScrollInput(wheelDelta));
+    public static void ScrollWheel(int wheelDelta = 120) => InputSender.SendInput(ScrollInput(wheelDelta));
 
     #region Combinations
     public static void DragAndDrop(int endX, int endY)

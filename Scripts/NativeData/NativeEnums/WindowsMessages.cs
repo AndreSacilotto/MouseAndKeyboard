@@ -5,6 +5,8 @@
 /// Defined in winuser.h from Windows SDK v6.1
 /// Documentation pulled from MSDN.
 /// </summary>
+// https://github.com/rubberduck-vba/SlimDucky/blob/master/WM.cs
+// https://www.pinvoke.net/default.aspx/Enums/WindowsMessages.html
 public enum WindowsMessages : uint
 {
     /// <summary>
@@ -248,7 +250,7 @@ public enum WindowsMessages : uint
     /// </summary>
     NOTIFY = 0x004E,
     /// <summary>
-    /// The WM_INPUTLANGCHANGEREQUEST message is posted to the window with the focus when the user chooses a new input language, either with the hotkey (specified in the Keyboard control panel application) or from the indicator on the system taskbar. An application can accept the change by passing the message to the DefWindowProc function or reject the change (and prevent it from taking place) by returning immediately.
+    /// The WM_INPUTLANGCHANGEREQUEST message is posted to the window with the focus when the user chooses a new input language, either with the hotkey (specified in the KeyboardSender control panel application) or from the indicator on the system taskbar. An application can accept the change by passing the message to the DefWindowProc function or reject the change (and prevent it from taking place) by returning immediately.
     /// </summary>
     INPUTLANGCHANGEREQUEST = 0x0050,
     /// <summary>
@@ -936,7 +938,7 @@ public enum WindowsMessages : uint
     /// </summary>
     HSHELL_GETMINRECT = 5,
     /// <summary>
-    /// Keyboard language was changed or a new keyboard layout was loaded.
+    /// KeyboardSender language was changed or a new keyboard layout was loaded.
     /// </summary>
     HSHELL_LANGUAGE = 8,
     /// <summary>

@@ -9,7 +9,7 @@ internal class AppKeyboardListener : KeyboardListener
     {
     }
 
-    protected override List<KeyPressEventArgsExt> GetPressEventArgs(ref nint wParam, ref nint lParam)
+    protected override List<KeyPressEventArgsExt> GetPressEventArgs(ref IntPtr wParam, ref IntPtr lParam)
     {
         //http://msdn.microsoft.com/en-us/library/ms644984(v=VS.85).aspx
 
@@ -31,14 +31,14 @@ internal class AppKeyboardListener : KeyboardListener
 
         var scanCode = checked(flags & maskScanCode);
 
-        KeyboardStateHelper.TryGetCharFromKeyboardState((VirtualKeyShort)wParam, (ScanCodeShort)scanCode, 0, out var chars);
+        KeyboardStateHelper.TryGetCharFromKeyboardState((VirtualKey)wParam, (ScanCode)scanCode, 0, out var chars);
         if (chars != null)
             foreach (var ch in chars)
                 list.Add(new KeyPressEventArgsExt(ch));
         return list;
     }
 
-    protected override KeyEventArgsExt GetDownUpEventArgs(ref nint wParam, ref nint lParam)
+    protected override KeyEventArgsExt GetDownUpEventArgs(ref IntPtr wParam, ref IntPtr lParam)
     {
         //http://msdn.microsoft.com/en-us/library/ms644984(v=VS.85).aspx
 
@@ -65,7 +65,7 @@ internal class AppKeyboardListener : KeyboardListener
         var isKeyDown = !isKeyReleased;
         var isKeyUp = wasKeyDown && isKeyReleased;
 
-        return new KeyEventArgsExt(keyData, (ScanCodeShort)scanCode, timestamp, isKeyDown, isKeyUp, isExtendedKey);
+        return new KeyEventArgsExt(keyData, (ScanCode)scanCode, timestamp, isKeyDown, isKeyUp, isExtendedKey);
     }
 
 }

@@ -32,13 +32,12 @@ public class WinHook : IDisposable
     public event NextHookProcedure? Callback;
     private HookProcedureHandle? hookProc;
 
+    /* https://stackoverflow.com/a/69105090 */
     private readonly LowLevelMKProc llmkProc;
     private readonly GCHandle gc_llmkProc;
-
-    public WinHook() 
+    public WinHook()
     {
         llmkProc = HookCallback;
-        //https://stackoverflow.com/a/69105090
         gc_llmkProc = GCHandle.Alloc(llmkProc);
     }
 
@@ -61,7 +60,7 @@ public class WinHook : IDisposable
 
     public static T MarshalHookParam<T>(IntPtr lParam) where T : struct => (T)Marshal.PtrToStructure(lParam, typeof(T))!;
 
-    private static WinHook CreateHook(HookType hookType, IntPtr process, uint thread = 0)
+    private static WinHook CreateHook(HookId hookType, IntPtr process, int thread = 0)
     {
         var hook = new WinHook();
 
@@ -81,19 +80,19 @@ public class WinHook : IDisposable
     }
 
     #region MK Hooks
-    public static WinHook HookAppMouse() => CreateHook(HookType.WH_MOUSE, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
-    public static WinHook HookAppKeyboard() => CreateHook(HookType.WH_KEYBOARD, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
+    public static WinHook HookAppMouse() => CreateHook(HookId.WH_MOUSE, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
+    public static WinHook HookAppKeyboard() => CreateHook(HookId.WH_KEYBOARD, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
     public static WinHook HookGlobalMouse()
     {
         using Process p = Process.GetCurrentProcess();
         using ProcessModule curModule = p.MainModule!;
-        return CreateHook(HookType.WH_MOUSE_LL, curModule.BaseAddress, 0);
+        return CreateHook(HookId.WH_MOUSE_LL, curModule.BaseAddress, 0);
     }
     public static WinHook HookGlobalKeyboard()
     {
         using Process p = Process.GetCurrentProcess();
         using ProcessModule curModule = p.MainModule!;
-        return CreateHook(HookType.WH_KEYBOARD_LL, curModule.BaseAddress, 0);
+        return CreateHook(HookId.WH_KEYBOARD_LL, curModule.BaseAddress, 0);
     }
     #endregion
 

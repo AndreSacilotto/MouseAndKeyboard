@@ -15,8 +15,8 @@ public class MouseEventExtArgs : MouseEventArgs
     /// <param name="isMouseButtonDown">True if event signals mouse button down.</param>
     /// <param name="isMouseButtonUp">True if event signals mouse button up.</param>
     /// <param name="isHorizontalWheel">True if event signals horizontal wheel action.</param>
-    internal MouseEventExtArgs(MouseButtons buttons, int clicks, Point point, int delta, int timestamp, bool isMouseButtonDown, bool isMouseButtonUp, bool isHorizontalWheel)
-        : base(buttons, clicks, point.X, point.Y, delta)
+    public MouseEventExtArgs(MouseButtons buttons, int clicks, int x, int y, int delta, int timestamp, bool isMouseButtonDown, bool isMouseButtonUp, bool isHorizontalWheel)
+        : base(buttons, clicks, x, y, delta)
     {
         IsMouseButtonDown = isMouseButtonDown;
         IsMouseButtonUp = isMouseButtonUp;
@@ -24,55 +24,29 @@ public class MouseEventExtArgs : MouseEventArgs
         Timestamp = timestamp;
     }
 
-    /// <summary>
-    ///     Set this property to <b>true</b> inside your event handler to prevent further processing of the event in other
-    ///     applications.
-    /// </summary>
-    public bool Handled { get; set; }
+    #region Handled
+    private bool handled = false;
+    /// <summary>Value that represents if the event was already fully procesed</summary>
+    public bool Handled => handled;
+    /// <summary>Set this event as handled, used to prevent further processing of this event</summary>
+    public void Handle() => handled = true;
+    #endregion
 
-    /// <summary>
-    ///     True if event contains information about wheel scroll.
-    /// </summary>
-    public bool IsScroll => Delta != 0;
 
-    /// <summary>
-    ///     True if event signals horizontal wheel action.
-    /// </summary>
     public bool IsHorizontalWheel { get; }
 
-    /// <summary>
-    ///     True if event signals a click. False if it was only a move or wheel scroll.
-    /// </summary>
-    public bool IsClick => Clicks > 0;
-
-    /// <summary>
-    ///     True if event signals mouse button down.
-    /// </summary>
     public bool IsMouseButtonDown { get; }
 
-    /// <summary>
-    ///     True if event signals mouse button up.
-    /// </summary>
     public bool IsMouseButtonUp { get; }
 
-    /// <summary>
-    ///     The system tick count of when the event occurred.
-    /// </summary>
+    /// <summary>The system tick count of when the event occurred</summary>
     public int Timestamp { get; }
 
-    internal Point Point => new(X, Y);
+    /// <summary>True if event contains information about wheel scroll</summary>
+    public bool IsScroll => Delta != 0;
 
-    internal static MouseEventExtArgs FromRawDataApp(ref nint wParam, ref nint lParam)
-    {
-        var mouseHookStruct = (MouseInput)WinHook.MarshalHookParam<AppMouseInput>(lParam);
-        return FromRawData((WindowsMessages)wParam, ref mouseHookStruct);
-    }
-
-    internal static MouseEventExtArgs FromRawDataGlobal(ref nint wParam, ref nint lParam)
-    {
-        var mouseHookStruct = WinHook.MarshalHookParam<MouseInput>(lParam);
-        return FromRawData((WindowsMessages)wParam, ref mouseHookStruct);
-    }
+    /// <summary>True if event signals a click. False if it was only a move or wheel scroll</summary>
+    public bool IsClick => Clicks > 0;
 
     /// <summary>
     ///     Creates <see cref="MouseEventExtArgs" /> from relevant mouse data.
@@ -80,7 +54,7 @@ public class MouseEventExtArgs : MouseEventArgs
     /// <param name="wParam">First Windows Message parameter.</param>
     /// <param name="mouseInfo">A MouseInput containing information from which to construct MouseEventExtArgs.</param>
     /// <returns>A new MouseEventExtArgs object.</returns>
-    private static MouseEventExtArgs FromRawData(WindowsMessages WM, ref MouseInput mouseHookStruct)
+    internal static MouseEventExtArgs FromRawData(WindowsMessages WM, ref MouseInput mouseHookStruct)
     {
         var button = MouseButtons.None;
         var mouseDelta = 0;
@@ -165,7 +139,8 @@ public class MouseEventExtArgs : MouseEventArgs
         var e = new MouseEventExtArgs(
             button,
             clickCount,
-            mouseHookStruct.GetPoint(),
+            mouseHookStruct.X,
+            mouseHookStruct.Y,
             mouseDelta,
             mouseHookStruct.time,
             isMouseButtonDown,
@@ -192,6 +167,8 @@ public class MouseEventExtArgs : MouseEventArgs
 
     }
 
-    internal MouseEventExtArgs ToDoubleClickEventArgs() =>
-        new(Button, 2, Point, Delta, Timestamp, IsMouseButtonDown, IsMouseButtonUp, IsHorizontalWheel);
+    public Point GetPosition() => new(X, Y);
+
+    public MouseEventExtArgs ToDoubleClickEventArgs() =>
+        new(Button, 2, X, Y, Delta, Timestamp, IsMouseButtonDown, IsMouseButtonUp, IsHorizontalWheel);
 }

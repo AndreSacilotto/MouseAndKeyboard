@@ -8,7 +8,7 @@ namespace MouseAndKeyboard.InputListener;
 /// </summary>
 public class KeyEventArgsExt : KeyEventArgs
 {
-    internal KeyEventArgsExt(Keys keyData, ScanCodeShort scanCode, int timestamp, bool isKeyDown, bool isKeyUp, bool isExtendedKey) : base(keyData)
+    internal KeyEventArgsExt(Keys keyData, ScanCode scanCode, int timestamp, bool isKeyDown, bool isKeyUp, bool isExtendedKey) : base(keyData)
     {
         ScanCode = scanCode;
         Timestamp = timestamp;
@@ -18,7 +18,7 @@ public class KeyEventArgsExt : KeyEventArgs
     }
 
     /// <summary>hardware scan code</summary>
-    public ScanCodeShort ScanCode { get; }
+    public ScanCode ScanCode { get; }
 
     /// <summary>The system tick count of when the event occurred</summary>
     public int Timestamp { get; }

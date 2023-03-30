@@ -7,10 +7,6 @@ internal static partial class HookNativeMethods
     /// <summary>
     ///     Passes the hook information to the next hook procedure in the current hook chain. A hook procedure can call this
     ///     function either before or after processing the hook information.
-    ///     <para>
-    ///     See [ https://msdn.microsoft.com/en-us/library/windows/desktop/ms644974%28v=vs.85%29.aspx ] for more
-    ///     information.
-    ///     </para>
     /// </summary>
     /// <param name="hhk">C++ ( hhk [in, optional]. Type: HHOOK )<br />This parameter is ignored. </param>
     /// <param name="nCode">
@@ -42,6 +38,7 @@ internal static partial class HookNativeMethods
     ///     applications.
     ///     </para>
     /// </remarks>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex?redirectedfrom=MSDN
     [LibraryImport("user32.dll")]
     internal static partial IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
@@ -75,9 +72,10 @@ internal static partial class HookNativeMethods
     /// <remarks>
     ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
     /// </remarks>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw
     [LibraryImport("user32.dll", SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
-    internal static partial IntPtr SetWindowsHookExW(HookType hookType, LowLevelMKProc lpfn, IntPtr hMod, uint dwThreadId);
+    internal static partial IntPtr SetWindowsHookExW(HookId hookType, LowLevelMKProc lpfn, IntPtr hMod, Int32 dwThreadId);
 
     /// <summary>
     ///     The UnhookWindowsHookEx function removes a hook procedure installed in a hook chain by the SetWindowsHookEx
@@ -94,6 +92,7 @@ internal static partial class HookNativeMethods
     /// <remarks>
     ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
     /// </remarks>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex
     [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool UnhookWindowsHookEx(IntPtr hhk);
@@ -102,8 +101,9 @@ internal static partial class HookNativeMethods
     ///     Retrieves the unmanaged thread identifier of the calling thread.
     /// </summary>
     /// <returns></returns>
+    // https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
     [LibraryImport("kernel32")]
-    internal static partial uint GetCurrentThreadId();
+    internal static partial Int32 GetCurrentThreadId();
 
     /// <summary>
     ///     Retrieves a handle to the foreground window (the window with which the user is currently working).
@@ -111,6 +111,7 @@ internal static partial class HookNativeMethods
     ///     other threads.
     /// </summary>
     /// <returns></returns>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow
     [LibraryImport("user32.dll")]
     internal static partial IntPtr GetForegroundWindow();
 
@@ -125,12 +126,13 @@ internal static partial class HookNativeMethods
     ///     GetWindowThreadProcessId copies the identifier of the process to the variable; otherwise, it does not.
     /// </param>
     /// <returns>The return value is the identifier of the thread that created the window. </returns>
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid
     [LibraryImport("user32.dll", SetLastError = true)]
-    internal static partial uint GetWindowThreadProcessId(IntPtr handle, out uint processId);
-
+    internal static partial Int32 GetWindowThreadProcessId(IntPtr handle, out UInt32 processId);
     [LibraryImport("user32.dll")]
-    internal static partial uint GetWindowThreadProcessId(IntPtr handle, IntPtr processId);
-
+    internal static partial Int32 GetWindowThreadProcessId(IntPtr handle, IntPtr processId);
+    
+    //https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew
     [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
     public static partial IntPtr GetModuleHandleW([MarshalAs(UnmanagedType.LPWStr)] string lpModuleName);
 }

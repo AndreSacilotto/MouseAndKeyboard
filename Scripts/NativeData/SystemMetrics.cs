@@ -4,13 +4,11 @@ namespace MouseAndKeyboard.Native;
 
 internal static partial class SystemMetrics
 {
-    /// <summary>https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics</summary>
-    //[DllImport("user32.dll")]
-    //internal static extern int GetSystemMetrics([In] int smIndex);
+    // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics
     [LibraryImport("user32.dll")]
     internal static partial int GetSystemMetrics(SystemMetric smIndex);
 
-    /// <summary>https://pinvoke.net/default.aspx/Enums.SystemMetric</summary>
+    // https://pinvoke.net/default.aspx/Enums.SystemMetric
     internal enum SystemMetric : int
     {
         SM_CXSCREEN = 0,
@@ -115,5 +113,4 @@ internal static partial class SystemMetrics
     public static int GetYDragThreshold() => GetSystemMetrics(SystemMetric.SM_CYDRAG);
     public static int GetXDoubleClickThreshold() => GetSystemMetrics(SystemMetric.SM_CXDOUBLECLK) / 2 + 1;
     public static int GetYDoubleClickThreshold() => GetSystemMetrics(SystemMetric.SM_CYDOUBLECLK) / 2 + 1;
-
 }

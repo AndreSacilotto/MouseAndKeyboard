@@ -48,7 +48,7 @@ public abstract class MouseListener : BaseListener
     public event Action<MouseEventExtArgs>? MouseDragFinishedExt;
     #endregion
 
-    protected override void CallbackInternal(ref nint wParam, ref nint lParam)
+    protected override void CallbackInternal(ref IntPtr wParam, ref IntPtr lParam)
     {
         var e = GetEventArgs(ref wParam, ref lParam);
 
@@ -66,13 +66,13 @@ public abstract class MouseListener : BaseListener
                 ProcessWheel(e);
         }
 
-        if (previousPosition != e.Point)
+        if (previousPosition != e.GetPosition())
             ProcessMove(e);
 
         ProcessDrag(e);
     }
 
-    protected abstract MouseEventExtArgs GetEventArgs(ref nint wParam, ref nint lParam);
+    protected abstract MouseEventExtArgs GetEventArgs(ref IntPtr wParam, ref IntPtr lParam);
 
     protected virtual void ProcessWheel(MouseEventExtArgs e)
     {
@@ -123,7 +123,7 @@ public abstract class MouseListener : BaseListener
 
     private void ProcessMove(MouseEventExtArgs e)
     {
-        previousPosition = e.Point;
+        previousPosition = e.GetPosition();
 
         MouseMove?.Invoke(e);
         MouseMoveExt?.Invoke(e);
@@ -134,7 +134,7 @@ public abstract class MouseListener : BaseListener
         if (singleDown.HasFlag(MouseButtons.Left))
         {
             if (dragStartPosition.Equals(offGridPoint))
-                dragStartPosition = e.Point;
+                dragStartPosition = e.GetPosition();
             ProcessDragStarted(e);
         }
         else
@@ -148,8 +148,8 @@ public abstract class MouseListener : BaseListener
     {
         if (!isDragging)
         {
-            var isXDragging = Math.Abs(e.Point.X - dragStartPosition.X) > dragThresholdX;
-            var isYDragging = Math.Abs(e.Point.Y - dragStartPosition.Y) > dragThresholdY;
+            var isXDragging = Math.Abs(e.X - dragStartPosition.X) > dragThresholdX;
+            var isYDragging = Math.Abs(e.Y - dragStartPosition.Y) > dragThresholdY;
             isDragging = isXDragging || isYDragging;
 
             if (isDragging)

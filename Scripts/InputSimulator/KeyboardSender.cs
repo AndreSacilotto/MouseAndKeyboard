@@ -3,19 +3,17 @@ using MouseAndKeyboard.Util;
 
 namespace MouseAndKeyboard.InputSimulation;
 
-public static partial class Keyboard
+public static partial class KeyboardSender
 {
     internal static InputStruct KeyDownInput(Keys key)
     {
-        var union = new InputUnion(ki: new((VirtualKeyShort)key, (ScanCodeShort)KeyUtil.KeyCodeToScanCode(key), KeyEventF.ScanCode, Environment.TickCount, 0));
-        var input = new InputStruct(InputType.Keyboard, union);
-        return input;
+        KeyboardInput ki = new((VirtualKey)key, (ScanCode)KeyUtil.KeyCodeToScanCode(key), KeyEventF.ScanCode, Environment.TickCount, 0);
+        return InputStruct.NewInput(ki);
     }
     internal static InputStruct KeyUpInput(Keys key)
     {
-        var union = new InputUnion(ki: new((VirtualKeyShort)key, (ScanCodeShort)KeyUtil.KeyCodeToScanCode(key), KeyEventF.KeyUp | KeyEventF.ScanCode, Environment.TickCount, 0));
-        var input = new InputStruct(InputType.Keyboard, union);
-        return input;
+        KeyboardInput ki = new((VirtualKey)key, (ScanCode)KeyUtil.KeyCodeToScanCode(key), KeyEventF.KeyUp | KeyEventF.ScanCode, Environment.TickCount, 0);
+        return InputStruct.NewInput(ki);
     }
 
     #region Down

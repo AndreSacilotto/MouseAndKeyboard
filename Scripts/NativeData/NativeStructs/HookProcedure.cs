@@ -27,9 +27,9 @@
 ///     hooks will not receive hook notifications and may behave incorrectly as a result. If the hook
 ///     procedure does not call CallNextHookEx, the return value should be zero.
 /// </returns>
-/// <remarks>
-///    https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644986(v=vs.85)
-/// </remarks>
+// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644986(v=vs.85)#syntax
+// or
+// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644985(v=vs.85)#syntax
 public delegate IntPtr LowLevelMKProc(int nCode, IntPtr wParam, IntPtr lParam);
 
 

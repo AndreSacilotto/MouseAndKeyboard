@@ -4,7 +4,7 @@ namespace MouseAndKeyboard.InputListener;
 
 internal class GlobalMouseListener : MouseListener
 {
-    private readonly int systemDoubleClickTime;
+    private readonly uint systemDoubleClickTime;
     private readonly int doubleClickThresholdX;
     private readonly int doubleClickThresholdY;
     private MouseButtons previousClicked;
@@ -27,7 +27,7 @@ internal class GlobalMouseListener : MouseListener
             //StartDoubleClickWaiting
             previousClicked = e.Button;
             previousClickedTime = e.Timestamp;
-            previousClickedPosition = e.Point;
+            previousClickedPosition = new(e.X, e.Y);
         }
         base.ProcessDown(e);
     }
@@ -46,15 +46,16 @@ internal class GlobalMouseListener : MouseListener
 
     private bool IsDoubleClick(MouseEventExtArgs e)
     {
-        var isXMoving = Math.Abs(e.Point.X - previousClickedPosition.X) > doubleClickThresholdX;
-        var isYMoving = Math.Abs(e.Point.Y - previousClickedPosition.Y) > doubleClickThresholdY;
+        var isXMoving = Math.Abs(e.X - previousClickedPosition.X) > doubleClickThresholdX;
+        var isYMoving = Math.Abs(e.Y - previousClickedPosition.Y) > doubleClickThresholdY;
 
         return e.Button == previousClicked && !isXMoving && !isYMoving &&
             (e.Timestamp - previousClickedTime) <= systemDoubleClickTime;
     }
 
-    protected override MouseEventExtArgs GetEventArgs(ref nint wParam, ref nint lParam)
+    protected override MouseEventExtArgs GetEventArgs(ref IntPtr wParam, ref IntPtr lParam)
     {
-        return MouseEventExtArgs.FromRawDataGlobal(ref wParam, ref lParam);
+        var mouseHookStruct = WinHook.MarshalHookParam<MouseInput>(lParam);
+        return MouseEventExtArgs.FromRawData((WindowsMessages)wParam, ref mouseHookStruct);
     }
 }

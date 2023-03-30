@@ -4,12 +4,12 @@ using System.Text;
 
 namespace MouseAndKeyboard.InputListener;
 
-public static class KeyboardStateHelper
+internal static class KeyboardStateHelper
 {
     //Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods
-    private static VirtualKeyShort lastVirtualKeyCode;
+    private static VirtualKey lastVirtualKeyCode;
 
-    private static ScanCodeShort lastScanCode;
+    private static ScanCode lastScanCode;
     private static byte[] lastKeyState = new byte[byte.MaxValue];
     private static bool lastIsDead;
 
@@ -26,15 +26,8 @@ public static class KeyboardStateHelper
         return KeyboardNativeMethods.GetKeyboardLayout(hCurrentWnd); //get the layout identifier for the thread whose window is focused
     }
 
-    /// <summary>
-    ///     Translates a virtual key to its character equivalent using a specified keyboard layout
-    /// </summary>
-    /// <param name="virtualKeyCode"></param>
-    /// <param name="scanCode"></param>
-    /// <param name="fuState"></param>
-    /// <param name="dwhkl"></param>
-    /// <param name="chars"></param>
-    internal static void TryGetCharFromKeyboardState(VirtualKeyShort virtualKeyCode, ScanCodeShort scanCode, KeyEventF fuState, out char[]? chars)
+    /// <summary>Translates a virtual key to its character equivalent using a specified keyboard layout</summary>
+    internal static void TryGetCharFromKeyboardState(VirtualKey virtualKeyCode, ScanCode scanCode, KeyEventF fuState, out char[]? chars)
     {
         var dwhkl = GetActiveKeyboardLayout();
 

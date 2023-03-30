@@ -1,4 +1,7 @@
-﻿namespace MouseAndKeyboard.InputListener;
+﻿using MouseAndKeyboard.Native;
+using System.Runtime.InteropServices;
+
+namespace MouseAndKeyboard.InputListener;
 
 internal class AppMouseListener : MouseListener
 {
@@ -6,8 +9,21 @@ internal class AppMouseListener : MouseListener
     {
     }
 
-    protected override MouseEventExtArgs GetEventArgs(ref nint wParam, ref nint lParam)
+    protected override MouseEventExtArgs GetEventArgs(ref IntPtr wParam, ref IntPtr lParam)
     {
-        return MouseEventExtArgs.FromRawDataApp(ref wParam, ref lParam);
+        var mouseHookStruct = (MouseInput)WinHook.MarshalHookParam<AppMouseInput>(lParam);
+        return MouseEventExtArgs.FromRawData((WindowsMessages)wParam, ref mouseHookStruct);
     }
+
+    /// <summary>AppMouseInput structure contains information about a application-level mouse input event</summary>
+    [StructLayout(LayoutKind.Explicit)]
+    public readonly struct AppMouseInput
+    {
+        [FieldOffset(0x00)] public readonly Point Point;
+        [FieldOffset(0x16)] public readonly short MouseData_x86;
+        [FieldOffset(0x22)] public readonly short MouseData_x64;
+        public static explicit operator MouseInput(AppMouseInput other) =>
+            new(other.Point.X, other.Point.Y, MouseEventF.None, IntPtr.Size == 4 ? other.MouseData_x86 : other.MouseData_x64, Environment.TickCount);
+    }
+
 }
