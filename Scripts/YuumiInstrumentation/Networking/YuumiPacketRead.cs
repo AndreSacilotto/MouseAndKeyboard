@@ -1,10 +1,11 @@
-﻿using MouseAndKeyboard.InputSimulation;
+﻿using MouseAndKeyboard.InputSimulator;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
 
 public class YuumiPacketRead
 {
+    public event Action<int, int>? OnScreen;
     public event Action<int, int>? OnMouseMove;
     public event Action<int>? OnMouseScroll;
     public event Action<MouseButtons, PressedState>? OnMouseClick;
@@ -15,26 +16,37 @@ public class YuumiPacketRead
 
     public void ReadAll(Packet packet)
     {
-        var cmd = (Commands)packet.ReadByte();
-
-        switch (cmd)
+        switch ((Commands)packet.ReadByte())
         {
             case Commands.MouseMove:
                 ReadMouseMove(packet);
-                break;
+            break;
             case Commands.MouseScroll:
                 ReadMouseScroll(packet);
-                break;
+            break;
             case Commands.MouseClick:
                 ReadMouseClick(packet);
-                break;
+            break;
             case Commands.Key:
                 ReadKeyPress(packet);
-                break;
+            break;
             case Commands.KeyModifier:
                 ReadKeyModifier(packet);
-                break;
+            break;
+            case Commands.Screen:
+                ReadScreen(packet);
+            break;
         }
+    }
+
+    private void ReadScreen(Packet packet)
+    {
+        if (OnScreen == null)
+            return;
+
+        var w = packet.ReadInt();
+        var h = packet.ReadInt();
+        OnScreen(w, h);
     }
 
     private void ReadMouseMove(Packet packet)

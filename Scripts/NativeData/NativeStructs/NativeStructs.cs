@@ -109,3 +109,31 @@ public readonly struct MouseInput
     private int GetHighWORD() => mouseData >> (sizeof(int) * 4);
     internal int GetWheelDelta() => GetHighWORD();
 }
+
+
+/// <summary>
+/// The MONITORINFO structure contains information about a display monitor.
+/// <br/>The GetMonitorInfo function stores information in a MONITORINFO structure or a MONITORINFOEX structure.
+/// <br/>The MONITORINFO structure is a subset of the MONITORINFOEX structure.The MONITORINFOEX structure adds a string member to contain a name for the display monitor.
+/// </summary>
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-monitorinfo
+// https://github.com/dapplo/Dapplo.Windows/blob/master/src/Dapplo.Windows.User32/Structs/MonitorInfoEx.cs
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+internal unsafe struct MonitorInfoEx
+{
+    private readonly Int32 cbSize = Marshal.SizeOf(typeof(MonitorInfoEx));
+    public readonly NativeRect rcMonitor;
+    public readonly NativeRect rcWork;
+    public readonly Int32 dwFlags;
+    private fixed char szDevice[32];
+    public MonitorInfoEx() { }
+
+    public string DeviceName
+    {
+        get
+        {
+            fixed (char* deviceName = szDevice)
+                return new string(deviceName);
+        }
+    }
+}

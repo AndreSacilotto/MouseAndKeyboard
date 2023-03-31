@@ -44,7 +44,7 @@ public class MouseHookEventArgs : MouseEventArgs
     public bool IsClick => Clicks > 0;
 
     public Point GetPosition() => new(X, Y);
-    
+
     public MouseHookEventArgs ToDoubleClickEventArgs() => new(Button, 2, X, Y, Delta, Timestamp, IsMouseButtonDown, IsMouseButtonUp, IsHorizontalScroll);
 
     internal static MouseHookEventArgs NewEvent(WindowsMessages WM, ref MouseInput mouseHookStruct, int swapButtonThreshold)

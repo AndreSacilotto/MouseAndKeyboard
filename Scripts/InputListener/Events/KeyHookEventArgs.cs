@@ -4,7 +4,7 @@ namespace MouseAndKeyboard.InputListener;
 
 public class KeyHookEventArgs : KeyEventArgs
 {
-    internal KeyHookEventArgs(Keys keyData, ScanCode scanCode, int timestamp, bool isKeyDown, bool isKeyUp, bool isExtendedKey) : 
+    internal KeyHookEventArgs(Keys keyData, ScanCode scanCode, int timestamp, bool isKeyDown, bool isKeyUp, bool isExtendedKey) :
         base(keyData)
     {
         ScanCode = scanCode;

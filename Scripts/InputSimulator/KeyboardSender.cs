@@ -1,28 +1,37 @@
 ﻿using MouseAndKeyboard.Native;
-using MouseAndKeyboard.Util;
 
-namespace MouseAndKeyboard.InputSimulation;
+namespace MouseAndKeyboard.InputSimulator;
 
 public static partial class KeyboardSender
 {
-    internal static InputStruct KeyDownInput(Keys key)
+    internal static InputStruct KeyDownInputSC(Keys key)
     {
         KeyboardInput ki = new((VirtualKey)key, (ScanCode)KeyUtil.KeyCodeToScanCode(key), KeyEventF.ScanCode, Environment.TickCount, 0);
         return InputStruct.NewInput(ki);
     }
-    internal static InputStruct KeyUpInput(Keys key)
+    internal static InputStruct KeyUpInputSC(Keys key)
     {
         KeyboardInput ki = new((VirtualKey)key, (ScanCode)KeyUtil.KeyCodeToScanCode(key), KeyEventF.KeyUp | KeyEventF.ScanCode, Environment.TickCount, 0);
         return InputStruct.NewInput(ki);
     }
+    internal static InputStruct KeyDownInputVK(Keys key)
+    {
+        KeyboardInput ki = new((VirtualKey)key, 0, 0, Environment.TickCount, 0);
+        return InputStruct.NewInput(ki);
+    }
+    internal static InputStruct KeyUpInputVK(Keys key)
+    {
+        KeyboardInput ki = new((VirtualKey)key, 0, KeyEventF.KeyUp, Environment.TickCount, 0);
+        return InputStruct.NewInput(ki);
+    }
 
     #region Down
-    public static void SendKeyDown(Keys key) => InputSender.SendInput(KeyDownInput(key));
+    public static void SendKeyDown(Keys key) => InputSender.SendInput(KeyDownInputSC(key));
     public static void SendKeyDown(params Keys[] keys)
     {
         var inputs = new InputStruct[keys.Length];
         for (int i = 0; i < keys.Length; i++)
-            inputs[i] = KeyDownInput(keys[i]);
+            inputs[i] = KeyDownInputSC(keys[i]);
         InputSender.SendInput(inputs);
     }
     public static void SendKeyDown(Keys key, Keys modifier)
@@ -38,12 +47,12 @@ public static partial class KeyboardSender
     #endregion
 
     #region Up
-    public static void SendKeyUp(Keys key) => InputSender.SendInput(KeyUpInput(key));
+    public static void SendKeyUp(Keys key) => InputSender.SendInput(KeyUpInputSC(key));
     public static void SendKeyUp(params Keys[] keys)
     {
         var inputs = new InputStruct[keys.Length];
         for (int i = 0; i < keys.Length; i++)
-            inputs[i] = KeyUpInput(keys[i]);
+            inputs[i] = KeyUpInputSC(keys[i]);
         InputSender.SendInput(inputs);
     }
     public static void SendKeyUp(Keys key, Keys modifier)
@@ -58,9 +67,8 @@ public static partial class KeyboardSender
     }
     #endregion
 
-
     #region Full
-    public static void SendFull(Keys key) => InputSender.SendInput(KeyDownInput(key), KeyUpInput(key));
+    public static void SendFull(Keys key) => InputSender.SendInput(KeyDownInputSC(key), KeyUpInputSC(key));
     public static void SendFull(params Keys[] keys)
     {
         var len = keys.Length;
@@ -68,8 +76,8 @@ public static partial class KeyboardSender
         for (int i = 0; i < len; i++)
         {
             var key = keys[i];
-            inputs[i] = KeyDownInput(key);
-            inputs[len + i] = KeyUpInput(key);
+            inputs[i] = KeyDownInputSC(key);
+            inputs[len + i] = KeyUpInputSC(key);
         }
         InputSender.SendInput(inputs);
     }

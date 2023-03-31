@@ -1,12 +1,13 @@
 ﻿using MouseAndKeyboard.InputListener;
-using MouseAndKeyboard.InputSimulation;
+using MouseAndKeyboard.InputSimulator;
+using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
 
 public sealed partial class YuumiMaster : IDisposable
 {
-    private readonly UDPSocketShipper socket = new();
+    private readonly UDPSocketShipper socket;
 
     private readonly YuumiPacketWrite mkPacket = new();
     private readonly MKListener inputEvents;
@@ -16,11 +17,28 @@ public sealed partial class YuumiMaster : IDisposable
 
     public YuumiMaster()
     {
+#if DEBUG
+        socket = new UDPSocketShipper(true);
+#else
+		socket = new UDPSocketShipper(false);
+#endif
+
+        socket.OnConnect += WhenConnect;
+
         inputEvents = MKListener.FactoryGlobal();
         //inputEvents = Hook.GlobalEvents();
 
         //Safe Exit
-        inputEvents.KeyListener.KeyUp += (ev) => { if (ev.KeyCode == Keys.Pause) Application.Exit(); }; 
+        inputEvents.KeyListener.KeyUp += (ev) => { if (ev.KeyCode == Keys.Pause) Application.Exit(); };
+    }
+
+    private void WhenConnect(UDPSocketShipper socket)
+    {
+        var width = PrimaryMonitor.Instance.Width;
+        var height = PrimaryMonitor.Instance.Height;
+        Logger.WriteLine($"SEND: Screen {width} {height}");
+        mkPacket.WriteScreen(width, height);
+        SendPacket();
     }
 
     public void Dispose()
@@ -36,7 +54,7 @@ public sealed partial class YuumiMaster : IDisposable
     private void SendPacket()
     {
         socket.Send(mkPacket.Packet);
-        mkPacket.Reset();
+        mkPacket.Packet.Reset();
     }
 
     #region Enabling

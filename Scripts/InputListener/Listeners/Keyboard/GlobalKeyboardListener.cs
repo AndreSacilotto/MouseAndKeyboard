@@ -1,5 +1,4 @@
 ﻿using MouseAndKeyboard.Native;
-using MouseAndKeyboard.Util;
 
 namespace MouseAndKeyboard.InputListener;
 

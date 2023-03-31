@@ -6,10 +6,11 @@ internal static partial class SystemMetrics
 {
     // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics
     [LibraryImport("user32.dll")]
-    internal static partial int GetSystemMetrics(SystemMetric smIndex);
+    private static partial int GetSystemMetrics(SystemMetric smIndex);
 
     // https://pinvoke.net/default.aspx/Enums.SystemMetric
-    internal enum SystemMetric : int
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics
+    private enum SystemMetric : int
     {
         SM_CXSCREEN = 0,
         SM_CYSCREEN = 1,
@@ -108,9 +109,29 @@ internal static partial class SystemMetrics
         SM_SYSTEMDOCKED = 0x2004,
     }
 
+    public static int GetPrimaryMonitorScreenWidth() => GetSystemMetrics(SystemMetric.SM_CXSCREEN);
+    public static int GetPrimaryMonitorScreenHeight() => GetSystemMetrics(SystemMetric.SM_CYSCREEN);
+    public static Point GetPrimaryMonitorScreenSize() => new(GetPrimaryMonitorScreenWidth(), GetPrimaryMonitorScreenHeight());
+
+    public static int GetVirtualScreenWidth() => GetSystemMetrics(SystemMetric.SM_CXVIRTUALSCREEN);
+    public static int GetVirtualScreenHeight() => GetSystemMetrics(SystemMetric.SM_CYVIRTUALSCREEN);
+    public static Point GetVirtualScreenSize() => new(GetVirtualScreenWidth(), GetVirtualScreenHeight());
+
+    public static int GetVirtualScreenX() => GetSystemMetrics(SystemMetric.SM_XVIRTUALSCREEN);
+    public static int GetVirtualScreenY() => GetSystemMetrics(SystemMetric.SM_YVIRTUALSCREEN);
+    public static Point GetVirtualScreenCoords() => new(GetVirtualScreenX(), GetVirtualScreenY());
+
+    public static int CountVisibleMonitors() => GetSystemMetrics(SystemMetric.SM_CMONITORS);
+
     public static int GetSwapButtonThreshold() => GetSystemMetrics(SystemMetric.SM_SWAPBUTTON);
     public static int GetXDragThreshold() => GetSystemMetrics(SystemMetric.SM_CXDRAG);
     public static int GetYDragThreshold() => GetSystemMetrics(SystemMetric.SM_CYDRAG);
     public static int GetXDoubleClickThreshold() => GetSystemMetrics(SystemMetric.SM_CXDOUBLECLK) / 2 + 1;
     public static int GetYDoubleClickThreshold() => GetSystemMetrics(SystemMetric.SM_CYDOUBLECLK) / 2 + 1;
+
+    public static bool HasMouse() => GetSystemMetrics(SystemMetric.SM_MOUSEPRESENT) != 0;
+    public static bool HasHorizontalWheel() => GetSystemMetrics(SystemMetric.SM_MOUSEHORIZONTALWHEELPRESENT) != 0;
+    public static bool HasVerticalWheel() => GetSystemMetrics(SystemMetric.SM_MOUSEWHEELPRESENT) != 0;
+
+    //public static bool IsPotato() => GetSystemMetrics(SystemMetric.SM_SLOWMACHINE) != 0;
 }

@@ -1,5 +1,4 @@
 using MouseAndKeyboard.Native;
-using MouseAndKeyboard.Util;
 
 namespace MouseAndKeyboard.InputListener;
 
@@ -38,7 +37,7 @@ internal class AppKeyboardListener : KeyboardListener
 
         return new KeyHookEventArgs(keyData, (ScanCode)scanCode, timestamp, isKeyDown, isKeyUp, isExtendedKey);
     }
-    
+
     protected override IEnumerable<KeyHookPressEventArgs> GetPressEventArgs(IntPtr wParam, IntPtr lParam)
     {
         //https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644984(v=vs.85)#syntax

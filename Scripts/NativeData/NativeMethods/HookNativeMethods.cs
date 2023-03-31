@@ -131,7 +131,7 @@ internal static partial class HookNativeMethods
     internal static partial Int32 GetWindowThreadProcessId(IntPtr handle, out UInt32 processId);
     [LibraryImport("user32.dll")]
     internal static partial Int32 GetWindowThreadProcessId(IntPtr handle, IntPtr processId);
-    
+
     //https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew
     [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
     public static partial IntPtr GetModuleHandleW([MarshalAs(UnmanagedType.LPWStr)] string lpModuleName);

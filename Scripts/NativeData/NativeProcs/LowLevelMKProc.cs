@@ -31,5 +31,3 @@
 // or
 // https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc
 public delegate IntPtr LowLevelMKProc(int nCode, IntPtr wParam, IntPtr lParam);
-
-

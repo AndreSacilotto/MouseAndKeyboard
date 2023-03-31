@@ -1,4 +1,4 @@
-﻿namespace MouseAndKeyboard.InputSimulation;
+﻿namespace MouseAndKeyboard.InputSimulator;
 
 public enum PressedState : byte
 {

@@ -34,6 +34,7 @@ public class Packet
     public int Length => buffer.Length;
 
     #region Funcs
+
     public void Rewind() => pointer = 0;
 
     public void Reset()

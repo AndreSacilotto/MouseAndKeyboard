@@ -6,6 +6,8 @@ namespace MouseAndKeyboard.Network;
 
 public class UDPSocketShipper : UDPSocket
 {
+    public event Action<UDPSocketShipper>? OnConnect;
+
     public UDPSocketShipper(bool clientCanHost = true) : base()
     {
         ReuseAddress = clientCanHost;
@@ -16,6 +18,7 @@ public class UDPSocketShipper : UDPSocket
         if (MySocket.Connected)
             return;
         MySocket.Connect(hostEndPoint);
+        OnConnect?.Invoke(this);
     }
 
     public async Task<int> SendAsync(Packet packet)
@@ -28,7 +31,7 @@ public class UDPSocketShipper : UDPSocket
     public int Send(Packet packet)
     {
         if (MySocket.Connected)
-           return MySocket.Send(packet.ReadOnlySpan, SocketFlags.None);
+            return MySocket.Send(packet.ReadOnlySpan, SocketFlags.None);
         return 0;
     }
 

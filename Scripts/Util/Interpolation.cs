@@ -45,15 +45,6 @@ public static class Interpolation
     {
         return (1 - t) * v0 + t * v1;
     }
-
-    public static float Clamp(float value, float min, float max)
-    {
-        if (value < min)
-            return min;
-        if (value > max)
-            return max;
-        return value;
-    }
     public static float Clamp01(float value)
     {
         if (value < 0f)
@@ -62,4 +53,12 @@ public static class Interpolation
             return 1f;
         return value;
     }
+
+    public static float Remap(float fromMax, float toMax, float value) => value * toMax / fromMax;
+    public static float Remap(float fromMin, float fromMax, float toMin, float toMax, float value) => 
+        toMin + (toMax - toMin) * (value - fromMin) / (fromMax - fromMin);
+    public static int Remap(int fromMax, int toMax, int value) => value * toMax / fromMax;
+    public static int Remap(int fromMin, int fromMax, int toMin, int toMax, int value) =>
+        toMin + (toMax - toMin) * (value - fromMin) / (fromMax - fromMin);
+
 }

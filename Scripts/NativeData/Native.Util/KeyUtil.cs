@@ -1,7 +1,4 @@
-﻿using MouseAndKeyboard.Native;
-using System.Text;
-
-namespace MouseAndKeyboard.Util;
+﻿namespace MouseAndKeyboard.Native;
 
 public static class KeyUtil
 {
@@ -12,7 +9,7 @@ public static class KeyUtil
         if (!scanCodesDict.TryGetValue(key, out var result))
         {
             result = KeyNativeMethods.MapVirtualKeyW((uint)key, MapType.VK_TO_VSC);
-            if(result != 0)
+            if (result != 0)
                 scanCodesDict.Add(key, result);
         }
         return result;

@@ -1,5 +1,7 @@
-﻿using MouseAndKeyboard.InputSimulation;
+﻿using MouseAndKeyboard.InputSimulator;
+using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Network;
+using MouseAndKeyboard.Util;
 
 namespace YuumiInstrumentation;
 
@@ -30,15 +32,28 @@ public sealed class YuumiSlave : IDisposable
         yuumiRead.OnMouseClick += MouseClick;
         yuumiRead.OnKeyPress += Key;
         yuumiRead.OnKeyModifierPress += KeyModifier;
+        yuumiRead.OnScreen += Screen;
     }
 
     private void OnReceive(int bytes, byte[] data) => yuumiRead.ReadAll(data);
 
     #region Read
 
+    public static Point MasterScreenSize { get; private set; } = PrimaryMonitor.Instance.GetSize();
+
+    public static void Screen(int width, int height)
+    {
+        Logger.WriteLine($"RECEIVE: Screen {width} {height}");
+        MasterScreenSize = new(width, height);
+    }
+
     public static void MouseMove(int x, int y)
     {
+        x = Interpolation.Remap(MasterScreenSize.X, PrimaryMonitor.Instance.Width, x);
+        y = Interpolation.Remap(MasterScreenSize.Y, PrimaryMonitor.Instance.Height, y);
+
         Logger.WriteLine($"RECEIVE: MMove {x} {y}");
+        //TODO: mouse
         MouseSender.MoveAbsolute(x, y);
     }
 
@@ -108,4 +123,5 @@ public sealed class YuumiSlave : IDisposable
 
         socket.Dispose();
     }
+
 }

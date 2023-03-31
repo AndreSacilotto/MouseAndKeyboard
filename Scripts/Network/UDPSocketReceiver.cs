@@ -9,7 +9,7 @@ public class UDPSocketReceiver : UDPSocket
 {
     public delegate void NetReceive(int recievedBytes, byte[] data);
     public event NetReceive? OnReceive;
-    
+
     private byte[]? buffer;
     private Memory<byte> memBuffer;
 
@@ -42,11 +42,11 @@ public class UDPSocketReceiver : UDPSocket
     {
         //try
         //{
-            while (MySocket.IsBound && !cancellationToken!.IsCancellationRequested)
-            {
-                var receivedBytes = await MySocket.ReceiveAsync(memBuffer, SocketFlags.None, cancellationToken.Token);
-                OnReceive?.Invoke(receivedBytes, buffer!);
-            }
+        while (MySocket.IsBound && !cancellationToken!.IsCancellationRequested)
+        {
+            var receivedBytes = await MySocket.ReceiveAsync(memBuffer, SocketFlags.None, cancellationToken.Token);
+            OnReceive?.Invoke(receivedBytes, buffer!);
+        }
         //}
         //catch (SocketException)
         //{

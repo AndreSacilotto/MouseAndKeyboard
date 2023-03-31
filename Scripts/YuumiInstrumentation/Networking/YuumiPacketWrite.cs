@@ -1,4 +1,4 @@
-﻿using MouseAndKeyboard.InputSimulation;
+﻿using MouseAndKeyboard.InputSimulator;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
@@ -11,13 +11,14 @@ public class YuumiPacketWrite
 
     public Packet Packet => packet;
 
-    public void Reset()
-    {
-        packet.Reset();
-        packet.Rewind();
-    }
-
     #region WRITE 
+
+    public void WriteScreen(int width, int height)
+    {
+        packet.Add((byte)Commands.Screen);
+        packet.Add(width);
+        packet.Add(height);
+    }
 
     public void WriteMouseMove(int x, int y)
     {

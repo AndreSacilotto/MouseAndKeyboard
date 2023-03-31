@@ -18,6 +18,21 @@ public partial class MainForm : Form
         Logger.OnLog += LoggerEvents_OnLog;
     }
 
+    private void MainForm_FormClosing(object? sender, FormClosingEventArgs? e)
+    {
+        if (ym != null)
+        {
+            ym.Dispose();
+            ym = null;
+        }
+        if (ys != null)
+        {
+            ys.Dispose();
+            ys = null;
+        }
+        SetControlServerInput(true);
+    }
+
     private void LoggerEvents_OnLog(string text)
     {
         if (txtConsole.InvokeRequired)
@@ -34,6 +49,18 @@ public partial class MainForm : Form
             txtConsole.Clear();
         }
         txtConsole.AppendText(text);
+    }
+    private void SetControlServerInput(bool enable)
+    {
+        txtPort.Enabled = enable;
+        chbReceiver.Enabled = enable;
+        ChbReceiver_CheckStateChanged(null, null);
+    }
+
+    private void SetControlButtons(bool isRunning)
+    {
+        btnStart.Enabled = !isRunning;
+        btnStop.Enabled = isRunning;
     }
 
     private void BtnStart_Click(object? sender, EventArgs e)
@@ -63,33 +90,6 @@ public partial class MainForm : Form
         SetControlButtons(true);
 
         Logger.WriteLine("START");
-    }
-
-    private void SetControlServerInput(bool enable)
-    {
-        txtPort.Enabled = enable;
-        chbReceiver.Enabled = enable;
-        ChbReceiver_CheckStateChanged(null, null);
-    }
-
-    private void SetControlButtons(bool isRunning)
-    {
-        btnStart.Enabled = !isRunning;
-        btnStop.Enabled = isRunning;
-    }
-
-    private void MainForm_FormClosing(object? sender, FormClosingEventArgs? e)
-    {
-        if (ym != null) {
-            ym?.Dispose();
-            ym = null;
-        }
-        if (ys != null)
-        {
-            ys?.Dispose();
-            ys = null;
-        }
-        SetControlServerInput(true);
     }
 
     private void BtnStop_Click(object? sender, EventArgs? e)

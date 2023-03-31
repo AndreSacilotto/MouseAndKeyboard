@@ -47,11 +47,23 @@ public enum MouseEventF : Int32
     HWheel = 0x01000,
     /// <summary>The WM_MOUSEMOVE messages will not be coalesced. The default behavior is to coalesce WM_MOUSEMOVE messages.</summary>
     Move_NoCoalesce = 0x2000,
-    /// <summary>Maps coordinates to the entire desktop. Must be used with MOUSEEVENTF_ABSOLUTE.</summary>
+    /// <summary>Maps coordinates to the entire desktop.
+    /// <br/> MOUSEEVENTF_ABSOLUTE must be also be set.
+    /// <br/> (0, 0) is located on left most monitor (no negative coordinates)
+    /// <br/> Coordinates: 0..65535
+    /// </summary>
     VirtualDesk = 0x4000,
-    /// <summary>
-    /// The pt and dy members contain normalized absolute coordinates. 
-    /// If the flag is not set, dxand dy contain relative data (the change in position since the last reported position).
+    /// <summary>Maps coordinates to the based on primary monitor.
+    /// <br/> The dx and dy members contain absolute coordinates. If not used, dx and dy contain relative coordinates.
+    /// <br/> (0, 0) is located on primary monitor
+    /// <br/>
+    /// <br/> Coordinates are completely based on the primary monitor:
+    /// <br/> Eg: 800w_1600w(PR): -32767(ushort/2)..65535(ushort)
+    /// <br/> Eg: 1600w(PR)_800w: -0..98302(ushort*1.5)
+    /// <br/>
+    /// <br/> So each 65535 means one Primary Monitor Width or Height move.
+    /// <br/>
+    /// <br/> https://learn.microsoft.com/en-us/windows/win32/gdi/the-virtual-screen
     /// </summary>
     Absolute = 0x8000,
 

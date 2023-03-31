@@ -1,5 +1,3 @@
-using MouseAndKeyboard.Native;
-
 namespace MouseAndKeyboard.InputListener;
 
 public abstract class KeyboardListener : BaseListener
