@@ -21,12 +21,4 @@ public abstract class UDPSocket : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public void Start(IPEndPoint endPoint)
-    {
-        if (MySocket.Connected)
-            return;
-        StartInternal(endPoint);
-    }
-
-    protected abstract void StartInternal(IPEndPoint hostEndPoint);
 }

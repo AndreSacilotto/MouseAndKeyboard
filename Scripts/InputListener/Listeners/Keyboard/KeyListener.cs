@@ -6,9 +6,9 @@ public abstract class KeyboardListener : BaseListener
 {
     protected KeyboardListener(WinHook hook) : base(hook) { }
 
-    public event Action<KeyEventArgs>? KeyDown;
+    public event Action<KeyHookEventArgs>? KeyDown;
     public event Action<KeyHookPressEventArgs>? KeyPress;
-    public event Action<KeyEventArgs>? KeyUp;
+    public event Action<KeyHookEventArgs>? KeyUp;
 
     public void InvokeKeyDown(KeyHookEventArgs e)
     {

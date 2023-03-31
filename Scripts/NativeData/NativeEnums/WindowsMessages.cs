@@ -5,7 +5,7 @@
 /// Defined in winuser.h from Windows SDK v6.1
 /// Documentation pulled from MSDN.
 /// </summary>
-// https://github.com/rubberduck-vba/SlimDucky/blob/master/WM.cs
+// https://github.com/rubberduck-vba/SlimDucky/blob/ym/WM.cs
 // https://www.pinvoke.net/default.aspx/Enums/WindowsMessages.html
 public enum WindowsMessages : uint
 {

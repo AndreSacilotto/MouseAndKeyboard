@@ -3,14 +3,15 @@ using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
 
-public sealed class YuumiSlave : IMKInput, IDisposable
+public sealed class YuumiSlave : IDisposable
 {
     private readonly UDPSocketReceiver socket;
-    public UDPSocket Socket => socket;
 
     private readonly YuumiPacketRead yuumiRead;
 
     private bool enabled;
+
+    public UDPSocketReceiver Socket => socket;
 
     public YuumiSlave()
     {

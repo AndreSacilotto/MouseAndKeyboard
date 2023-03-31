@@ -1,11 +1,10 @@
 ﻿using MouseAndKeyboard.InputListener;
 using MouseAndKeyboard.InputSimulation;
 using MouseAndKeyboard.Network;
-using System.Threading.Tasks;
 
 namespace YuumiInstrumentation;
 
-public sealed partial class YuumiMaster : IMKInput, IDisposable
+public sealed partial class YuumiMaster : IDisposable
 {
     private readonly UDPSocketShipper socket = new();
 
@@ -13,12 +12,15 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
     private readonly MKListener inputEvents;
     //private readonly IKeyboardMouseEvents inputEvents;
 
-    public UDPSocket Socket => socket;
+    public UDPSocketShipper Socket => socket;
 
     public YuumiMaster()
     {
         inputEvents = MKListener.FactoryGlobal();
         //inputEvents = Hook.GlobalEvents();
+
+        //Safe Exit
+        inputEvents.KeyListener.KeyUp += (ev) => { if (ev.KeyCode == Keys.Pause) Application.Exit(); }; 
     }
 
     public void Dispose()
@@ -37,11 +39,9 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
         mkPacket.Reset();
     }
 
-    #region Enabling Events
+    #region Enabling
 
     private bool enabledMM, enabledMS, enabledMC, enabledKK;
-
-    public bool Enabled => enabledMM || enabledMS || enabledMC || enabledKK;
 
     public bool EnabledMM
     {
@@ -118,20 +118,20 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
 
     #region Event Funcs
 
-    private void WhenKeyDown(KeyEventArgs ev) => UnifyKey(PressedState.Down, ev);
-    private void WhenKeyUp(KeyEventArgs ev) => UnifyKey(PressedState.Up, ev);
+    private void WhenKeyDown(KeyHookEventArgs ev) => UnifyKey(PressedState.Down, ev);
+    private void WhenKeyUp(KeyHookEventArgs ev) => UnifyKey(PressedState.Up, ev);
 
-    private void WhenMouseDown(MouseEventArgs ev) => UnifyMouse(PressedState.Down, ev);
-    private void WhenMouseUp(MouseEventArgs ev) => UnifyMouse(PressedState.Up, ev);
+    private void WhenMouseDown(MouseHookEventArgs ev) => UnifyMouse(PressedState.Down, ev);
+    private void WhenMouseUp(MouseHookEventArgs ev) => UnifyMouse(PressedState.Up, ev);
 
-    private void WhenMouseMove(MouseEventArgs ev)
+    private void WhenMouseMove(MouseHookEventArgs ev)
     {
         Logger.WriteLine($"SEND: MMove {ev.X} {ev.Y}");
         mkPacket.WriteMouseMove(ev.X, ev.Y);
         SendPacket();
     }
 
-    private void WhenMouseScroll(MouseEventArgs ev)
+    private void WhenMouseScroll(MouseHookEventArgs ev)
     {
         Logger.WriteLine("SEND: MScroll " + ev.Delta);
         mkPacket.WriteMouseScroll(ev.Delta);
@@ -141,7 +141,7 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
     #endregion
 
     #region Unify
-    private void UnifyKey(PressedState pressed, KeyEventArgs ev)
+    private void UnifyKey(PressedState pressed, KeyHookEventArgs ev)
     {
         if (ev.Shift && MirrorWhenShiftKeys.Contains(ev.KeyCode))
         {
@@ -156,7 +156,7 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
             SendPacket();
         }
     }
-    private void UnifyMouse(PressedState pressed, MouseEventArgs ev)
+    private void UnifyMouse(PressedState pressed, MouseHookEventArgs ev)
     {
         if (MouseToKey.TryGetValue(ev.Button, out var key))
         {

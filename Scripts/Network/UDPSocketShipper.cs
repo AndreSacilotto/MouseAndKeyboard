@@ -6,8 +6,15 @@ namespace MouseAndKeyboard.Network;
 
 public class UDPSocketShipper : UDPSocket
 {
-    protected override void StartInternal(IPEndPoint hostEndPoint)
+    public UDPSocketShipper(bool clientCanHost = true) : base()
     {
+        ReuseAddress = clientCanHost;
+    }
+
+    public void Start(IPEndPoint hostEndPoint)
+    {
+        if (MySocket.Connected)
+            return;
         MySocket.Connect(hostEndPoint);
     }
 
