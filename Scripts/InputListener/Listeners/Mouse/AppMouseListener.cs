@@ -9,10 +9,10 @@ internal class AppMouseListener : MouseListener
     {
     }
 
-    protected override MouseEventExtArgs GetEventArgs(ref IntPtr wParam, ref IntPtr lParam)
+    protected override MouseHookEventArgs GetEventArgs(IntPtr wParam, IntPtr lParam)
     {
         var mouseHookStruct = (MouseInput)WinHook.MarshalHookParam<AppMouseInput>(lParam);
-        return MouseEventExtArgs.FromRawData((WindowsMessages)wParam, ref mouseHookStruct);
+        return MouseHookEventArgs.NewEvent((WindowsMessages)wParam, ref mouseHookStruct, swapButtonThreshold);
     }
 
     /// <summary>AppMouseInput structure contains information about a application-level mouse input event</summary>

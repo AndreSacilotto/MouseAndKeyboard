@@ -1,6 +1,7 @@
 ﻿using MouseAndKeyboard.InputListener;
 using MouseAndKeyboard.InputSimulation;
 using MouseAndKeyboard.Network;
+using System.Threading.Tasks;
 
 namespace YuumiInstrumentation;
 
@@ -30,18 +31,11 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
         inputEvents.Dispose();
     }
 
-    #region Network
     private void SendPacket()
     {
-        socket.Send(mkPacket.GetPacket);
+        socket.Send(mkPacket.Packet);
         mkPacket.Reset();
     }
-    private void WriteKey(Keys key, PressedState pressedState)
-    {
-        mkPacket.WriteKey(key, pressedState);
-        SendPacket();
-    }
-    #endregion
 
     #region Enabling Events
 
@@ -73,9 +67,9 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
                 return;
             enabledMS = value;
             if (enabledMS)
-                inputEvents.MouseListener.MouseWheel += WhenMouseScroll;
+                inputEvents.MouseListener.MouseWheelVertical += WhenMouseScroll;
             else
-                inputEvents.MouseListener.MouseWheel -= WhenMouseScroll;
+                inputEvents.MouseListener.MouseWheelVertical -= WhenMouseScroll;
         }
     }
 
@@ -132,14 +126,14 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
 
     private void WhenMouseMove(MouseEventArgs ev)
     {
-        LoggerEvents.WriteLine($"SEND: MMove {ev.X} {ev.Y}");
+        Logger.WriteLine($"SEND: MMove {ev.X} {ev.Y}");
         mkPacket.WriteMouseMove(ev.X, ev.Y);
         SendPacket();
     }
 
     private void WhenMouseScroll(MouseEventArgs ev)
     {
-        LoggerEvents.WriteLine("SEND: MScroll " + ev.Delta);
+        Logger.WriteLine("SEND: MScroll " + ev.Delta);
         mkPacket.WriteMouseScroll(ev.Delta);
         SendPacket();
     }
@@ -151,12 +145,13 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
     {
         if (ev.Shift && MirrorWhenShiftKeys.Contains(ev.KeyCode))
         {
-            LoggerEvents.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} | Shift");
-            WriteKey(ev.KeyCode, pressed);
+            Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} | Shift");
+            mkPacket.WriteKey(ev.KeyCode, pressed);
+            SendPacket();
         }
         else if (ev.Control && SkillUpKeys.TryGetValue(ev.KeyCode, out var key))
         {
-            LoggerEvents.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} => {key} | Control");
+            Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} => {key} | Control");
             mkPacket.WriteKeyModifier(key, Keys.LControlKey, pressed);
             SendPacket();
         }
@@ -165,12 +160,13 @@ public sealed partial class YuumiMaster : IMKInput, IDisposable
     {
         if (MouseToKey.TryGetValue(ev.Button, out var key))
         {
-            LoggerEvents.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button} => {key}");
-            WriteKey(key, pressed);
+            Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button} => {key}");
+            mkPacket.WriteKey(key, pressed);
+            SendPacket();
         }
         else
         {
-            LoggerEvents.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button}");
+            Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button}");
             mkPacket.WriteMouseClick(ev.Button, pressed);
             SendPacket();
         }

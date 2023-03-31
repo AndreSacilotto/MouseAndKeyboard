@@ -1,73 +1,51 @@
-using System.Linq;
+using MouseAndKeyboard.Native;
 
 namespace MouseAndKeyboard.InputListener;
 
 public abstract class KeyboardListener : BaseListener
 {
-    protected KeyboardListener(WinHook hook) : base(hook)
-    {
-    }
+    protected KeyboardListener(WinHook hook) : base(hook) { }
 
     public event Action<KeyEventArgs>? KeyDown;
-    public event Action<KeyPressEventArgsExt>? KeyPress;
-    public event Action<KeyDownTxtEventArgs>? KeyDownTxt;
+    public event Action<KeyHookPressEventArgs>? KeyPress;
     public event Action<KeyEventArgs>? KeyUp;
 
-    public void InvokeKeyDown(KeyEventArgsExt e)
+    public void InvokeKeyDown(KeyHookEventArgs e)
     {
         if (KeyDown == null || e.Handled || !e.IsKeyDown)
             return;
         KeyDown(e);
     }
 
-    public void InvokeKeyPress(KeyPressEventArgsExt e)
+    public void InvokeKeyPress(KeyHookPressEventArgs e)
     {
         if (KeyPress == null || e.Handled || e.IsNonChar)
             return;
         KeyPress(e);
     }
 
-    public void InvokeKeyDownTxt(KeyDownTxtEventArgs e)
-    {
-        if (KeyDownTxt == null || e.KeyEvent.Handled || !e.KeyEvent.IsKeyDown)
-            return;
-        KeyDownTxt(e);
-    }
-
-    public void InvokeKeyUp(KeyEventArgsExt e)
+    public void InvokeKeyUp(KeyHookEventArgs e)
     {
         if (KeyUp == null || e.Handled || !e.IsKeyUp)
             return;
         KeyUp(e);
     }
 
-    protected override void CallbackInternal(ref IntPtr wParam, ref IntPtr lParam)
+    protected override void CallbackInternal(IntPtr wParam, IntPtr lParam)
     {
-        var eDownUp = GetDownUpEventArgs(ref wParam, ref lParam);
+        var keyEvent = GetKeyEventArgs(wParam, lParam);
 
-        InvokeKeyDown(eDownUp);
+        InvokeKeyDown(keyEvent);
 
-        if (KeyPress != null || KeyDownTxt != null)
+        if (KeyPress != null)
         {
-            var pressEventArgs = GetPressEventArgs(ref wParam, ref lParam);
-
-            foreach (var pressEventArg in pressEventArgs)
-                InvokeKeyPress(pressEventArg);
-
-            var downTxtEventArgs = GetDownTxtEventArgs(eDownUp, pressEventArgs);
-            InvokeKeyDownTxt(downTxtEventArgs);
+            foreach (var ev in GetPressEventArgs(wParam, lParam))
+                InvokeKeyPress(ev);
         }
 
-        InvokeKeyUp(eDownUp);
+        InvokeKeyUp(keyEvent);
     }
 
-    private static KeyDownTxtEventArgs GetDownTxtEventArgs(KeyEventArgsExt eDownUp, IEnumerable<KeyPressEventArgsExt> pressEventArgs)
-    {
-        var charsCollection = pressEventArgs.Where(e => !e.IsNonChar).Select(e => e.KeyChar);
-        var chars = string.Join(string.Empty, charsCollection);
-        return new(eDownUp, chars);
-    }
-
-    protected abstract List<KeyPressEventArgsExt> GetPressEventArgs(ref IntPtr wParam, ref IntPtr lParam);
-    protected abstract KeyEventArgsExt GetDownUpEventArgs(ref IntPtr wParam, ref IntPtr lParam);
+    protected abstract KeyHookEventArgs GetKeyEventArgs(IntPtr wParam, IntPtr lParam);
+    protected abstract IEnumerable<KeyHookPressEventArgs> GetPressEventArgs(IntPtr wParam, IntPtr lParam);
 }

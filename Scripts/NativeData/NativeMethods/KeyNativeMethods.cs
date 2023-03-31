@@ -57,8 +57,8 @@ internal static partial class KeyNativeMethods
     // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyw
     [LibraryImport("user32.dll")]
     internal static partial uint MapVirtualKeyW(uint uCode, MapType uMapType);
-    
-    // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-vkkeyscana
+
+    //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-vkkeyscanw
     [LibraryImport("user32.dll", StringMarshalling = StringMarshalling.Utf16)]
     internal static partial short VkKeyScanW(char ch);
 }

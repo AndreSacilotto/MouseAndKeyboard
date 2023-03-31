@@ -1,6 +1,6 @@
 ﻿namespace MouseAndKeyboard.Util.Log;
 
-public static class LoggerEvents
+public static class Logger
 {
     public static bool Enabled { get; set; } = true;
 

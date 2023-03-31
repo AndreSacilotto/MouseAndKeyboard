@@ -55,9 +55,6 @@ public class WinHook : IDisposable
         return HookNativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
     }
 
-    private static int swapButtonThreshold;
-    public static int SwapButtonThreshold => swapButtonThreshold;
-
     public static T MarshalHookParam<T>(IntPtr lParam) where T : struct => (T)Marshal.PtrToStructure(lParam, typeof(T))!;
 
     private static WinHook CreateHook(HookId hookType, IntPtr process, int thread = 0)
@@ -73,8 +70,6 @@ public class WinHook : IDisposable
             var errorCode = Marshal.GetLastWin32Error();
             throw new Win32Exception(errorCode);
         }
-
-        swapButtonThreshold = SystemMetrics.GetSwapButtonThreshold();
 
         return hook;
     }

@@ -7,19 +7,16 @@ namespace MouseAndKeyboard.Network;
 
 public abstract class UDPSocket : IDisposable
 {
-    protected bool closed = false;
+    protected bool ReuseAddress
+    {
+        get => (bool)MySocket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress)!;
+        set => MySocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, value);
+    }
 
     public Socket MySocket { get; } = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-    public IPEndPoint? HostEndPoint { get; private set; }
 
-    protected EndPoint senderEndPoint = new IPEndPoint(IPAddress.Any, 0);
-    protected AsyncCallback? recv = null;
-
-    public void Dispose()
+    public virtual void Dispose()
     {
-        if (closed)
-            return;
-        closed = true;
         MySocket.Close(); // Calls Dispose internally
         GC.SuppressFinalize(this);
     }
@@ -28,16 +25,8 @@ public abstract class UDPSocket : IDisposable
     {
         if (MySocket.Connected)
             return;
-        HostEndPoint = endPoint;
-        InternalStart(endPoint);
-    }
-    public void Start(IPAddress address, int port)
-    {
-        if (MySocket.Connected)
-            return;
-        HostEndPoint = new IPEndPoint(address, port);
-        InternalStart(HostEndPoint);
+        StartInternal(endPoint);
     }
 
-    protected abstract void InternalStart(IPEndPoint hostEndPoint);
+    protected abstract void StartInternal(IPEndPoint hostEndPoint);
 }

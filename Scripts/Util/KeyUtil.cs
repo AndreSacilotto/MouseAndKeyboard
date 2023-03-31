@@ -12,7 +12,8 @@ public static class KeyUtil
         if (!scanCodesDict.TryGetValue(key, out var result))
         {
             result = KeyNativeMethods.MapVirtualKeyW((uint)key, MapType.VK_TO_VSC);
-            scanCodesDict.Add(key, result);
+            if(result != 0)
+                scanCodesDict.Add(key, result);
         }
         return result;
     }
@@ -32,7 +33,7 @@ public static class KeyUtil
         return retval;
     }
 
-    public static Keys NormalizeModifier(this Keys key)
+    public static Keys NormalizeModifier(Keys key)
     {
         if (key.HasFlag(Keys.LControlKey) || key.HasFlag(Keys.RControlKey))
             return Keys.Control;
@@ -44,32 +45,30 @@ public static class KeyUtil
     }
 
     // # It is not possible to distinguish Keys.LControlKey and Keys.RControlKey when they are modifiers
-    // Check for Keys.Control instead
-    // Same for Shift and Alt(Menu)
-    public static bool CheckModifier(int vKey) => (KeyboardNativeMethods.GetKeyState(vKey) & 0x8000) > 0;
+    // Check for Keys.Control instead. Same apply to Shift/Alt/Menu
+    public static bool CheckModifier(int vKey) => (KeyboardNativeMethods.GetKeyState(vKey) & (short.MaxValue + 1)) > 0;
 
     public static Keys AppendModifierStates(Keys keyData)
     {
-        // Is Shift being held down?
-        var shift = CheckModifier((int)VirtualKey.SHIFT);
-        // Is Control being held down?
-        var control = CheckModifier((int)VirtualKey.CONTROL);
-        // Is Alt being held down?
-        var alt = CheckModifier((int)VirtualKey.MENU);
+        if (CheckModifier((int)VirtualKey.SHIFT))
+            keyData |= Keys.Shift;
 
-        // Windows keys
-        // # combine LWin and RWin key with other keys will potentially corrupt the data
+        if (CheckModifier((int)VirtualKey.CONTROL))
+            keyData |= Keys.Control;
+
+        if (CheckModifier((int)VirtualKey.MENU))
+            keyData |= Keys.Menu;
+
+        // # Windows keys
+        // combine LWin and RWin key with other keys will potentially corrupt the data
         // notable F5 | Keys.LWin == F12
         // and the KeyEventArgs.KeyData don't recognize combined data either
 
-        // Function (Fn) key
-        // # CANNOT determine state due to conversion inside keyboard
+        // # Function Key [Fn]
+        // CANNOT determine state due to conversion inside keyboard
         // See http://en.wikipedia.org/wiki/Fn_key#Technical_details
 
-        return keyData |
-               (control ? Keys.Control : Keys.None) |
-               (shift ? Keys.Shift : Keys.None) |
-               (alt ? Keys.Alt : Keys.None);
+        return keyData;
     }
 
 }

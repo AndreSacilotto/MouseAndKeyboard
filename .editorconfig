@@ -97,4 +97,4 @@ dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggesti
 dotnet_style_prefer_auto_properties = true:silent
 
 # IDE0049: Simplify Names
-dotnet_style_predefined_type_for_locals_parameters_members = false
+dotnet_style_predefined_type_for_locals_parameters_members = false:silent

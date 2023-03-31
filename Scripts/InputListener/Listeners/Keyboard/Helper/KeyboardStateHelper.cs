@@ -14,11 +14,9 @@ internal static class KeyboardStateHelper
     private static bool lastIsDead;
 
     /// <summary>
-    ///     Gets the input locale identifier for the active application's thread.  Using this combined with the ToUnicodeEx and
-    ///     MapVirtualKeyEx enables Windows to properly translate keys based on the keyboard layout designated for the
-    ///     application.
+    /// Gets the input locale identifier for the active application's thread.  Using this combined with the ToUnicodeEx and
+    /// MapVirtualKeyEx enables Windows to properly translate keys based on the keyboard layout designated for the application.
     /// </summary>
-    /// <returns>HKL</returns>
     internal static IntPtr GetActiveKeyboardLayout()
     {
         var hActiveWnd = HookNativeMethods.GetForegroundWindow(); //handle to focused window
@@ -27,12 +25,14 @@ internal static class KeyboardStateHelper
     }
 
     /// <summary>Translates a virtual key to its character equivalent using a specified keyboard layout</summary>
-    internal static void TryGetCharFromKeyboardState(VirtualKey virtualKeyCode, ScanCode scanCode, KeyEventF fuState, out char[]? chars)
+    internal static char[]? TryGetCharFromKeyboardState(VirtualKey virtualKeyCode, ScanCode scanCode, KeyEventF fuState)
     {
+        char[]? chars;
+
         var dwhkl = GetActiveKeyboardLayout();
 
         var pwszBuff = new StringBuilder(64);
-        var keyboardState = KeyboardSnapshot.GetCurrent();
+        var keyboardState = KeyboardSnapshot.CreateSnapshot();
         var currentKeyboardState = keyboardState.KeyboardStateNative;
         var isDead = false;
 
@@ -79,7 +79,7 @@ internal static class KeyboardStateHelper
                 break;
         }
 
-        if (lastVirtualKeyCode != 0 && lastIsDead)
+        if (lastVirtualKeyCode > 0 && lastIsDead)
         {
             if (chars != null)
             {
@@ -88,14 +88,16 @@ internal static class KeyboardStateHelper
                 lastIsDead = false;
                 lastVirtualKeyCode = 0;
             }
-
-            return;
+        }
+        else
+        {
+            lastScanCode = scanCode;
+            lastVirtualKeyCode = virtualKeyCode;
+            lastIsDead = isDead;
+            lastKeyState = (byte[])currentKeyboardState.Clone();
         }
 
-        lastScanCode = scanCode;
-        lastVirtualKeyCode = virtualKeyCode;
-        lastIsDead = isDead;
-        lastKeyState = (byte[])currentKeyboardState.Clone();
+        return chars;
     }
 
 }

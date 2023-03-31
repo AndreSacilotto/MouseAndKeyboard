@@ -9,7 +9,7 @@ public class YuumiPacketWrite
 
     private readonly Packet packet = new(MAX_PACKET_BYTE_SIZE);
 
-    public Packet GetPacket => packet;
+    public Packet Packet => packet;
 
     public void Reset()
     {

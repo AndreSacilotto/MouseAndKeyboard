@@ -3,37 +3,37 @@ using System.Text;
 
 namespace MouseAndKeyboard.Network;
 
-//16 = short | 32 = int | 64 = long
+//1b = bool | 16b = short | 32b = int | 64b = long
 
 public class Packet
 {
+    const int SOCKET_DEFAULT_SIZE = 1 << 13;
+
+    //https://stackoverflow.com/q/56285370
+
     private readonly byte[] buffer;
-    private readonly Memory<byte> memory;
+    private readonly ReadOnlyMemory<byte> memory;
 
     private int pointer;
 
     public Packet(byte[] arr)
     {
         buffer = arr;
-        memory = new Memory<byte>(buffer);
+        memory = buffer;
     }
+    public Packet(int size = SOCKET_DEFAULT_SIZE) : this(new byte[size]) { }
 
-    public Packet(int size = 8192)
-    {
-        buffer = new byte[size];
-        memory = new Memory<byte>(buffer);
-    }
-
-    public byte[] GetBuffer => buffer;
+    public byte[] Buffer => buffer;
+    public ReadOnlyMemory<byte> MemoryBuffer => memory;
+    public ReadOnlySpan<byte> ReadOnlySpan => buffer;
     public byte this[int index]
     {
         get => buffer[index];
         set => buffer[index] = value;
     }
-
-    #region Main Funcs
-
     public int Length => buffer.Length;
+
+    #region Funcs
     public void Rewind() => pointer = 0;
 
     public void Reset()
@@ -41,10 +41,6 @@ public class Packet
         Array.Clear(buffer, 0, Length);
         Rewind();
     }
-
-    #endregion
-
-    #region Util Funcs
 
     public byte[] CopyBuffer()
     {
@@ -57,7 +53,7 @@ public class Packet
     public override string ToString()
     {
         var sb = new StringBuilder();
-        foreach (var item in memory.Span)
+        foreach (var item in buffer.AsSpan())
             sb.AppendLine(item.ToString());
         return sb.ToString();
     }
@@ -71,55 +67,29 @@ public class Packet
         buffer[pointer] = value;
         pointer += sizeof(byte);
     }
-    public void Add(params byte[] values)
-    {
-        for (int i = 0; i < values.Length; i++)
-            Add(values[i]);
-    }
 
     public void Add(short value)
     {
-        BinaryPrimitives.WriteInt16LittleEndian(memory.Span.Slice(pointer, sizeof(short)), value);
+        BinaryPrimitives.WriteInt16LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(short)), value);
         pointer += sizeof(short);
     }
-    public void Add(params short[] values)
-    {
-        for (int i = 0; i < values.Length; i++)
-            Add(values[i]);
-    }
-
 
     public void Add(int value)
     {
-        BinaryPrimitives.WriteInt32LittleEndian(memory.Span.Slice(pointer, sizeof(int)), value);
+        BinaryPrimitives.WriteInt32LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(int)), value);
         pointer += sizeof(int);
-    }
-    public void Add(params int[] values)
-    {
-        for (int i = 0; i < values.Length; i++)
-            Add(values[i]);
     }
 
     public void Add(uint value)
     {
-        BinaryPrimitives.WriteUInt32LittleEndian(memory.Span.Slice(pointer, sizeof(uint)), value);
+        BinaryPrimitives.WriteUInt32LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(uint)), value);
         pointer += sizeof(uint);
-    }
-    public void Add(params uint[] values)
-    {
-        for (int i = 0; i < values.Length; i++)
-            Add(values[i]);
     }
 
     public void Add(long value)
     {
-        BinaryPrimitives.WriteInt64LittleEndian(memory.Span.Slice(pointer, sizeof(uint)), value);
+        BinaryPrimitives.WriteInt64LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(uint)), value);
         pointer += sizeof(long);
-    }
-    public void Add(params long[] values)
-    {
-        for (int i = 0; i < values.Length; i++)
-            Add(values[i]);
     }
 
     #endregion
@@ -132,17 +102,32 @@ public class Packet
         pointer += sizeof(byte);
         return value;
     }
+
     public short ReadShort()
     {
-        var value = BinaryPrimitives.ReadInt16LittleEndian(memory.Span.Slice(pointer, sizeof(short)));
+        var value = BinaryPrimitives.ReadInt16LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(short)));
         pointer += sizeof(short);
         return value;
     }
 
     public int ReadInt()
     {
-        var value = BinaryPrimitives.ReadInt32LittleEndian(memory.Span.Slice(pointer, sizeof(int)));
+        var value = BinaryPrimitives.ReadInt32LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(int)));
         pointer += sizeof(int);
+        return value;
+    }
+
+    public uint ReadUInt()
+    {
+        var value = BinaryPrimitives.ReadUInt32LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(uint)));
+        pointer += sizeof(uint);
+        return value;
+    }
+
+    public long ReadLong()
+    {
+        var value = BinaryPrimitives.ReadInt64LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(uint)));
+        pointer += sizeof(uint);
         return value;
     }
 

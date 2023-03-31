@@ -37,25 +37,25 @@ public sealed class YuumiSlave : IMKInput, IDisposable
 
     public static void MouseMove(int x, int y)
     {
-        LoggerEvents.WriteLine($"RECEIVE: MMove {x} {y}");
+        Logger.WriteLine($"RECEIVE: MMove {x} {y}");
         MouseSender.MoveAbsolute(x, y);
     }
 
     public static void MouseScroll(int scrollDelta)
     {
-        LoggerEvents.WriteLine($"RECEIVE: MScroll {scrollDelta}");
+        Logger.WriteLine($"RECEIVE: MScroll {scrollDelta}");
         MouseSender.ScrollWheel(scrollDelta);
     }
 
     public static void MouseClick(MouseButtons mouseButton, PressedState pressedState)
     {
-        LoggerEvents.WriteLine($"RECEIVE: MClick {mouseButton} {pressedState}");
+        Logger.WriteLine($"RECEIVE: MClick {mouseButton} {pressedState}");
         MouseSender.Click(pressedState, mouseButton);
     }
 
     public static void Key(Keys keys, PressedState pressedState)
     {
-        LoggerEvents.WriteLine($"RECEIVE: KKey {keys} {pressedState}");
+        Logger.WriteLine($"RECEIVE: KKey {keys} {pressedState}");
 
         if (pressedState == PressedState.Down)
             KeyboardSender.SendKeyDown(keys);
@@ -67,7 +67,7 @@ public sealed class YuumiSlave : IMKInput, IDisposable
 
     public static void KeyModifier(Keys keys, Keys modifier, PressedState pressedState)
     {
-        LoggerEvents.WriteLine($"RECEIVE: KKeyMod {keys} {pressedState}");
+        Logger.WriteLine($"RECEIVE: KKeyMod {keys} {pressedState}");
 
         if (pressedState == PressedState.Down)
             KeyboardSender.SendKeyDown(keys, modifier);
@@ -78,8 +78,6 @@ public sealed class YuumiSlave : IMKInput, IDisposable
     }
 
     #endregion
-
-    #region Enable
 
     public bool Enabled
     {
@@ -109,7 +107,4 @@ public sealed class YuumiSlave : IMKInput, IDisposable
 
         socket.Dispose();
     }
-
-    #endregion
-
 }

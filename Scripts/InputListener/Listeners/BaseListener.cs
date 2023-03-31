@@ -2,7 +2,7 @@ namespace MouseAndKeyboard.InputListener;
 
 public abstract class BaseListener : IDisposable
 {
-    protected WinHook Handle { get; }
+    private WinHook Handle { get; }
 
     protected BaseListener(WinHook hook)
     {
@@ -12,10 +12,11 @@ public abstract class BaseListener : IDisposable
 
     public void Dispose()
     {
+        Handle.Callback -= Callback;
         Handle.Dispose();
         GC.SuppressFinalize(this);
     }
 
-    private void Callback(IntPtr wParam, IntPtr lParam) => CallbackInternal(ref wParam, ref lParam);
-    protected abstract void CallbackInternal(ref IntPtr wParam, ref IntPtr lParam);
+    private void Callback(IntPtr wParam, IntPtr lParam) => CallbackInternal(wParam, lParam);
+    protected abstract void CallbackInternal(IntPtr wParam, IntPtr lParam);
 }

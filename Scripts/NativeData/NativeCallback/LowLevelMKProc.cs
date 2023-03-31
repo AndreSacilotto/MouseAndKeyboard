@@ -27,9 +27,9 @@
 ///     hooks will not receive hook notifications and may behave incorrectly as a result. If the hook
 ///     procedure does not call CallNextHookEx, the return value should be zero.
 /// </returns>
-// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644986(v=vs.85)#syntax
+// https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelmouseproc
 // or
-// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644985(v=vs.85)#syntax
+// https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc
 public delegate IntPtr LowLevelMKProc(int nCode, IntPtr wParam, IntPtr lParam);
 
 

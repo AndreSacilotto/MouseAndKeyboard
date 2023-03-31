@@ -3,30 +3,20 @@
 namespace MouseAndKeyboard.InputListener;
 
 /// <summary>
-///     Contains a snapshot of a keyboard state at certain moment and provides methods
-///     of querying whether specific keys are pressed or locked.
+/// Contains a snapshot of a keyboard state at certain moment and provides methods
+/// of querying whether specific keys are pressed or locked.
 /// </summary>
-/// <remarks>
-///     This class is basically a managed wrapper of GetKeyboardState API function
-///     http://msdn.microsoft.com/en-us/library/ms646299
-/// </remarks>
 public class KeyboardSnapshot
 {
     private readonly byte[] keyboardStateNative;
 
     public byte[] KeyboardStateNative => keyboardStateNative;
 
-    private KeyboardSnapshot(byte[] keyboardStateNative)
-    {
-        this.keyboardStateNative = keyboardStateNative;
-    }
+    private KeyboardSnapshot(byte[] keyboardStateNative) => this.keyboardStateNative = keyboardStateNative;
 
-    /// <summary>
-    ///     Makes a snapshot of a keyboard state to the moment of call and returns an
-    ///     instance of <see cref="KeyboardSnapshot" /> class.
-    /// </summary>
-    /// <returns>An instance of <see cref="KeyboardSnapshot" /> class representing a snapshot of keyboard state at certain moment.</returns>
-    public static KeyboardSnapshot GetCurrent()
+    /// <summary> Makes a snapshot of a keyboard state to the moment of call and returns an instance of <see cref="KeyboardSnapshot"/> class</summary>
+    /// <returns>An instance of <see cref="KeyboardSnapshot" /> class representing a snapshot of keyboard state at certain moment</returns>
+    public static KeyboardSnapshot CreateSnapshot()
     {
         var keyboardStateNative = new byte[byte.MaxValue + 1];
         KeyboardNativeMethods.GetKeyboardState(keyboardStateNative);
@@ -90,17 +80,10 @@ public class KeyboardSnapshot
     {
         var virtualKeyCode = (int)key;
         if (virtualKeyCode < 0 || virtualKeyCode > byte.MaxValue)
-            throw new ArgumentOutOfRangeException(nameof(key), key, "The value must be between 0 and 255.");
+            throw new ArgumentOutOfRangeException(nameof(key), key, "The value must be between 0 and 255");
         return keyboardStateNative[virtualKeyCode];
     }
 
-    private static bool GetHighBit(byte value)
-    {
-        return value >> 7 != 0;
-    }
-
-    private static bool GetLowBit(byte value)
-    {
-        return (value & 1) != 0;
-    }
+    private static bool GetHighBit(byte value) => value >> 7 != 0;
+    private static bool GetLowBit(byte value) => (value & 1) != 0;
 }

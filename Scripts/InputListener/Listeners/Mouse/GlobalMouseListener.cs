@@ -13,12 +13,11 @@ internal class GlobalMouseListener : MouseListener
 
     public GlobalMouseListener() : base(WinHook.HookGlobalMouse())
     {
-        systemDoubleClickTime = MouseNativeMethods.GetDoubleClickTime();
         doubleClickThresholdX = SystemMetrics.GetXDoubleClickThreshold();
         doubleClickThresholdY = SystemMetrics.GetYDoubleClickThreshold();
     }
 
-    protected override void ProcessDown(MouseEventExtArgs e)
+    protected override void InvokeMouseDown(MouseHookEventArgs e)
     {
         if (IsDoubleClick(e))
             e = e.ToDoubleClickEventArgs();
@@ -29,12 +28,12 @@ internal class GlobalMouseListener : MouseListener
             previousClickedTime = e.Timestamp;
             previousClickedPosition = new(e.X, e.Y);
         }
-        base.ProcessDown(e);
+        base.InvokeMouseDown(e);
     }
 
-    protected override void ProcessUp(MouseEventExtArgs e)
+    protected override void InvokeMouseUp(MouseHookEventArgs e)
     {
-        base.ProcessUp(e);
+        base.InvokeMouseUp(e);
         if (e.Clicks == 2)
         {
             //StopDoubleClickWaiting
@@ -44,7 +43,7 @@ internal class GlobalMouseListener : MouseListener
         }
     }
 
-    private bool IsDoubleClick(MouseEventExtArgs e)
+    private bool IsDoubleClick(MouseHookEventArgs e)
     {
         var isXMoving = Math.Abs(e.X - previousClickedPosition.X) > doubleClickThresholdX;
         var isYMoving = Math.Abs(e.Y - previousClickedPosition.Y) > doubleClickThresholdY;
@@ -53,9 +52,9 @@ internal class GlobalMouseListener : MouseListener
             (e.Timestamp - previousClickedTime) <= systemDoubleClickTime;
     }
 
-    protected override MouseEventExtArgs GetEventArgs(ref IntPtr wParam, ref IntPtr lParam)
+    protected override MouseHookEventArgs GetEventArgs(IntPtr wParam, IntPtr lParam)
     {
         var mouseHookStruct = WinHook.MarshalHookParam<MouseInput>(lParam);
-        return MouseEventExtArgs.FromRawData((WindowsMessages)wParam, ref mouseHookStruct);
+        return MouseHookEventArgs.NewEvent((WindowsMessages)wParam, ref mouseHookStruct, swapButtonThreshold);
     }
 }

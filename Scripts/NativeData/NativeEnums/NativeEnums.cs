@@ -1,26 +1,9 @@
 ﻿namespace MouseAndKeyboard.Native;
 
-// DWORD => 32b = int or uint | (I will use Int32 in this cases or UInt32 if the code needed it)
-// WORD => 16b = short or ushort | (I will use Int16 in this cases or UInt32 if the code needed it)
-
-//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyexw
-public enum MapType : uint
-{
-    /// <summary>VirtualKey to ScanCode</summary>
-    VK_TO_VSC = 0x00,
-    /// <summary>ScanCode to VirtualKey</summary>
-    VSC_TO_VK = 0x01,
-    /// <summary>VirtualKey to Undefined Char</summary>
-    VK_TO_CHAR = 0x02,
-    /// <summary>
-    /// Windows NT/2000/XP: uCode is a scan code and is translated into a
-    /// virtual-key code that distinguishes between left- and right-hand keys. If
-    /// there is no translation, the function returns 0.
-    /// </summary>
-    MAPVK_VSC_TO_VK_EX = 0x03,
-    /// <summary>Not currently documented</summary>
-    MAPVK_VK_TO_VSC_EX = 0x04
-}
+/*
+* DWORD => 32b = int or uint | (I will use Int32 in this cases or UInt32 if the code needed it)
+* WORD => 16b = short or ushort | (I will use Int16 in this cases or UInt32 if the code needed it)
+*/
 
 #region Mouse Input
 
@@ -28,18 +11,18 @@ public enum MapType : uint
 [Flags]
 public enum MouseDataXButton : Int32
 {
-    None = 0x0,
+    None = 0,
     /// <summary>Set if the first X button is pressed or released</summary>
-    XButton1 = 0x00000001,
+    XButton1 = 1,
     /// <summary>Set if the second X button is pressed or released</summary>
-    XButton2 = 0x00000002
+    XButton2 = 2
 }
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
 [Flags]
 public enum MouseEventF : Int32
 {
-    None = 0x000,
+    None = 0x0000,
     /// <summary>Movement occurred.</summary>
     Move = 0x0001,
     /// <summary>The left button was pressed.</summary>
@@ -86,12 +69,12 @@ public enum MouseEventF : Int32
 [Flags]
 public enum FsModifiers : uint
 {
-    None = 0x0000,
-    Alt = 0x0001,
-    Control = 0x0002,
-    Shift = 0x0004,
-    Windows = 0x0008,
-    NoRepeat = 0x4000,
+    None = 0,
+    Alt = 1,
+    Control = 2,
+    Shift = 4,
+    Windows = 8,
+    NoRepeat = 1 << 14,
 }
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
@@ -99,13 +82,38 @@ public enum FsModifiers : uint
 public enum KeyEventF : Int32
 {
     /// <summary>If used, the scan code was preceded by a prefix byte that has the value 0xE0 (224)</summary>
-    ExtendedKey = 0x0001,
+    ExtendedKey = 1,
     /// <summary>If used, the key is being released. If not specified, the key is being pressed</summary>
-    KeyUp = 0x0002,
+    KeyUp = 2,
+    /// <summary>
+    /// If specified, the system synthesizes a VK_PACKET keystroke. 
+    /// <br/>The wVk parameter must be zero. 
+    /// <br/>This flag can only be combined with the KEYEVENTF_KEYUP flag. 
+    /// </summary>
+    Unicode = 4,
     /// <summary>If used, wScan identifies the key and wVk is ignored</summary>
-    ScanCode = 0x0008,
-    /// <summary>If used, the system synthesizes a VK_PACKET keystroke. The wVk parameter must be zero</summary>
-    Unicode = 0x0004
+    ScanCode = 8,
 }
+
+
+//https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input#keystroke-message-flags
+// https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input
+[Flags]
+public enum KeyFlags : int
+{
+    /// <summary>Manipulates the extended key flag</summary>
+    KF_EXTENDED = 0x0100,
+    /// <summary>Manipulates the dialog mode flag, which indicates whether a dialog box is active</summary>
+    KF_DLGMODE = 0x0800,
+    /// <summary>Manipulates the menu mode flag, which indicates whether a menu is active</summary>
+    KF_MENUMODE = 0x1000,
+    /// <summary>Manipulates the ALT key flag, which indicated if the ALT key is pressed</summary>
+    KF_ALTDOWN = 0x2000,
+    /// <summary>Manipulates the repeat count</summary>
+    KF_REPEAT = 0x4000,
+    /// <summary>Manipulates the transition state flag</summary>
+    KF_UP = 0x8000
+}
+
 
 #endregion

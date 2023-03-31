@@ -15,7 +15,7 @@ public partial class MainForm : Form
 
     private void MainForm_Load(object? sender, EventArgs e)
     {
-        LoggerEvents.OnLog += LoggerEvents_OnLog;
+        Logger.OnLog += LoggerEvents_OnLog;
     }
 
     private void LoggerEvents_OnLog(string text)
@@ -69,7 +69,7 @@ public partial class MainForm : Form
         SetControlServerInput(false);
         SetControlButtons(true);
 
-        LoggerEvents.WriteLine("START");
+        Logger.WriteLine("START");
     }
 
     private void SetControlServerInput(bool enable)
@@ -98,12 +98,12 @@ public partial class MainForm : Form
 
         SetControlButtons(false);
 
-        LoggerEvents.WriteLine("STOP");
+        Logger.WriteLine("STOP");
     }
 
     private void ChbConsole_CheckedChanged(object? sender, EventArgs? e)
     {
-        LoggerEvents.Enabled = chbConsole.Checked;
+        Logger.Enabled = chbConsole.Checked;
     }
 
     private void ChbMMove_CheckedChanged(object? sender, EventArgs? e)

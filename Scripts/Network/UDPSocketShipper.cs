@@ -1,28 +1,28 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace MouseAndKeyboard.Network;
 
 public class UDPSocketShipper : UDPSocket
 {
-    protected override void InternalStart(IPEndPoint hostEndPoint)
+    protected override void StartInternal(IPEndPoint hostEndPoint)
     {
         MySocket.Connect(hostEndPoint);
     }
 
-    public async void Send(Packet packet, Action<int> callback)
+    public async Task<int> SendAsync(Packet packet)
     {
         if (MySocket.Connected)
-        {
-            var bytes = await MySocket.SendAsync(packet.GetBuffer, SocketFlags.None);
-            callback?.Invoke(bytes);
-        }
+            return await MySocket.SendAsync(packet.MemoryBuffer, SocketFlags.None);
+        return 0;
     }
 
-    public async void Send(Packet packet)
+    public int Send(Packet packet)
     {
         if (MySocket.Connected)
-            await MySocket.SendAsync(packet.GetBuffer, SocketFlags.None);
+           return MySocket.Send(packet.ReadOnlySpan, SocketFlags.None);
+        return 0;
     }
 
 }

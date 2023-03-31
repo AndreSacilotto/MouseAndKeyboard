@@ -2,13 +2,10 @@
 
 namespace MouseAndKeyboard.InputListener;
 
-/// <summary>
-///     Provides extended argument data for the <see cref='KeyboardListener.KeyDown' /> or
-///     <see cref='KeyboardListener.KeyUp' /> event.
-/// </summary>
-public class KeyEventArgsExt : KeyEventArgs
+public class KeyHookEventArgs : KeyEventArgs
 {
-    internal KeyEventArgsExt(Keys keyData, ScanCode scanCode, int timestamp, bool isKeyDown, bool isKeyUp, bool isExtendedKey) : base(keyData)
+    internal KeyHookEventArgs(Keys keyData, ScanCode scanCode, int timestamp, bool isKeyDown, bool isKeyUp, bool isExtendedKey) : 
+        base(keyData)
     {
         ScanCode = scanCode;
         Timestamp = timestamp;
@@ -27,9 +24,6 @@ public class KeyEventArgsExt : KeyEventArgs
 
     public bool IsKeyUp { get; }
 
+    /// <summary>If true the ScanCode consists of a sequence of two bytes, where the first byte has a value of 0xE0</summary>
     public bool IsExtendedKey { get; }
-
-
-
-
 }
