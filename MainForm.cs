@@ -15,10 +15,16 @@ public partial class MainForm : Form
 
     private void MainForm_Load(object? sender, EventArgs e)
     {
-        Logger.OnLog += LoggerEvents_OnLog;
+        ChbConsole_CheckedChanged(null, null!);
     }
 
-    private void MainForm_FormClosing(object? sender, FormClosingEventArgs? e)
+    private void MainForm_FormClosing(object? sender, FormClosingEventArgs e)
+    {
+        Logger.OnLog -= LoggerEvents_OnLog;
+        CloseNetwork();
+    }
+
+    private void CloseNetwork() 
     {
         if (ym != null)
         {
@@ -30,7 +36,6 @@ public partial class MainForm : Form
             ys.Dispose();
             ys = null;
         }
-        SetControlServerInput(true);
     }
 
     private void LoggerEvents_OnLog(string text)
@@ -40,7 +45,6 @@ public partial class MainForm : Form
         else
             LogAppend(text);
     }
-
     private void LogAppend(string text)
     {
         if (txtConsole.TextLength > txtConsole.MaxLength / 2)
@@ -54,7 +58,7 @@ public partial class MainForm : Form
     {
         txtPort.Enabled = enable;
         chbReceiver.Enabled = enable;
-        ChbReceiver_CheckStateChanged(null, null);
+        ChbReceiver_CheckStateChanged(null, null!);
     }
 
     private void SetControlButtons(bool isRunning)
@@ -92,45 +96,50 @@ public partial class MainForm : Form
         Logger.WriteLine("START");
     }
 
-    private void BtnStop_Click(object? sender, EventArgs? e)
+    private void BtnStop_Click(object? sender, EventArgs e)
     {
-        MainForm_FormClosing(null, null);
+        CloseNetwork();
+
+        SetControlServerInput(true);
 
         SetControlButtons(false);
 
         Logger.WriteLine("STOP");
     }
 
-    private void ChbConsole_CheckedChanged(object? sender, EventArgs? e)
+    private void ChbConsole_CheckedChanged(object? sender, EventArgs e)
     {
-        Logger.Enabled = chbConsole.Checked;
+        if (chbConsole.Checked)
+            Logger.OnLog += LoggerEvents_OnLog;
+        else
+            Logger.OnLog -= LoggerEvents_OnLog;
     }
 
-    private void ChbMMove_CheckedChanged(object? sender, EventArgs? e)
+    private void ChbMMove_CheckedChanged(object? sender, EventArgs e)
     {
         if (ym is not null)
             ym.EnabledMM = chbMMove.Checked;
     }
 
-    private void ChbMScroll_CheckedChanged(object? sender, EventArgs? e)
+    private void ChbMScroll_CheckedChanged(object? sender, EventArgs e)
     {
         if (ym is not null)
             ym.EnabledMS = chbMScroll.Checked;
     }
 
-    private void ChbMClick_CheckedChanged(object? sender, EventArgs? e)
+    private void ChbMClick_CheckedChanged(object? sender, EventArgs e)
     {
         if (ym is not null)
             ym.EnabledMC = chbMClick.Checked;
     }
 
-    private void ChbKKey_CheckedChanged(object? sender, EventArgs? e)
+    private void ChbKKey_CheckedChanged(object? sender, EventArgs e)
     {
         if (ym is not null)
             ym.EnabledKK = chbKKey.Checked;
     }
 
-    private void ChbReceiver_CheckStateChanged(object? sender, EventArgs? e)
+    private void ChbReceiver_CheckStateChanged(object? sender, EventArgs e)
     {
         txtIP.Enabled = !chbReceiver.Checked && txtPort.Enabled;
         chbMMove.Visible = chbMScroll.Visible = chbMClick.Visible = chbKKey.Visible = !chbReceiver.Checked;

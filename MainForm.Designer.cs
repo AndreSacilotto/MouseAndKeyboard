@@ -34,7 +34,7 @@ namespace MouseAndKeyboard
             Label lblPort;
             Label labelSeparator;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            flowLayoutPanel1 = new FlowLayoutPanel();
+            flowLayoutPanel = new FlowLayoutPanel();
             txtIP = new TextBox();
             txtPort = new TextBox();
             chbReceiver = new CheckBox();
@@ -49,7 +49,7 @@ namespace MouseAndKeyboard
             lblIP = new Label();
             lblPort = new Label();
             labelSeparator = new Label();
-            flowLayoutPanel1.SuspendLayout();
+            flowLayoutPanel.SuspendLayout();
             SuspendLayout();
             // 
             // lblIP
@@ -80,28 +80,28 @@ namespace MouseAndKeyboard
             labelSeparator.Size = new Size(115, 2);
             labelSeparator.TabIndex = 7;
             // 
-            // flowLayoutPanel1
+            // flowLayoutPanel
             // 
-            flowLayoutPanel1.Controls.Add(lblIP);
-            flowLayoutPanel1.Controls.Add(txtIP);
-            flowLayoutPanel1.Controls.Add(lblPort);
-            flowLayoutPanel1.Controls.Add(txtPort);
-            flowLayoutPanel1.Controls.Add(chbReceiver);
-            flowLayoutPanel1.Controls.Add(btnStart);
-            flowLayoutPanel1.Controls.Add(btnStop);
-            flowLayoutPanel1.Controls.Add(chbConsole);
-            flowLayoutPanel1.Controls.Add(labelSeparator);
-            flowLayoutPanel1.Controls.Add(chbMMove);
-            flowLayoutPanel1.Controls.Add(chbMScroll);
-            flowLayoutPanel1.Controls.Add(chbMClick);
-            flowLayoutPanel1.Controls.Add(chbKKey);
-            flowLayoutPanel1.Dock = DockStyle.Left;
-            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel1.Location = new Point(0, 0);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Padding = new Padding(15);
-            flowLayoutPanel1.Size = new Size(169, 357);
-            flowLayoutPanel1.TabIndex = 0;
+            flowLayoutPanel.Controls.Add(lblIP);
+            flowLayoutPanel.Controls.Add(txtIP);
+            flowLayoutPanel.Controls.Add(lblPort);
+            flowLayoutPanel.Controls.Add(txtPort);
+            flowLayoutPanel.Controls.Add(chbReceiver);
+            flowLayoutPanel.Controls.Add(btnStart);
+            flowLayoutPanel.Controls.Add(btnStop);
+            flowLayoutPanel.Controls.Add(chbConsole);
+            flowLayoutPanel.Controls.Add(labelSeparator);
+            flowLayoutPanel.Controls.Add(chbMMove);
+            flowLayoutPanel.Controls.Add(chbMScroll);
+            flowLayoutPanel.Controls.Add(chbMClick);
+            flowLayoutPanel.Controls.Add(chbKKey);
+            flowLayoutPanel.Dock = DockStyle.Left;
+            flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel.Location = new Point(0, 0);
+            flowLayoutPanel.Name = "flowLayoutPanel";
+            flowLayoutPanel.Padding = new Padding(15);
+            flowLayoutPanel.Size = new Size(169, 331);
+            flowLayoutPanel.TabIndex = 0;
             // 
             // txtIP
             // 
@@ -220,7 +220,7 @@ namespace MouseAndKeyboard
             txtConsole.PlaceholderText = "Console";
             txtConsole.ReadOnly = true;
             txtConsole.ScrollBars = ScrollBars.Vertical;
-            txtConsole.Size = new Size(268, 357);
+            txtConsole.Size = new Size(267, 331);
             txtConsole.TabIndex = 0;
             txtConsole.TabStop = false;
             // 
@@ -228,23 +228,25 @@ namespace MouseAndKeyboard
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(437, 357);
+            ClientSize = new Size(436, 331);
             Controls.Add(txtConsole);
-            Controls.Add(flowLayoutPanel1);
+            Controls.Add(flowLayoutPanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximumSize = new Size(900, 900);
+            MinimumSize = new Size(180, 370);
             Name = "MainForm";
             Text = "MainForm";
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
-            flowLayoutPanel1.ResumeLayout(false);
-            flowLayoutPanel1.PerformLayout();
+            flowLayoutPanel.ResumeLayout(false);
+            flowLayoutPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private FlowLayoutPanel flowLayoutPanel1;
+        private FlowLayoutPanel flowLayoutPanel;
         private TextBox txtPort;
         private Button btnStart;
         private Button btnStop;

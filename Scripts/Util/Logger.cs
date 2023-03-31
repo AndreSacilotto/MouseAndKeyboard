@@ -1,34 +1,27 @@
-﻿namespace MouseAndKeyboard.Util.Log;
+﻿using System.Runtime.CompilerServices;
+
+namespace MouseAndKeyboard.Util.Log;
 
 public static class Logger
 {
-    public static bool Enabled { get; set; } = true;
+    public static bool Enabled => OnLog == null;
 
     public static event Action<string>? OnLog;
 
-    public static void Write(string log)
-    {
-        if (Enabled)
-            OnLog?.Invoke(log);
-    }
-
-    public static void Write(object log)
-    {
-        if (Enabled)
-            OnLog?.Invoke(log.ToString()!);
-    }
+    //[Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Write(string log) => OnLog?.Invoke(log);
 
     //[Conditional("DEBUG")]
-    public static void WriteLine(string log)
-    {
-        if (Enabled)
-            OnLog?.Invoke(log + Environment.NewLine);
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Write(object log) => OnLog?.Invoke(log.ToString()!);
 
-    public static void WriteLine(params object[] logs)
-    {
-        if (Enabled)
-            OnLog?.Invoke(string.Join(' ', logs) + Environment.NewLine);
-    }
+    //[Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteLine(string log) => OnLog?.Invoke(log + Environment.NewLine);
+
+    //[Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteLine(params object[] logs) => OnLog?.Invoke(string.Join(' ', logs) + Environment.NewLine);
 
 }
