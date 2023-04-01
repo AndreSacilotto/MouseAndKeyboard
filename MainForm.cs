@@ -76,13 +76,13 @@ public partial class MainForm : Form
         if (isReceiver)
         {
             ys = new YuumiSlave();
-            ys.Socket.Start(port);
+            ys.Socket.StartServer(port);
             ys.Enabled = true;
         }
         else
         {
             ym = new YuumiMaster();
-            ym.Socket.Start(NetworkUtil.ToAddress(ip, port));
+            ym.Socket.StartClient(NetworkUtil.ToAddress(ip, port));
 
             ym.EnabledMM = chbMMove.Checked;
             ym.EnabledMS = chbMScroll.Checked;
@@ -92,8 +92,6 @@ public partial class MainForm : Form
 
         SetControlServerInput(false);
         SetControlButtons(true);
-
-        Logger.WriteLine("START");
     }
 
     private void BtnStop_Click(object? sender, EventArgs e)
@@ -103,8 +101,6 @@ public partial class MainForm : Form
         SetControlServerInput(true);
 
         SetControlButtons(false);
-
-        Logger.WriteLine("STOP");
     }
 
     private void ChbConsole_CheckedChanged(object? sender, EventArgs e)

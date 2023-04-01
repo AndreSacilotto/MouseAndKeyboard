@@ -7,38 +7,24 @@ namespace YuumiInstrumentation;
 
 public sealed partial class YuumiMaster : IDisposable
 {
-    private readonly UDPSocketShipper socket;
+    private readonly UDPSocket socket;
 
-    private readonly YuumiPacketWrite mkPacket = new();
     private readonly MKListener inputEvents;
-    //private readonly IKeyboardMouseEvents inputEvents;
+    private readonly YummiPacket ypacket = new();
 
-    public UDPSocketShipper Socket => socket;
+    public UDPSocket Socket => socket;
 
     public YuumiMaster()
     {
+        inputEvents = MKListener.FactoryGlobal();
 #if DEBUG
-        socket = new UDPSocketShipper(true);
+        socket = new UDPSocket(true, YummiPacket.MAX_PACKET_BYTE_SIZE);
+        inputEvents.KeyListener.KeyUp += (ev) => { if (ev.KeyCode == Keys.Pause) Application.Exit(); };//Emergency Exit
 #else
-		socket = new UDPSocketShipper(false);
+		socket = new UDPSocket(false);
 #endif
 
         socket.OnConnect += WhenConnect;
-
-        inputEvents = MKListener.FactoryGlobal();
-        //inputEvents = Hook.GlobalEvents();
-
-        //Safe Exit
-        inputEvents.KeyListener.KeyUp += (ev) => { if (ev.KeyCode == Keys.Pause) Application.Exit(); };
-    }
-
-    private void WhenConnect(UDPSocketShipper socket)
-    {
-        var width = PrimaryMonitor.Instance.Width;
-        var height = PrimaryMonitor.Instance.Height;
-        Logger.WriteLine($"SEND: Screen {width} {height}");
-        mkPacket.WriteScreen(width, height);
-        SendPacket();
     }
 
     public void Dispose()
@@ -49,12 +35,6 @@ public sealed partial class YuumiMaster : IDisposable
         EnabledKK = false;
         socket.Dispose();
         inputEvents.Dispose();
-    }
-
-    private void SendPacket()
-    {
-        socket.Send(mkPacket.Packet);
-        mkPacket.Packet.Reset();
     }
 
     #region Enabling
@@ -130,63 +110,6 @@ public sealed partial class YuumiMaster : IDisposable
                 inputEvents.KeyListener.KeyDown -= WhenKeyDown;
                 inputEvents.KeyListener.KeyUp -= WhenKeyUp;
             }
-        }
-    }
-    #endregion
-
-    #region Event Funcs
-
-    private void WhenKeyDown(KeyHookEventArgs ev) => UnifyKey(PressedState.Down, ev);
-    private void WhenKeyUp(KeyHookEventArgs ev) => UnifyKey(PressedState.Up, ev);
-
-    private void WhenMouseDown(MouseHookEventArgs ev) => UnifyMouse(PressedState.Down, ev);
-    private void WhenMouseUp(MouseHookEventArgs ev) => UnifyMouse(PressedState.Up, ev);
-
-    private void WhenMouseMove(MouseHookEventArgs ev)
-    {
-        Logger.WriteLine($"SEND: MMove {ev.X} {ev.Y}");
-        mkPacket.WriteMouseMove(ev.X, ev.Y);
-        SendPacket();
-    }
-
-    private void WhenMouseScroll(MouseHookEventArgs ev)
-    {
-        Logger.WriteLine("SEND: MScroll " + ev.Delta);
-        mkPacket.WriteMouseScroll(ev.Delta);
-        SendPacket();
-    }
-
-    #endregion
-
-    #region Unify
-    private void UnifyKey(PressedState pressed, KeyHookEventArgs ev)
-    {
-        if (ev.Shift && MirrorWhenShiftKeys.Contains(ev.KeyCode))
-        {
-            Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} | Shift");
-            mkPacket.WriteKey(ev.KeyCode, pressed);
-            SendPacket();
-        }
-        else if (ev.Control && SkillUpKeys.TryGetValue(ev.KeyCode, out var key))
-        {
-            Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} => {key} | Control");
-            mkPacket.WriteKeyModifier(key, Keys.LControlKey, pressed);
-            SendPacket();
-        }
-    }
-    private void UnifyMouse(PressedState pressed, MouseHookEventArgs ev)
-    {
-        if (MouseToKey.TryGetValue(ev.Button, out var key))
-        {
-            Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button} => {key}");
-            mkPacket.WriteKey(key, pressed);
-            SendPacket();
-        }
-        else
-        {
-            Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button}");
-            mkPacket.WriteMouseClick(ev.Button, pressed);
-            SendPacket();
         }
     }
     #endregion

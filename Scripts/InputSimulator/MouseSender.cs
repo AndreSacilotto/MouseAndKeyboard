@@ -54,7 +54,6 @@ public static partial class MouseSender
 
     internal static void Click(MouseEventF dwFlags) => InputSender.SendInput(ClickInput(dwFlags));
     internal static void Click(MouseEventF dwFlags, MouseDataXButton mouseData) => InputSender.SendInput(ClickInput(dwFlags, mouseData));
-    internal static void Click(MouseDataXButton mouseData) => InputSender.SendInput(ClickInput(0, mouseData));
 
     internal static void MultClick(MouseEventF dwFlags, int numberOfClicks = 2)
     {
@@ -78,112 +77,98 @@ public static partial class MouseSender
     /// <param name="wheelDelta">Scroll amount - Windows default is 120</param>
     public static void ScrollHWheel(int wheelDelta = 120) => InputSender.SendInput(ScrollHInput(wheelDelta));
 
-    #region Combinations
-    public static void DragAndDrop(int endX, int endY)
-    {
-        Task.Run(async () =>
-        {
-            Click(MouseEventF.LeftDown);
-            await Task.Delay(15);
-            MoveAbsolute(endX, endY);
-            await Task.Delay(15);
-            Click(MouseEventF.LeftUp);
-        });
-    }
 
-    #endregion
+    #region Press by State
 
-    #region Click by Enum
-
-    public static void Click(PressedState pressState, MouseButtons mouseButton)
+    public static void MouseButtonPress(MouseButtons mouseButton, PressState pressState)
     {
         switch (mouseButton)
         {
             case MouseButtons.Left:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     Click(MouseEventF.LeftClick);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     Click(MouseEventF.LeftDown);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     Click(MouseEventF.LeftUp);
                 break;
             case MouseButtons.Middle:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     Click(MouseEventF.MiddleClick);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     Click(MouseEventF.MiddleDown);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     Click(MouseEventF.MiddleUp);
                 break;
             case MouseButtons.Right:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     Click(MouseEventF.RightClick);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     Click(MouseEventF.RightDown);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     Click(MouseEventF.RightUp);
                 break;
             case MouseButtons.XButton1:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     Click(MouseEventF.XClick, MouseDataXButton.XButton1);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     Click(MouseEventF.XDown, MouseDataXButton.XButton1);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     Click(MouseEventF.XUp, MouseDataXButton.XButton1);
                 break;
             case MouseButtons.XButton2:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     Click(MouseEventF.XClick, MouseDataXButton.XButton2);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     Click(MouseEventF.XDown, MouseDataXButton.XButton2);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     Click(MouseEventF.XUp, MouseDataXButton.XButton2);
                 break;
         }
     }
 
-    public static void Click(PressedState pressState, MouseButtons mouseButton, int numberOfClicks = 2)
+    public static void MouseButtonPress(MouseButtons mouseButton, int numberOfClicks, PressState pressState)
     {
         switch (mouseButton)
         {
             case MouseButtons.Left:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     MultClick(MouseEventF.LeftClick, MouseDataXButton.None, numberOfClicks);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     MultClick(MouseEventF.LeftDown, MouseDataXButton.None, numberOfClicks);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     MultClick(MouseEventF.LeftUp, MouseDataXButton.None, numberOfClicks);
                 break;
             case MouseButtons.Middle:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     MultClick(MouseEventF.MiddleClick, MouseDataXButton.None, numberOfClicks);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     MultClick(MouseEventF.MiddleDown, MouseDataXButton.None, numberOfClicks);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     MultClick(MouseEventF.MiddleUp, MouseDataXButton.None, numberOfClicks);
                 break;
             case MouseButtons.Right:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     MultClick(MouseEventF.RightClick, MouseDataXButton.None, numberOfClicks);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     MultClick(MouseEventF.RightDown, MouseDataXButton.None, numberOfClicks);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     MultClick(MouseEventF.RightUp, MouseDataXButton.None, numberOfClicks);
                 break;
             case MouseButtons.XButton1:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     MultClick(MouseEventF.XClick, MouseDataXButton.XButton1, numberOfClicks);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     MultClick(MouseEventF.XDown, MouseDataXButton.XButton1, numberOfClicks);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     MultClick(MouseEventF.XUp, MouseDataXButton.XButton1, numberOfClicks);
                 break;
             case MouseButtons.XButton2:
-                if (pressState == PressedState.Click)
+                if (pressState == PressState.Click)
                     MultClick(MouseEventF.XClick, MouseDataXButton.XButton2, numberOfClicks);
-                else if (pressState == PressedState.Down)
+                else if (pressState == PressState.Down)
                     MultClick(MouseEventF.XDown, MouseDataXButton.XButton2, numberOfClicks);
-                else if (pressState == PressedState.Up)
+                else if (pressState == PressState.Up)
                     MultClick(MouseEventF.XUp, MouseDataXButton.XButton2, numberOfClicks);
                 break;
         }

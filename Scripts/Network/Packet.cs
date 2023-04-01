@@ -23,6 +23,7 @@ public class Packet
     }
     public Packet(int size = SOCKET_DEFAULT_SIZE) : this(new byte[size]) { }
 
+    public int Pointer => pointer;
     public byte[] Buffer => buffer;
     public ReadOnlyMemory<byte> MemoryBuffer => memory;
     public ReadOnlySpan<byte> ReadOnlySpan => buffer;
@@ -63,6 +64,12 @@ public class Packet
 
     #region ADD
 
+    public void Add(bool value)
+    {
+        buffer[pointer] = value ? (byte)1 : (byte)0;
+        pointer += sizeof(bool);
+    }
+
     public void Add(byte value)
     {
         buffer[pointer] = value;
@@ -89,13 +96,20 @@ public class Packet
 
     public void Add(long value)
     {
-        BinaryPrimitives.WriteInt64LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(uint)), value);
+        BinaryPrimitives.WriteInt64LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(long)), value);
         pointer += sizeof(long);
     }
 
     #endregion
 
     #region READ
+
+    public bool ReadBool()
+    {
+        var value = buffer[pointer] != 0;
+        pointer += sizeof(bool);
+        return value;
+    }
 
     public byte ReadByte()
     {
@@ -127,8 +141,8 @@ public class Packet
 
     public long ReadLong()
     {
-        var value = BinaryPrimitives.ReadInt64LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(uint)));
-        pointer += sizeof(uint);
+        var value = BinaryPrimitives.ReadInt64LittleEndian(buffer.AsSpan().Slice(pointer, sizeof(long)));
+        pointer += sizeof(long);
         return value;
     }
 

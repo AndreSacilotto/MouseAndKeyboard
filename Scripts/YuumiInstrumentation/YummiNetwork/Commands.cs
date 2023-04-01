@@ -5,11 +5,11 @@
 /// <br/>[B] = byte
 /// <br/>[I] = int
 /// </summary>
-public enum Commands : byte
+public enum Command : byte
 {
     /// <summary>Command [B] X [I] Y [I]</summary>
     MouseMove,
-    /// <summary>Command [B] Amount [I]</summary>
+    /// <summary>Command [B] Amount [I] IsHorizontal [Bool]</summary>
     MouseScroll,
 
     /// <summary>Command [B] MouseButton [I] PressState [B]</summary>
@@ -18,7 +18,7 @@ public enum Commands : byte
     /// <summary>Command [B] Key [I] PressState [B]</summary>
     Key,
     /// <summary>Command [B] Key [I] Modifier [I] PressState [B]</summary>
-    KeyModifier,
+    KeyWithModifier,
 
     /// <summary>Command [B] Width [I] Height [I]</summary>
     Screen,

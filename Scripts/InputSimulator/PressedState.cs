@@ -1,11 +1,12 @@
 ﻿namespace MouseAndKeyboard.InputSimulator;
 
-public enum PressedState : byte
+[Flags]
+public enum PressState : byte
 {
     None = 0,
     Down = 1,
     Up = 2,
-    Click = 3,
+    Click = Down | Up,
 
     /// <summary>Not Implemented</summary>
     Pressed = 4,

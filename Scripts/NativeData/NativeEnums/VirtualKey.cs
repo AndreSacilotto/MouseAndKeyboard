@@ -549,7 +549,7 @@ public enum VirtualKey : Int16
     ///</summary>
     BROWSER_FAVORITES = 0xAB,
     ///<summary>
-    ///Windows 2000/XP: Browser Start and Home key
+    ///Windows 2000/XP: Browser StartClient and Home key
     ///</summary>
     BROWSER_HOME = 0xAC,
     ///<summary>
@@ -581,7 +581,7 @@ public enum VirtualKey : Int16
     ///</summary>
     MEDIA_PLAY_PAUSE = 0xB3,
     ///<summary>
-    ///Windows 2000/XP: Start Mail key
+    ///Windows 2000/XP: StartClient Mail key
     ///</summary>
     LAUNCH_MAIL = 0xB4,
     ///<summary>
@@ -589,11 +589,11 @@ public enum VirtualKey : Int16
     ///</summary>
     LAUNCH_MEDIA_SELECT = 0xB5,
     ///<summary>
-    ///Windows 2000/XP: Start Application 1 key
+    ///Windows 2000/XP: StartClient Application 1 key
     ///</summary>
     LAUNCH_APP1 = 0xB6,
     ///<summary>
-    ///Windows 2000/XP: Start Application 2 key
+    ///Windows 2000/XP: StartClient Application 2 key
     ///</summary>
     LAUNCH_APP2 = 0xB7,
     ///<summary>
