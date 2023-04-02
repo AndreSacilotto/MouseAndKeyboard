@@ -1,62 +1,86 @@
-﻿namespace MouseAndKeyboard.Native;
+﻿using MouseAndKeyboard.InputShared;
+using MouseAndKeyboard.Util;
+
+namespace MouseAndKeyboard.Native;
 
 public static class KeyUtil
 {
-    private static readonly Dictionary<Keys, uint> scanCodesDict = new();
+    internal static readonly Dictionary<VirtualKey, ScanCode> ScanCodesDict = GetAllScanCodes();
 
-    public static uint KeyCodeToScanCode(Keys key)
+    private static Dictionary<VirtualKey, ScanCode> GetAllScanCodes()
     {
-        if (!scanCodesDict.TryGetValue(key, out var result))
+        var vkValues = EnumUtil.EnumToArray<VirtualKey>();
+        var dict = new Dictionary<VirtualKey, ScanCode>(vkValues.Length);
+        for (int i = 1; i < vkValues.Length; i++)
         {
-            result = KeyNativeMethods.MapVirtualKeyW((uint)key, MapType.VK_TO_VSC);
+            var key = vkValues[i];
+            dict.TryAdd(key, (ScanCode)KeyNativeMethods.MapVirtualKeyW(key, MapType.VK_TO_VSC));
+        }
+        return dict;
+    }
+
+    public static ScanCode VirtualKeyToScanCode(VirtualKey key)
+    {
+        if (!ScanCodesDict.TryGetValue(key, out var result))
+        {
+            result = (ScanCode)KeyNativeMethods.MapVirtualKeyW(key, MapType.VK_TO_VSC);
             if (result != 0)
-                scanCodesDict.Add(key, result);
+                ScanCodesDict.Add(key, result);
         }
         return result;
     }
 
-    public static Keys CharToVirtualKey(char ch)
-    {
-        var vkey = KeyNativeMethods.VkKeyScanW(ch);
-        var retval = (Keys)(vkey & 0xff);
-        int modifiers = vkey >> 8;
+    public static VirtualKey ScanCodeToVirtualKey(short key) => (VirtualKey)KeyNativeMethods.MapVirtualKeyW((uint)key, MapType.VSC_TO_VK);
 
-        if ((modifiers & 1) != 0)
-            retval |= Keys.Shift;
-        if ((modifiers & 2) != 0)
-            retval |= Keys.Control;
-        if ((modifiers & 4) != 0)
-            retval |= Keys.Alt;
-        return retval;
+    public static VirtualKey CharToVirtualKey(char ch, out bool control, out bool shift, out bool alt)
+    {
+        var vk = KeyNativeMethods.VkKeyScanW(ch);
+        var order = new HighLowWORD(vk);
+
+        byte virtualKeyCode = order.Low;
+        byte shiftState = order.High;
+
+        //https://stackoverflow.com/a/2899364
+        //var retval = (vk & 0xff);
+        //var modifiers = vk >> 8;
+
+        shift = (shiftState & 1) != 0;
+        control = (shiftState & 2) != 0;
+        alt = (shiftState & 4) != 0;
+
+        return (VirtualKey)virtualKeyCode;
     }
 
-    public static Keys NormalizeModifier(Keys key)
+    // # It is not possible to distinguish Keys.LControlKey and Keys.RControlKey when they are modifiers. Same apply to Shift/Alt/Menu
+    /// <returns>If true the key is down; otherwise, it is up.</returns>
+    //public static bool CheckKeyState(int vKey) => (KeyboardNativeMethods.GetKeyState(vKey) & (short.MaxValue + 1)) > 0;
+    public static bool CheckKeyState(int vKey) => new HighLowWORD(KeyboardNativeMethods.GetKeyState(vKey)).High > 0;
+    public static void CheckKeyState(int vKey, out bool isDown, out bool isToggle)
     {
-        if (key.HasFlag(Keys.LControlKey) || key.HasFlag(Keys.RControlKey))
-            return Keys.Control;
-        if (key.HasFlag(Keys.LShiftKey) || key.HasFlag(Keys.RShiftKey))
-            return Keys.Shift;
-        if (key.HasFlag(Keys.LMenu) || key.HasFlag(Keys.RMenu))
-            return Keys.Alt;
-        return key;
+        var hl = new HighLowWORD(KeyboardNativeMethods.GetKeyState(vKey));
+        isDown = hl.High > 0;
+        isToggle = hl.Low > 0;
     }
 
-    // # It is not possible to distinguish Keys.LControlKey and Keys.RControlKey when they are modifiers
-    // Check for Keys.Control instead. Same apply to Shift/Alt/Menu
-    public static bool CheckModifier(int vKey) => (KeyboardNativeMethods.GetKeyState(vKey) & (short.MaxValue + 1)) > 0;
-
-    public static Keys AppendModifierStates(Keys keyData)
+    public static InputModifiers CheckeModifiersState()
     {
-        if (CheckModifier((int)VirtualKey.SHIFT))
-            keyData |= Keys.Shift;
+        var mod = InputModifiers.None;
+        if (CheckKeyState((int)VirtualKey.Control))
+            mod |= InputModifiers.Control;
+        if (CheckKeyState((int)VirtualKey.Shift))
+            mod |= InputModifiers.Shift;
+        if (CheckKeyState((int)VirtualKey.Menu))
+            mod |= InputModifiers.Alt;
+        return mod;
+    }
 
-        if (CheckModifier((int)VirtualKey.CONTROL))
-            keyData |= Keys.Control;
+    public static void CheckeModifiersState(out bool control, out bool shift, out bool alt)
+    {
+        control = CheckKeyState((int)VirtualKey.Control);
+        shift = CheckKeyState((int)VirtualKey.Shift);
+        alt = CheckKeyState((int)VirtualKey.Menu);
 
-        if (CheckModifier((int)VirtualKey.MENU))
-            keyData |= Keys.Menu;
-
-        // # Windows keys
+        // # Windows Key
         // combine LWin and RWin key with other keys will potentially corrupt the data
         // notable F5 | Keys.LWin == F12
         // and the KeyEventArgs.KeyData don't recognize combined data either
@@ -64,8 +88,31 @@ public static class KeyUtil
         // # Function Key [Fn]
         // CANNOT determine state due to conversion inside keyboard
         // See http://en.wikipedia.org/wiki/Fn_key#Technical_details
+    }
 
-        return keyData;
+    public static VirtualKey[] ModifiersToVirtualKey(this InputModifiers mod)
+    {
+        var ctl = mod.HasFlag(InputModifiers.Control) ? 1 : 0;
+        var sht = mod.HasFlag(InputModifiers.Shift) ? 1 : 0;
+        var alt = mod.HasFlag(InputModifiers.Alt) ? 1 : 0;
+
+        var arr = new VirtualKey[ctl + sht + alt];
+        int i = 0;
+        if (ctl == 1) arr[i++] = VirtualKey.Control;
+        if (sht == 1) arr[i++] = VirtualKey.Shift;
+        if (alt == 1) arr[i++] = VirtualKey.Alt;
+        return arr;
+    }
+    public static InputModifiers KeyToModifier(this VirtualKey key)
+    {
+        var mod = InputModifiers.None;
+        if (key.HasFlag(VirtualKey.LeftControl) || key.HasFlag(VirtualKey.RightControl))
+            mod |= InputModifiers.Control;
+        if (key.HasFlag(VirtualKey.LeftShift) || key.HasFlag(VirtualKey.RightShift))
+            mod |= InputModifiers.Shift;
+        if (key.HasFlag(VirtualKey.LeftMenu) || key.HasFlag(VirtualKey.RightMenu))
+            mod |= InputModifiers.Alt;
+        return mod;
     }
 
 }

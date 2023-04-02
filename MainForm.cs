@@ -1,4 +1,5 @@
 using MouseAndKeyboard.Network;
+using System.Windows.Forms;
 using YuumiInstrumentation;
 
 namespace MouseAndKeyboard;
@@ -11,7 +12,18 @@ public partial class MainForm : Form
     public MainForm()
     {
         InitializeComponent();
+        //MaximumSize = Screen.FromControl(this).Bounds.Size;
     }
+
+    #region Props
+
+    public bool Console { get => chbConsole.Checked; set => chbConsole.Checked = value; }
+    public bool MMove { get => chbMMove.Checked; set => chbMMove.Checked = value; }
+    public bool MClick { get => chbMClick.Checked; set => chbMClick.Checked = value; }
+    public bool MScroll { get => chbMScroll.Checked; set => chbMScroll.Checked = value; }
+    public bool KKey { get => chbKKey.Checked; set => chbKKey.Checked = value; }
+
+    #endregion
 
     private void MainForm_Load(object? sender, EventArgs e)
     {
@@ -24,7 +36,7 @@ public partial class MainForm : Form
         CloseNetwork();
     }
 
-    private void CloseNetwork() 
+    private void CloseNetwork()
     {
         if (ym != null)
         {

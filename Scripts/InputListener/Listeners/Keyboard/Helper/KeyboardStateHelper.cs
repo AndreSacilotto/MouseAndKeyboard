@@ -6,10 +6,10 @@ namespace MouseAndKeyboard.InputListener;
 
 internal static class KeyboardStateHelper
 {
-    //Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods
+    //Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the Low word of a 32-bit Virtual Key Value used for non-keyboard input methods
     private static VirtualKey lastVirtualKeyCode;
-
     private static ScanCode lastScanCode;
+
     private static byte[] lastKeyState = new byte[byte.MaxValue];
     private static bool lastIsDead;
 
@@ -36,55 +36,55 @@ internal static class KeyboardStateHelper
         var currentKeyboardState = keyboardState.KeyboardStateNative;
         var isDead = false;
 
-        if (keyboardState.IsDown(Keys.ShiftKey))
-            currentKeyboardState[(int)Keys.ShiftKey] = 0x80;
+        if (keyboardState.IsDown(VirtualKey.Shift))
+            currentKeyboardState[(int)VirtualKey.Shift] = 0x80;
 
-        if (keyboardState.IsToggled(Keys.CapsLock))
-            currentKeyboardState[(int)Keys.CapsLock] = 0x01;
+        if (keyboardState.IsToggled(VirtualKey.CapitalLock))
+            currentKeyboardState[(int)VirtualKey.CapitalLock] = 0x01;
 
-        var relevantChars = KeyNativeMethods.ToUnicodeEx(virtualKeyCode, scanCode, currentKeyboardState, pwszBuff, pwszBuff.Capacity, fuState, dwhkl);
+        var relevantChars = KeyNativeMethods.ToUnicodeEx(virtualKeyCode, (uint)scanCode, currentKeyboardState, pwszBuff, pwszBuff.Capacity, fuState, dwhkl);
 
         switch (relevantChars)
         {
             case -1:
-                // ClearKeyboardBuffer
-                var sb = new StringBuilder(10);
-                int rc;
-                do
-                {
-                    var lpKeyStateNull = new byte[byte.MaxValue];
-                    rc = KeyNativeMethods.ToUnicodeEx(virtualKeyCode, scanCode, lpKeyStateNull, sb, sb.Capacity, 0, dwhkl);
-                } while (rc < 0);
-                isDead = true;
-                chars = null;
-                break;
+            // ClearKeyboardBuffer
+            var sb = new StringBuilder(10);
+            int rc;
+            do
+            {
+                var lpKeyStateNull = new byte[byte.MaxValue];
+                rc = KeyNativeMethods.ToUnicodeEx(virtualKeyCode, (uint)scanCode, lpKeyStateNull, sb, sb.Capacity, 0, dwhkl);
+            } while (rc < 0);
+            isDead = true;
+            chars = null;
+            break;
 
             case 0:
-                chars = null;
-                break;
+            chars = null;
+            break;
 
             case 1:
-                if (pwszBuff.Length > 0)
-                    chars = new[] { pwszBuff[0] };
-                else
-                    chars = null;
-                break;
+            if (pwszBuff.Length > 0)
+                chars = new[] { pwszBuff[0] };
+            else
+                chars = null;
+            break;
 
             // Two or more (only two of them is relevant)
             default:
-                if (pwszBuff.Length > 1)
-                    chars = new[] { pwszBuff[0], pwszBuff[1] };
-                else
-                    chars = new[] { pwszBuff[0] };
-                break;
+            if (pwszBuff.Length > 1)
+                chars = new[] { pwszBuff[0], pwszBuff[1] };
+            else
+                chars = new[] { pwszBuff[0] };
+            break;
         }
 
-        if (lastVirtualKeyCode > 0 && lastIsDead)
+        if (lastVirtualKeyCode != 0 && lastIsDead)
         {
             if (chars != null)
             {
                 var sbTemp = new StringBuilder(5);
-                _ = KeyNativeMethods.ToUnicodeEx(lastVirtualKeyCode, lastScanCode, lastKeyState, sbTemp, sbTemp.Capacity, 0, dwhkl);
+                _ = KeyNativeMethods.ToUnicodeEx((uint)lastVirtualKeyCode, (uint)lastScanCode, lastKeyState, sbTemp, sbTemp.Capacity, 0, dwhkl);
                 lastIsDead = false;
                 lastVirtualKeyCode = 0;
             }

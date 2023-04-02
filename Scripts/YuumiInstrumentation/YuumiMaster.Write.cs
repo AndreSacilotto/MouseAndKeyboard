@@ -1,6 +1,5 @@
 ﻿using MouseAndKeyboard.InputListener;
-using MouseAndKeyboard.InputSimulator;
-using MouseAndKeyboard.Native;
+using MouseAndKeyboard.InputShared;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
@@ -13,56 +12,57 @@ partial class YuumiMaster
         ypacket.Reset();
     }
 
-    #region Event Funcs
+    #region Events Funcs
 
     private void WhenConnect(bool isServer)
     {
-        var width = PrimaryMonitor.Instance.Width;
-        var height = PrimaryMonitor.Instance.Height;
+        var width = MouseAndKeyboard.Native.PrimaryMonitor.Instance.Width;
+        var height = MouseAndKeyboard.Native.PrimaryMonitor.Instance.Height;
         Logger.WriteLine($"SEND: Screen {width} {height}");
         ypacket.WriteScreen(width, height);
         SendPacket();
     }
 
-    private void WhenKeyDown(KeyHookEventArgs ev) => UnifyKey(PressState.Down, ev);
-    private void WhenKeyUp(KeyHookEventArgs ev) => UnifyKey(PressState.Up, ev);
+    private void WhenKeyDown(KeyEventData ev) => UnifyKey(PressState.Down, ev);
+    private void WhenKeyUp(KeyEventData ev) => UnifyKey(PressState.Up, ev);
 
-    private void WhenMouseDown(MouseHookEventArgs ev) => UnifyMouse(PressState.Down, ev);
-    private void WhenMouseUp(MouseHookEventArgs ev) => UnifyMouse(PressState.Up, ev);
+    private void WhenMouseDown(MouseEventData ev) => UnifyMouse(PressState.Down, ev);
+    private void WhenMouseUp(MouseEventData ev) => UnifyMouse(PressState.Up, ev);
 
-    private void WhenMouseMove(MouseHookEventArgs ev)
+    private void WhenMouseMove(MouseEventData ev)
     {
         Logger.WriteLine($"SEND: MMove {ev.X} {ev.Y}");
         ypacket.WriteMouseMove(ev.X, ev.Y);
         SendPacket();
     }
 
-    private void WhenMouseScroll(MouseHookEventArgs ev)
+    private void WhenMouseScroll(MouseEventData ev)
     {
-        Logger.WriteLine("SEND: MScroll " + ev.Delta);
-        ypacket.WriteMouseScroll(ev.Delta);
+        Logger.WriteLine("SEND: MScroll " + ev.SrollDelta);
+        ypacket.WriteMouseScroll(ev.SrollDelta);
         SendPacket();
     }
 
     #endregion
 
     #region Unify
-    private void UnifyKey(PressState pressed, KeyHookEventArgs ev)
+    private void UnifyKey(PressState pressed, KeyEventData ev)
     {
-        if (ev.Shift && MirrorWhenShiftKeys.Contains(ev.KeyCode))
-        {
-            Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} | Shift");
-            ypacket.WriteKey(ev.KeyCode, pressed);
-            SendPacket();
-        }
-        else if (ev.Control && SkillUpKeys.TryGetValue(ev.KeyCode, out var key))
-        {
-            Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} => {key} | Control");
-            ypacket.WriteKeyModifier(key, Keys.LControlKey, pressed);
-            SendPacket();
-        }
+        Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev}");
+        //if (ev.Shift && MirrorWhenShiftKeys.Contains(ev.KeyCode))
+        //{
+        //    Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} | Shift");
+        //    ypacket.WriteKey(ev.KeyCode, pressed);
+        //    SendPacket();
+        //}
+        //else if (ev.Control && KeyWithShiftWhenControlShift.TryGetValue(ev.KeyCode, out var key))
+        //{
+        //    Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} => {key} | Control");
+        //    ypacket.WriteKeyModifier(key, Modifiers.Control, pressed);
+        //    SendPacket();
+        //}
     }
-    private void UnifyMouse(PressState pressed, MouseHookEventArgs ev)
+    private void UnifyMouse(PressState pressed, MouseEventData ev)
     {
         if (MouseToKey.TryGetValue(ev.Button, out var key))
         {

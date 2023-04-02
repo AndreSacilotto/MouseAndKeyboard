@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace MouseAndKeyboard
 {
@@ -232,7 +233,6 @@ namespace MouseAndKeyboard
             Controls.Add(txtConsole);
             Controls.Add(flowLayoutPanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximumSize = new Size(900, 900);
             MinimumSize = new Size(180, 370);
             Name = "MainForm";
             Text = "MainForm";
@@ -253,13 +253,13 @@ namespace MouseAndKeyboard
         private Label lblIP;
         private TextBox txtIP;
         private Label lblPort;
-        private CheckBox chbConsole;
         private TextBox txtConsole;
-        private CheckBox chbMMove;
         private Label labelSeparator;
+        private CheckBox chbReceiver;
+        private CheckBox chbConsole;
+        private CheckBox chbMMove;
         private CheckBox chbMScroll;
         private CheckBox chbMClick;
         private CheckBox chbKKey;
-        private CheckBox chbReceiver;
     }
 }

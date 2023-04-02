@@ -8,22 +8,23 @@ internal class GlobalKeyboardListener : KeyboardListener
     {
     }
 
-    protected override KeyHookEventArgs GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
+    protected override KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
     {
         var keyboardHookStruct = WinHook.MarshalHookParam<KeyboardInput>(lParam);
 
-        var keyCode = (WindowsMessages)wParam;
-        var isKeyDown = keyCode == WindowsMessages.KEYDOWN || keyCode == WindowsMessages.SYSKEYDOWN;
-        var isKeyUp = keyCode == WindowsMessages.KEYUP || keyCode == WindowsMessages.SYSKEYUP;
+        var WM = (WindowsMessages)wParam;
 
-        var keyData = KeyUtil.AppendModifierStates((Keys)keyboardHookStruct.wVk);
+        var down = WM == WindowsMessages.KEYDOWN || WM == WindowsMessages.SYSKEYDOWN;
+        var up = WM == WindowsMessages.KEYUP || WM == WindowsMessages.SYSKEYUP;
+
+        KeyUtil.CheckeModifiersState(out var ctl, out var sht, out var alt);
 
         var isExtendedKey = keyboardHookStruct.dwFlags.HasFlag(KeyEventF.ExtendedKey);
 
-        return new KeyHookEventArgs(keyData, keyboardHookStruct.wScan, keyboardHookStruct.time, isKeyDown, isKeyUp, isExtendedKey);
+        return new KeyEventData(keyboardHookStruct.wVk, (ScanCode)keyboardHookStruct.wScan, down, up, ctl, sht, alt, isExtendedKey, keyboardHookStruct.time);
     }
 
-    protected override IEnumerable<KeyHookPressEventArgs> GetPressEventArgs(IntPtr wParam, IntPtr lParam)
+    protected override IEnumerable<KeyPressEventData> GetPressEventArgs(IntPtr wParam, IntPtr lParam)
     {
         var WM = (WindowsMessages)wParam;
 
@@ -32,17 +33,17 @@ internal class GlobalKeyboardListener : KeyboardListener
 
         var keyboardHookStruct = WinHook.MarshalHookParam<KeyboardInput>(lParam);
 
-        if (keyboardHookStruct.wVk == VirtualKey.PACKET)
+        if ((VirtualKey)keyboardHookStruct.wVk == VirtualKey.Packet)
         {
             var ch = (char)keyboardHookStruct.wScan;
-            yield return new KeyHookPressEventArgs(ch, keyboardHookStruct.time);
+            yield return new KeyPressEventData(ch, keyboardHookStruct.time);
         }
         else
         {
-            var chars = KeyboardStateHelper.TryGetCharFromKeyboardState(keyboardHookStruct.wVk, keyboardHookStruct.wScan, keyboardHookStruct.dwFlags);
+            var chars = KeyboardStateHelper.TryGetCharFromKeyboardState((VirtualKey)keyboardHookStruct.wVk, (ScanCode)keyboardHookStruct.wScan, keyboardHookStruct.dwFlags);
             if (chars != null)
                 foreach (var current in chars)
-                    yield return new KeyHookPressEventArgs(current, keyboardHookStruct.time);
+                    yield return new KeyPressEventData(current, keyboardHookStruct.time);
         }
     }
 

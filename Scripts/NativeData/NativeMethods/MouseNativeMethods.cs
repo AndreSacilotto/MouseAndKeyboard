@@ -13,7 +13,7 @@ internal static partial class MouseNativeMethods
     ///     milliseconds that may occur between the first and second click of a double-click.
     /// </summary>
     /// <returns>
-    ///     The return value specifies the current double-click time, in milliseconds.
+    ///     The return Value specifies the current double-click time, in milliseconds.
     /// </returns>
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdoubleclicktime
     [LibraryImport("user32")]

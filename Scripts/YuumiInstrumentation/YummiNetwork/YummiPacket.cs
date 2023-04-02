@@ -1,5 +1,5 @@
-﻿
-using MouseAndKeyboard.InputSimulator;
+﻿using MouseAndKeyboard.InputShared;
+using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
@@ -34,25 +34,25 @@ public class YummiPacket : Packet
         Add(isHorizontal);
     }
 
-    public void WriteMouseClick(MouseButtons mouseButton, PressState pressedState)
+    public void WriteMouseClick(MouseButton mouseButton, PressState pressedState)
     {
         Add((byte)Command.MouseClick);
-        Add((int)mouseButton);
+        Add((short)mouseButton);
         Add((byte)pressedState);
     }
 
-    public void WriteKey(Keys key, PressState pressedState)
+    public void WriteKey(VirtualKey key, PressState pressedState)
     {
         Add((byte)Command.Key);
-        Add((int)key);
+        Add((short)key);
         Add((byte)pressedState);
     }
 
-    public void WriteKeyModifier(Keys key, Keys modifiers, PressState pressedState)
+    public void WriteKeyModifier(VirtualKey key, InputModifiers modifiers, PressState pressedState)
     {
         Add((byte)Command.KeyWithModifier);
-        Add((int)key);
-        Add((int)modifiers);
+        Add((short)key);
+        Add((uint)modifiers);
         Add((byte)pressedState);
     }
 
@@ -80,22 +80,22 @@ public class YummiPacket : Packet
         isHorizontal = ReadBool();
     }
 
-    public void ReadMouseClick(out MouseButtons mouseButton, out PressState pressedState)
+    public void ReadMouseClick(out MouseButton mouseButton, out PressState pressedState)
     {
-        mouseButton = (MouseButtons)ReadInt();
+        mouseButton = (MouseButton)ReadShort();
         pressedState = (PressState)ReadByte();
     }
 
-    public void ReadKeyPress(out Keys keys, out PressState pressedState)
+    public void ReadKeyPress(out VirtualKey key, out PressState pressedState)
     {
-        keys = (Keys)ReadInt();
+        key = (VirtualKey)ReadShort();
         pressedState = (PressState)ReadByte();
     }
 
-    public void ReadKeyWithModifier(out Keys keys, out Keys modifiers, out PressState pressedState)
+    public void ReadKeyWithModifier(out VirtualKey key, out InputModifiers modifiers, out PressState pressedState)
     {
-        keys = (Keys)ReadInt();
-        modifiers = (Keys)ReadInt();
+        key = (VirtualKey)ReadShort();
+        modifiers = (InputModifiers)ReadUInt();
         pressedState = (PressState)ReadByte();
     }
 

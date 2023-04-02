@@ -4,32 +4,32 @@ public abstract class KeyboardListener : BaseListener
 {
     protected KeyboardListener(WinHook hook) : base(hook) { }
 
-    public event Action<KeyHookEventArgs>? KeyDown;
-    public event Action<KeyHookPressEventArgs>? KeyPress;
-    public event Action<KeyHookEventArgs>? KeyUp;
+    public event Action<KeyEventData>? KeyDown;
+    public event Action<KeyPressEventData>? KeyPress;
+    public event Action<KeyEventData>? KeyUp;
 
-    public void InvokeKeyDown(KeyHookEventArgs e)
+    public void InvokeKeyDown(KeyEventData e)
     {
         if (KeyDown == null || e.Handled || !e.IsKeyDown)
             return;
         KeyDown(e);
     }
 
-    public void InvokeKeyPress(KeyHookPressEventArgs e)
+    public void InvokeKeyPress(KeyPressEventData e)
     {
         if (KeyPress == null || e.Handled || e.IsNonChar)
             return;
         KeyPress(e);
     }
 
-    public void InvokeKeyUp(KeyHookEventArgs e)
+    public void InvokeKeyUp(KeyEventData e)
     {
         if (KeyUp == null || e.Handled || !e.IsKeyUp)
             return;
         KeyUp(e);
     }
 
-    protected override void CallbackInternal(IntPtr wParam, IntPtr lParam)
+    protected override void HookCallback(IntPtr wParam, IntPtr lParam)
     {
         var keyEvent = GetKeyEventArgs(wParam, lParam);
 
@@ -44,6 +44,6 @@ public abstract class KeyboardListener : BaseListener
         InvokeKeyUp(keyEvent);
     }
 
-    protected abstract KeyHookEventArgs GetKeyEventArgs(IntPtr wParam, IntPtr lParam);
-    protected abstract IEnumerable<KeyHookPressEventArgs> GetPressEventArgs(IntPtr wParam, IntPtr lParam);
+    protected abstract KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam);
+    protected abstract IEnumerable<KeyPressEventData> GetPressEventArgs(IntPtr wParam, IntPtr lParam);
 }

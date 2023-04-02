@@ -55,7 +55,7 @@ public static class Interpolation
     }
 
     public static float Remap(float fromMax, float toMax, float value) => value * toMax / fromMax;
-    public static float Remap(float fromMin, float fromMax, float toMin, float toMax, float value) => 
+    public static float Remap(float fromMin, float fromMax, float toMin, float toMax, float value) =>
         toMin + (toMax - toMin) * (value - fromMin) / (fromMax - fromMin);
     public static int Remap(int fromMax, int toMax, int value) => value * toMax / fromMax;
     public static int Remap(int fromMin, int fromMax, int toMin, int toMax, int value) =>

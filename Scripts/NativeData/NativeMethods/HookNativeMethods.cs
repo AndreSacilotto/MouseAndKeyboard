@@ -14,16 +14,16 @@ internal static partial class HookNativeMethods
     ///     hook procedure uses this code to determine how to process the hook information.
     /// </param>
     /// <param name="wParam">
-    ///     C++ ( wParam [in]. Type: WPARAM )<br />The wParam value passed to the current hook procedure. The
+    ///     C++ ( wParam [in]. Type: WPARAM )<br />The wParam Value passed to the current hook procedure. The
     ///     meaning of this parameter depends on the type of hook associated with the current hook chain.
     /// </param>
     /// <param name="lParam">
-    ///     C++ ( lParam [in]. Type: LPARAM )<br />The lParam value passed to the current hook procedure. The
+    ///     C++ ( lParam [in]. Type: LPARAM )<br />The lParam Value passed to the current hook procedure. The
     ///     meaning of this parameter depends on the type of hook associated with the current hook chain.
     /// </param>
     /// <returns>
-    ///     C++ ( Type: LRESULT )<br />This value is returned by the next hook procedure in the chain. The current hook
-    ///     procedure must also return this value. The meaning of the return value depends on the hook type. For more
+    ///     C++ ( Type: LRESULT )<br />This Value is returned by the next hook procedure in the chain. The current hook
+    ///     procedure must also return this Value. The meaning of the return Value depends on the hook type. For more
     ///     information, see the descriptions of the individual hook procedures.
     /// </returns>
     /// <remarks>
@@ -66,8 +66,8 @@ internal static partial class HookNativeMethods
     ///     same desktop as the calling thread.
     /// </param>
     /// <returns>
-    ///     If the function succeeds, the return value is the handle to the hook procedure.
-    ///     If the function fails, the return value is NULL. To get extended error information, call GetLastError.
+    ///     If the function succeeds, the return Value is the handle to the hook procedure.
+    ///     If the function fails, the return Value is NULL. To get extended error information, call GetLastError.
     /// </returns>
     /// <remarks>
     ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
@@ -75,7 +75,7 @@ internal static partial class HookNativeMethods
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw
     [LibraryImport("user32.dll", SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
-    internal static partial IntPtr SetWindowsHookExW(HookId hookType, LowLevelMKProc lpfn, IntPtr hMod, Int32 dwThreadId);
+    internal static partial IntPtr SetWindowsHookExW(HookId hookType, LowLevelMKProc lpfn, IntPtr hMod, DWORD dwThreadId);
 
     /// <summary>
     ///     The UnhookWindowsHookEx function removes a hook procedure installed in a hook chain by the SetWindowsHookEx
@@ -86,8 +86,8 @@ internal static partial class HookNativeMethods
     ///     SetWindowsHookEx.
     /// </param>
     /// <returns>
-    ///     If the function succeeds, the return value is nonzero.
-    ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
+    ///     If the function succeeds, the return Value is nonzero.
+    ///     If the function fails, the return Value is zero. To get extended error information, call GetLastError.
     /// </returns>
     /// <remarks>
     ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
@@ -103,7 +103,7 @@ internal static partial class HookNativeMethods
     /// <returns></returns>
     // https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
     [LibraryImport("kernel32")]
-    internal static partial Int32 GetCurrentThreadId();
+    internal static partial DWORD GetCurrentThreadId();
 
     /// <summary>
     ///     Retrieves a handle to the foreground window (the window with which the user is currently working).
@@ -125,12 +125,12 @@ internal static partial class HookNativeMethods
     ///     A pointer to a variable that receives the process identifier. If this parameter is not NULL,
     ///     GetWindowThreadProcessId copies the identifier of the process to the variable; otherwise, it does not.
     /// </param>
-    /// <returns>The return value is the identifier of the thread that created the window. </returns>
+    /// <returns>The return Value is the identifier of the thread that created the window. </returns>
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid
     [LibraryImport("user32.dll", SetLastError = true)]
-    internal static partial Int32 GetWindowThreadProcessId(IntPtr handle, out UInt32 processId);
+    internal static partial DWORD GetWindowThreadProcessId(IntPtr handle, out UDWORD processId);
     [LibraryImport("user32.dll")]
-    internal static partial Int32 GetWindowThreadProcessId(IntPtr handle, IntPtr processId);
+    internal static partial DWORD GetWindowThreadProcessId(IntPtr handle, IntPtr processId);
 
     //https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew
     [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]

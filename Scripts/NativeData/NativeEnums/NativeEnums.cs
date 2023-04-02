@@ -1,26 +1,29 @@
-﻿namespace MouseAndKeyboard.Native;
+﻿//WORD => 16b = short or ushort | (I will use Int16 in this cases or UInt32 if the code needed it)
+global using WORD = System.Int16; 
+global using UWORD = System.UInt16; 
 
-/*
-* DWORD => 32b = int or uint | (I will use Int32 in this cases or UInt32 if the code needed it)
-* WORD => 16b = short or ushort | (I will use Int16 in this cases or UInt32 if the code needed it)
-*/
+//DWORD => 32b = int or uint | (I will use Int32 in this cases or UInt32 if the code needed it)
+global using DWORD = System.Int32;
+global using UDWORD = System.UInt32;
+
+namespace MouseAndKeyboard.Native;
 
 #region Mouse Input
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
 [Flags]
-public enum MouseDataXButton : Int32
+public enum MouseDataXButton : WORD
 {
     None = 0,
-    /// <summary>Set if the first X button is pressed or released</summary>
+    /// <summary>SetFlags if the first X button is pressed or released</summary>
     XButton1 = 1,
-    /// <summary>Set if the second X button is pressed or released</summary>
+    /// <summary>SetFlags if the second X button is pressed or released</summary>
     XButton2 = 2
 }
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
 [Flags]
-public enum MouseEventF : Int32
+public enum MouseEventF : DWORD
 {
     None = 0x0000,
     /// <summary>Movement occurred.</summary>
@@ -77,28 +80,16 @@ public enum MouseEventF : Int32
 
 #region Keyboard Input
 
-//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerhotkey
-[Flags]
-public enum FsModifiers : uint
-{
-    None = 0,
-    Alt = 1,
-    Control = 2,
-    Shift = 4,
-    Windows = 8,
-    NoRepeat = 1 << 14,
-}
-
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
 [Flags]
-public enum KeyEventF : Int32
+public enum KeyEventF : DWORD
 {
-    /// <summary>If used, the scan code was preceded by a prefix byte that has the value 0xE0 (224)</summary>
+    /// <summary>If used, the scan code was preceded by a prefix byte that has the Value 0xE0 (224)</summary>
     ExtendedKey = 1,
     /// <summary>If used, the key is being released. If not specified, the key is being pressed</summary>
     KeyUp = 2,
     /// <summary>
-    /// If specified, the system synthesizes a VK_PACKET keystroke. 
+    /// If specified, the system synthesizes a VK_PACKET keystrokes. 
     /// <br/>The wVk parameter must be zero. 
     /// <br/>This flag can only be combined with the KEYEVENTF_KEYUP flag. 
     /// </summary>
@@ -108,10 +99,10 @@ public enum KeyEventF : Int32
 }
 
 
-//https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input#keystroke-message-flags
+// https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input#keystrokes-message-flags
 // https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input
 [Flags]
-public enum KeyFlags : int
+public enum KeyFlags
 {
     /// <summary>Manipulates the extended key flag</summary>
     KF_EXTENDED = 0x0100,

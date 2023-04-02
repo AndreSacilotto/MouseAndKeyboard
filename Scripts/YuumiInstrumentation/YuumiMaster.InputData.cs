@@ -1,37 +1,48 @@
-﻿namespace YuumiInstrumentation;
+﻿using MouseAndKeyboard.InputShared;
+using MouseAndKeyboard.Native;
+
+namespace YuumiInstrumentation;
 
 partial class YuumiMaster
 {
-    public readonly static Dictionary<MouseButtons, Keys> MouseToKey = new()
+    public const VirtualKey EMERGENCY_QUIT = VirtualKey.Pause;
+
+    public const VirtualKey TOGGLE_CONSOLE = VirtualKey.ScrollLock;
+    public const VirtualKey TOGGLE_MOUSEMOVE = VirtualKey.Numpad7;
+    public const VirtualKey TOGGLE_MOUSESCROLL = VirtualKey.Numpad4;
+    public const VirtualKey TOGGLE_MOUSECLICK = VirtualKey.Numpad1;
+    public const VirtualKey TOGGLE_KEYS = VirtualKey.Numpad0;
+
+    public readonly static Dictionary<MouseButton, VirtualKey> MouseToKey = new()
     {
-        [MouseButtons.XButton1] = Keys.F,
-        [MouseButtons.XButton2] = Keys.D,
+        [MouseButton.XButton1] = VirtualKey.F,
+        [MouseButton.XButton2] = VirtualKey.D,
     };
 
-    public readonly static Dictionary<Keys, Keys> SkillUpKeys = new()
+    public readonly static Dictionary<VirtualKey, VirtualKey> KeyWithShiftWhenControlShift = new()
     {
-        [Keys.D8] = Keys.Q,
-        [Keys.D9] = Keys.W,
-        [Keys.D0] = Keys.E,
-        [Keys.OemMinus] = Keys.R,
+        [VirtualKey.D8] = VirtualKey.Q,
+        [VirtualKey.D9] = VirtualKey.W,
+        [VirtualKey.D0] = VirtualKey.E,
+        [VirtualKey.OemMinus] = VirtualKey.R,
     };
 
-    public readonly static HashSet<Keys> MirrorWhenShiftKeys = new() {
-        Keys.F1, Keys.F2, Keys.F3, Keys.F4, Keys.F5,
+    public readonly static HashSet<VirtualKey> MirrorWhenShiftKeys = new() {
+        VirtualKey.F1, VirtualKey.F2, VirtualKey.F3, VirtualKey.F4, VirtualKey.F5,
 
-        Keys.Q, Keys.W, Keys.E, Keys.R,
+        VirtualKey.Q, VirtualKey.W, VirtualKey.E, VirtualKey.R,
 
-        Keys.D, Keys.F,
+        VirtualKey.D, VirtualKey.F,
 
-        Keys.D1, Keys.D2, Keys.D3, Keys.D4,
+        VirtualKey.D1, VirtualKey.D2, VirtualKey.D3, VirtualKey.D4,
 
-        Keys.Space,
+        VirtualKey.Space,
 
-        Keys.B,
-        Keys.Y,
-        Keys.P,
+        VirtualKey.B,
+        VirtualKey.Y,
 
-        Keys.Escape,
+        VirtualKey.P,
+        VirtualKey.Escape,
     };
 
 }

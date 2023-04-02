@@ -1,7 +1,6 @@
 ﻿using MouseAndKeyboard.InputListener;
-using MouseAndKeyboard.InputSimulator;
-using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Network;
+using System.Linq;
 
 namespace YuumiInstrumentation;
 
@@ -19,7 +18,20 @@ public sealed partial class YuumiMaster : IDisposable
         inputEvents = MKListener.FactoryGlobal();
 #if DEBUG
         socket = new UDPSocket(true, YummiPacket.MAX_PACKET_BYTE_SIZE);
-        inputEvents.KeyListener.KeyUp += (ev) => { if (ev.KeyCode == Keys.Pause) Application.Exit(); };//Emergency Exit
+
+        var mainForm = (MouseAndKeyboard.MainForm)System.Windows.Forms.Application.OpenForms[System.Windows.Forms.Application.OpenForms.Count - 1]!;
+        //inputEvents.KeyListener.KeyUp += (ev) =>
+        //{
+        //    switch (ev.KeyCode)
+        //    {
+        //        case TOGGLE_CONSOLE: mainForm.Console = !mainForm.Console; break;
+        //        case TOGGLE_MOUSEMOVE: mainForm.MMove = !mainForm.MMove; break;
+        //        case TOGGLE_MOUSECLICK: mainForm.MClick = !mainForm.MClick; break;
+        //        case TOGGLE_KEYS: mainForm.KKey = !mainForm.KKey; break;
+        //        case TOGGLE_MOUSESCROLL: mainForm.MScroll = !mainForm.MScroll; break;
+        //        case EMERGENCY_QUIT: mainForm.Close(); break;
+        //    }
+        //};
 #else
 		socket = new UDPSocket(false);
 #endif

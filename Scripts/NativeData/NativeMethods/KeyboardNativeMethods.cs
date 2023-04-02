@@ -5,33 +5,33 @@ namespace MouseAndKeyboard.Native;
 
 internal static partial class KeyboardNativeMethods
 {
-    /// <summary>The GetKeyboardState function copies the status of the 256 virtual keys to the specified buffer</summary>
-    /// <param name="pbKeyState">[in] Pointer to a 256-byte array that contains keyboard key states</param>
+    /// <summary>The GetKeyboardState function copies the status of the 256 virtual VirtualKey to the specified buffer</summary>
+    /// <param name="pbVirtualKeytate">[in] Pointer to a 256-byte array that contains keyboard key states</param>
     /// <returns>
-    ///     If the function succeeds, the return value is nonzero.
-    ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
+    ///     If the function succeeds, the return Value is nonzero.
+    ///     If the function fails, the return Value is zero. To get extended error information, call GetLastError.
     /// </returns>
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeyboardstate
     [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static partial bool GetKeyboardState(byte[] pbKeyState);
+    internal static partial bool GetKeyboardState(byte[] pbVirtualKeytate);
 
     /// <summary>
-    ///     The GetKeyState function retrieves the status of the specified virtual key. The status specifies whether the key is
+    ///     The GetVirtualKeytate function retrieves the status of the specified virtual key. The status specifies whether the key is
     ///     up, down, or toggled
     ///     (on, off—alternating each time the key is pressed).
     /// </summary>
     /// <param name="vKey">
     ///     [in] Specifies a virtual key. If the desired virtual key is a letter or digit (A through Z, a through z, or 0
-    ///     through 9), nVirtKey must be set to the ASCII value of that character. For other keys, it must be a virtual-key
+    ///     through 9), nVirtKey must be set to the ASCII Value of that character. For other VirtualKey, it must be a virtual-key
     ///     code.
     /// </param>
     /// <returns>
-    ///     The return value specifies the status of the specified virtual key, as follows:
-    ///     <br/>If the high-order bit is 1, the key is down; otherwise, it is up.
-    ///     <br/>If the low-order bit is 1, the key is toggled. 
+    ///     The return Value specifies the status of the specified virtual key, as follows:
+    ///     <br/>If the High-order bit is 1, the key is down; otherwise, it is up.
+    ///     <br/>If the Low-order bit is 1, the key is toggled. 
     ///     <br/>A key, such as the CAPS LOCK key, is toggled if it is turned on. 
-    ///     <br/>The key is off and untoggled if the low-order bit is 0. 
+    ///     <br/>The key is off and untoggled if the Low-order bit is 0. 
     ///     <br/>A toggle key's indicator light (if any) on the keyboard will be on when the key is toggled, and off when the key is untoggled.
     /// </returns>
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeystate
@@ -44,12 +44,12 @@ internal static partial class KeyboardNativeMethods
     /// </summary>
     /// <param name="dwLayout">[in] The identifier of the thread to query, or 0 for the current thread. </param>
     /// <returns>
-    /// The return value is the input locale identifier for the thread. The low word contains a Language Identifier for the input
-    /// language and the high word contains a device handle to the physical layout of the keyboard.
+    /// The return Value is the input locale identifier for the thread. The Low word contains a Language Identifier for the input
+    /// language and the High word contains a device handle to the physical layout of the keyboard.
     /// </returns>
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeyboardlayout
     [LibraryImport("user32.dll")]
-    internal static partial IntPtr GetKeyboardLayout(Int32 dwLayout);
+    internal static partial IntPtr GetKeyboardLayout(DWORD dwLayout);
 
     /// <summary>
     ///     Defines a system-wide hot key.
@@ -64,20 +64,20 @@ internal static partial class KeyboardNativeMethods
     ///     Remarks for the action taken.
     /// </param>
     /// <param name="fsModifiers">
-    ///     The keys that must be pressed in combination with the key specified by the uVirtKey parameter in order to generate
+    ///     The VirtualKey that must be pressed in combination with the key specified by the uVirtKey parameter in order to generate
     ///     the WM_HOTKEY message. The fsModifiers parameter can be a combination of the following values.
     /// </param>
     /// <param name="vk">
     ///     The virtual-key code of the hot key. See Virtual Key Codes.
     /// </param>
     /// <returns>
-    ///     If the function succeeds, the return value is nonzero.
-    ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
+    ///     If the function succeeds, the return Value is nonzero.
+    ///     If the function fails, the return Value is zero. To get extended error information, call GetLastError.
     /// </returns>
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerhotkey
     [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static partial bool RegisterHotKey(IntPtr hWnd, int id, FsModifiers fsModifiers, uint vk);
+    internal static partial bool RegisterHotKey(IntPtr hWnd, int id, InputModifiers fsModifiers, uint vk);
 
     /// <summary>
     ///     Frees a hot key previously registered by the calling thread.
@@ -90,8 +90,8 @@ internal static partial class KeyboardNativeMethods
     ///     The identifier of the hot key to be freed.
     /// </param>
     /// <returns>
-    ///     If the function succeeds, the return value is nonzero.
-    ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
+    ///     If the function succeeds, the return Value is nonzero.
+    ///     If the function fails, the return Value is zero. To get extended error information, call GetLastError.
     /// </returns>
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterhotkey
     [LibraryImport("user32.dll", SetLastError = true)]

@@ -1,6 +1,6 @@
-﻿using MouseAndKeyboard.InputSimulator;
+﻿using MouseAndKeyboard.InputShared;
+using MouseAndKeyboard.InputSimulator;
 using MouseAndKeyboard.Native;
-using MouseAndKeyboard.Network;
 using MouseAndKeyboard.Util;
 
 namespace YuumiInstrumentation;
@@ -32,14 +32,14 @@ partial class YuumiSlave
             }
             case Command.Key:
             {
-                packet.ReadKeyPress(out var keys, out var pressedState);
-                KeyPress(keys, pressedState);
+                packet.ReadKeyPress(out var key, out var pressedState);
+                KeyPress(key, pressedState);
                 break;
             }
             case Command.KeyWithModifier:
             {
-                packet.ReadKeyWithModifier(out var keys, out var mods, out var pressedState);
-                KeyWithModifierPress(keys, mods, pressedState);
+                packet.ReadKeyWithModifier(out var key, out var mods, out var pressedState);
+                KeyWithModifierPress(key, mods, pressedState);
                 break;
             }
             case Command.Screen:
@@ -73,29 +73,47 @@ partial class YuumiSlave
             Logger.WriteLine($"RECEIVE: MHScroll {scrollDelta}");
             MouseSender.ScrollHWheel(scrollDelta);
         }
-        else 
+        else
         {
             Logger.WriteLine($"RECEIVE: MScroll {scrollDelta}");
             MouseSender.ScrollWheel(scrollDelta);
         }
     }
 
-    private static void MouseClick(MouseButtons mouseButton, PressState pressedState)
+    private static void MouseClick(MouseButton mouseButton, PressState pressedState)
     {
         Logger.WriteLine($"RECEIVE: MClick {mouseButton} {pressedState}");
-        MouseSender.MouseButtonPress(mouseButton, pressedState);
+
+        if (pressedState == PressState.Click)
+            MouseSender.SendButtonClick(mouseButton);
+        else if (pressedState == PressState.Down)
+            MouseSender.SendButtonDown(mouseButton);
+        else if (pressedState == PressState.Up)
+            MouseSender.SendButtonUp(mouseButton);
     }
 
-    private static void KeyPress(Keys keys, PressState pressedState)
+    private static void KeyPress(VirtualKey key, PressState pressedState)
     {
-        Logger.WriteLine($"RECEIVE: KKey {keys} {pressedState}");
-        KeyboardSender.KeyboardKeyPress(keys, pressedState);
+        Logger.WriteLine($"RECEIVE: KKey {key} {pressedState}");
+
+        if(pressedState == PressState.Click)
+            KeyboardSender.SendKeyClick(key);
+        else if(pressedState == PressState.Down)
+            KeyboardSender.SendKeyDown(key);
+        else if(pressedState == PressState.Up)
+            KeyboardSender.SendKeyUp(key);
     }
 
-    private static void KeyWithModifierPress(Keys keys, Keys modifier, PressState pressedState)
+    private static void KeyWithModifierPress(VirtualKey key, InputModifiers modifiers, PressState pressedState)
     {
-        Logger.WriteLine($"RECEIVE: KKeyMod {keys} {pressedState}");
-        KeyboardSender.KeyboardKeyPress(keys, modifier, pressedState);
+        Logger.WriteLine($"RECEIVE: KMKey {key} {modifiers} {pressedState}");
+
+        if (pressedState == PressState.Click)
+            KeyboardSender.SendKeyClick(key);
+        else if (pressedState == PressState.Down)
+            KeyboardSender.SendKeyDown(key);
+        else if (pressedState == PressState.Up)
+            KeyboardSender.SendKeyUp(key);
     }
 
 }

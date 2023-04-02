@@ -1,4 +1,6 @@
-﻿namespace MouseAndKeyboard;
+﻿using System.Windows.Forms;
+
+namespace MouseAndKeyboard;
 
 public class MultiFormContext : ApplicationContext
 {

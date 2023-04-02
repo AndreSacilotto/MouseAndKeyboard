@@ -19,7 +19,7 @@ public enum HookId : int
     /// </summary>
     WH_JOURNALPLAYBACK = 1,
     /// <summary>
-    /// Installs a hook procedure that monitors keystroke messages. For more information, see the KeyboardProc
+    /// Installs a hook procedure that monitors keystrokes messages. For more information, see the KeyboardProc
     /// hook procedure.
     /// </summary>
     WH_KEYBOARD = 2,
@@ -63,7 +63,7 @@ public enum HookId : int
     WH_SHELL = 10,
     /// <summary>
     /// Installs a hook procedure that will be called when the application's foreground thread is about to become
-    /// idle. This hook is useful for performing low priority tasks during idle time. For more information, see the
+    /// idle. This hook is useful for performing Low priority tasks during idle time. For more information, see the
     /// ForegroundIdleProc hook procedure.
     /// </summary>
     WH_FOREGROUNDIDLE = 11,
@@ -73,12 +73,12 @@ public enum HookId : int
     /// </summary>
     WH_CALLWNDPROCRET = 12,
     /// <summary>
-    /// Installs a hook procedure that monitors low-level keyboard input events. For more information, see the
+    /// Installs a hook procedure that monitors Low-level keyboard input events. For more information, see the
     /// LowLevelKeyboardProc hook procedure.
     /// </summary>
     WH_KEYBOARD_LL = 13,
     /// <summary>
-    /// Installs a hook procedure that monitors low-level mouse input events. For more information, see the
+    /// Installs a hook procedure that monitors Low-level mouse input events. For more information, see the
     /// LowLevelMKProc hook procedure.
     /// </summary>
     WH_MOUSE_LL = 14

@@ -1,98 +1,92 @@
-﻿using MouseAndKeyboard.Native;
+﻿using MouseAndKeyboard.InputShared;
+using MouseAndKeyboard.Native;
 
 namespace MouseAndKeyboard.InputListener;
 
 public abstract class MouseListener : BaseListener
 {
-    protected readonly Point offGridPoint = new(-99999, -99999);
+    protected readonly static Point offGridPoint = new(-99999, -99999);
 
-    private MouseButtons doubleDown;
-    private MouseButtons singleDown;
-    protected readonly int swapButtonThreshold;
+    protected readonly bool swapButtonThreshold;
     private readonly int dragThresholdX;
     private readonly int dragThresholdY;
-    private Point dragStartPosition;
 
-    private bool isDragging;
+    private MouseButton singleDown = MouseButton.None;
+    private MouseButton doubleDown = MouseButton.None;
 
-    private Point previousPosition;
+    private Point previousPosition = offGridPoint;
+    
+    private Point dragStartPosition = offGridPoint;
+    private bool isDragging = false;
 
     protected MouseListener(WinHook hook) : base(hook)
     {
-        swapButtonThreshold = SystemMetrics.GetSwapButtonThreshold();
+        swapButtonThreshold = SystemMetrics.GetSwapButtonThreshold() > 0;
         dragThresholdX = SystemMetrics.GetXDragThreshold();
         dragThresholdY = SystemMetrics.GetYDragThreshold();
-        isDragging = false;
-
-        previousPosition = offGridPoint;
-        dragStartPosition = offGridPoint;
-
-        doubleDown = MouseButtons.None;
-        singleDown = MouseButtons.None;
     }
 
     #region Events
-    public event Action<MouseHookEventArgs>? MouseMove;
-    public event Action<MouseHookEventArgs>? MouseClick;
-    public event Action<MouseHookEventArgs>? MouseDown;
-    public event Action<MouseHookEventArgs>? MouseUp;
-    public event Action<MouseHookEventArgs>? MouseWheelVertical;
-    public event Action<MouseHookEventArgs>? MouseWheelHorizontal;
-    public event Action<MouseHookEventArgs>? MouseDoubleClick;
-    public event Action<MouseHookEventArgs>? MouseDragStarted;
-    public event Action<MouseHookEventArgs>? MouseDragFinished;
+    public event Action<MouseEventData>? MouseMove;
+    public event Action<MouseEventData>? MouseClick;
+    public event Action<MouseEventData>? MouseDown;
+    public event Action<MouseEventData>? MouseUp;
+    public event Action<MouseEventData>? MouseWheelVertical;
+    public event Action<MouseEventData>? MouseWheelHorizontal;
+    public event Action<MouseEventData>? MouseDoubleClick;
+    public event Action<MouseEventData>? MouseDragStarted;
+    public event Action<MouseEventData>? MouseDragFinished;
     #endregion
 
-    protected override void CallbackInternal(IntPtr wParam, IntPtr lParam)
+    protected override void HookCallback(IntPtr wParam, IntPtr lParam)
     {
         var mouseEvent = GetEventArgs(wParam, lParam);
 
-        if (mouseEvent.IsMouseButtonDown)
+        if (previousPosition != mouseEvent.GetPosition())
+            InvokeMouseMove(mouseEvent);
+
+        if (mouseEvent.IsButtonDown)
             InvokeMouseDown(mouseEvent);
 
-        if (mouseEvent.IsMouseButtonUp)
+        if (mouseEvent.IsButtonUp)
             InvokeMouseUp(mouseEvent);
 
-        if (mouseEvent.IsScroll)
+        if (mouseEvent.IsScrollEvent)
         {
-            if (mouseEvent.IsHorizontalScroll)
+            if (mouseEvent.IsHorizontalWheel)
                 InvokMouseWheelHorizontal(mouseEvent);
             else
                 InvokMouseWheelVertical(mouseEvent);
         }
 
-        if (previousPosition != mouseEvent.GetPosition())
-            InvokeMouseMove(mouseEvent);
-
         InvokeMouseDrag(mouseEvent);
     }
 
-    protected abstract MouseHookEventArgs GetEventArgs(IntPtr wParam, IntPtr lParam);
+    protected abstract MouseEventData GetEventArgs(IntPtr wParam, IntPtr lParam);
 
-    protected void InvokMouseWheelHorizontal(MouseHookEventArgs e)
+    protected void InvokMouseWheelHorizontal(MouseEventData e)
     {
         MouseWheelHorizontal?.Invoke(e);
     }
 
-    protected void InvokMouseWheelVertical(MouseHookEventArgs e)
+    protected void InvokMouseWheelVertical(MouseEventData e)
     {
         MouseWheelVertical?.Invoke(e);
     }
 
-    protected virtual void InvokeMouseDown(MouseHookEventArgs e)
+    protected virtual void InvokeMouseDown(MouseEventData e)
     {
         MouseDown?.Invoke(e);
         if (e.Handled)
             return;
 
-        if (e.Clicks == 2)
-            doubleDown |= e.Button;
-
         if (e.Clicks == 1)
             singleDown |= e.Button;
+        else if (e.Clicks == 2)
+            doubleDown |= e.Button;
     }
 
-    protected virtual void InvokeMouseUp(MouseHookEventArgs e)
+    protected virtual void InvokeMouseUp(MouseEventData e)
     {
         MouseUp?.Invoke(e);
         if (e.Handled)
@@ -112,48 +106,36 @@ public abstract class MouseListener : BaseListener
         }
     }
 
-    private void InvokeMouseMove(MouseHookEventArgs e)
+    private void InvokeMouseMove(MouseEventData e)
     {
         previousPosition = e.GetPosition();
         MouseMove?.Invoke(e);
     }
 
-    private void InvokeMouseDrag(MouseHookEventArgs e)
+    private void InvokeMouseDrag(MouseEventData e)
     {
-        if (singleDown.HasFlag(MouseButtons.Left))
+        if (singleDown.HasFlag(MouseButton.Left))
         {
-            if (dragStartPosition.Equals(offGridPoint))
+            //Drag Start
+            if (dragStartPosition == offGridPoint)
                 dragStartPosition = e.GetPosition();
-            InvokeMouseDragStarted(e);
+            if (!isDragging)
+            {
+                var isXDragging = Math.Abs(e.X - dragStartPosition.X) > dragThresholdX;
+                var isYDragging = Math.Abs(e.Y - dragStartPosition.Y) > dragThresholdY;
+                if (isXDragging || isYDragging)
+                    MouseDragStarted?.Invoke(e);
+            }
         }
         else
         {
+            //Drag End
             dragStartPosition = offGridPoint;
-            InvokeMouseDragFinished(e);
-        }
-    }
-
-    private void InvokeMouseDragStarted(MouseHookEventArgs e)
-    {
-        if (!isDragging)
-        {
-            var isXDragging = Math.Abs(e.X - dragStartPosition.X) > dragThresholdX;
-            var isYDragging = Math.Abs(e.Y - dragStartPosition.Y) > dragThresholdY;
-            isDragging = isXDragging || isYDragging;
-
             if (isDragging)
             {
-                MouseDragStarted?.Invoke(e);
+                MouseDragFinished?.Invoke(e);
+                isDragging = false;
             }
-        }
-    }
-
-    private void InvokeMouseDragFinished(MouseHookEventArgs e)
-    {
-        if (isDragging)
-        {
-            MouseDragFinished?.Invoke(e);
-            isDragging = false;
         }
     }
 

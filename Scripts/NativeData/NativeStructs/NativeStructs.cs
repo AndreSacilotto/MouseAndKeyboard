@@ -6,7 +6,7 @@ namespace MouseAndKeyboard.Native;
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct InputStruct
 {
-    public enum InputType : Int32
+    public enum InputType : DWORD
     {
         Mouse = 0,
         Keyboard = 1,
@@ -42,9 +42,9 @@ public readonly struct InputStruct
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct HardwareInput
 {
-    public readonly Int32 uMsg;
-    public readonly Int16 wParamL;
-    public readonly Int16 wParamH;
+    public readonly DWORD uMsg;
+    public readonly WORD wParamL;
+    public readonly WORD wParamH;
     public HardwareInput(int uMsg = default, short wParamL = default, short wParamH = default)
     {
         this.uMsg = uMsg;
@@ -54,13 +54,14 @@ public readonly struct HardwareInput
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct KeyboardInput
 {
     public readonly VirtualKey wVk;
     public readonly ScanCode wScan;
     public readonly KeyEventF dwFlags;
-    public readonly Int32 time;
+    public readonly DWORD time;
     public readonly UIntPtr dwExtraInfo;
     public KeyboardInput(VirtualKey wVk, ScanCode wScan, KeyEventF dwFlags, int time = default, UIntPtr dwExtraInfo = default)
     {
@@ -80,9 +81,9 @@ public readonly struct MouseInput
     public readonly int X;
     public readonly int Y;
     //or public readonly Point pt;
-    public readonly Int32 mouseData; //MouseDataXButton or ScrollAmount
+    public readonly DWORD mouseData; //MouseDataXButton or ScrollAmount
     public readonly MouseEventF dwFlags;
-    public readonly Int32 time;
+    public readonly DWORD time;
     public readonly UIntPtr dwExtraInfo;
     public MouseInput(Point pt, MouseEventF dwFlags, int mouseData = default, int time = default, UIntPtr dwExtraInfo = default)
     {
@@ -106,10 +107,10 @@ public readonly struct MouseInput
     public Point GetPoint() => new(X, Y);
     public MouseDataXButton AsXButton() => (MouseDataXButton)mouseData;
 
-    private int GetHighWORD() => mouseData >> (sizeof(int) * 4);
-    internal int GetWheelDelta() => GetHighWORD();
+    //private int GetHighWORD() => mouseData >> (sizeof(int) * 4);
+    //internal int GetWheelDelta() => GetHighWORD();
+    internal short GetWheelDelta() => new HighLowDWORD(mouseData).High;
 }
-
 
 /// <summary>
 /// The MONITORINFO structure contains information about a display monitor.
@@ -121,13 +122,12 @@ public readonly struct MouseInput
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 internal unsafe struct MonitorInfoEx
 {
-    private readonly Int32 cbSize = Marshal.SizeOf(typeof(MonitorInfoEx));
+    private readonly DWORD cbSize = Marshal.SizeOf(typeof(MonitorInfoEx));
     public readonly NativeRect rcMonitor;
     public readonly NativeRect rcWork;
-    public readonly Int32 dwFlags;
+    public readonly DWORD dwFlags;
     private fixed char szDevice[32];
     public MonitorInfoEx() { }
-
     public string DeviceName
     {
         get

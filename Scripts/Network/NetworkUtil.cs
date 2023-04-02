@@ -11,9 +11,9 @@ public static class NetworkUtil
     public static IPAddress ToAddress(string ip) => IPAddress.Parse(ip);
     public static IPEndPoint ToAddress(string ip, int port) => new(IPAddress.Parse(ip), port);
 
-    public static async Task<int> SendAsync(this Socket socket, Packet packet, SocketFlags flags = SocketFlags.None) => 
+    public static async Task<int> SendAsync(this Socket socket, Packet packet, SocketFlags flags = SocketFlags.None) =>
         await socket.SendAsync(packet.MemoryBuffer, flags);
 
-    public static int Send(this Socket socket, Packet packet, out SocketError error, SocketFlags flags = SocketFlags.None) => 
+    public static int Send(this Socket socket, Packet packet, out SocketError error, SocketFlags flags = SocketFlags.None) =>
         socket.Send(packet.Buffer, 0, packet.Pointer, flags, out error);
 }

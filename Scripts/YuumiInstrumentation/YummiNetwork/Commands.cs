@@ -17,7 +17,7 @@ public enum Command : byte
 
     /// <summary>Command [B] Key [I] PressState [B]</summary>
     Key,
-    /// <summary>Command [B] Key [I] Modifier [I] PressState [B]</summary>
+    /// <summary>Command [B] Key [I] VirtualModifier [I] PressState [B]</summary>
     KeyWithModifier,
 
     /// <summary>Command [B] Width [I] Height [I]</summary>

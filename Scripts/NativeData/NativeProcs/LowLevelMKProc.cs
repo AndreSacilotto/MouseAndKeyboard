@@ -11,7 +11,7 @@
 ///     If nCode is HC_ACTION, the hook procedure must process the message.
 ///     If nCode is less than zero, the hook procedure must pass the message to the
 ///     CallNextHookEx function without further processing and must return the
-///     value returned by CallNextHookEx.
+///     Value returned by CallNextHookEx.
 /// </param>
 /// <param name="wParam">
 ///     [in] Specifies whether the message was sent by the current thread.
@@ -21,11 +21,11 @@
 ///     [in] Pointer to a CWPSTRUCT structure that contains details about the message.
 /// </param>
 /// <returns>
-///     If nCode is less than zero, the hook procedure must return the value returned by CallNextHookEx.
+///     If nCode is less than zero, the hook procedure must return the Value returned by CallNextHookEx.
 ///     If nCode is greater than or equal to zero, it is highly recommended that you call CallNextHookEx
-///     and return the value it returns; otherwise, other applications that have installed WH_CALLWNDPROC
+///     and return the Value it returns; otherwise, other applications that have installed WH_CALLWNDPROC
 ///     hooks will not receive hook notifications and may behave incorrectly as a result. If the hook
-///     procedure does not call CallNextHookEx, the return value should be zero.
+///     procedure does not call CallNextHookEx, the return Value should be zero.
 /// </returns>
 // https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelmouseproc
 // or

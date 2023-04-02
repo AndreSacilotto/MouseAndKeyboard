@@ -6,7 +6,7 @@ internal partial class DeviceNativeMethods
 {
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint
     [LibraryImport("User32.dll")]
-    internal static partial IntPtr MonitorFromPoint(Point pt, Int32 flags);
+    internal static partial IntPtr MonitorFromPoint(Point pt, DWORD flags);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfow
     [LibraryImport("User32.dll")]
