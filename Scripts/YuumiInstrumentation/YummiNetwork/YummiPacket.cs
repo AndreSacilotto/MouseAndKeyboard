@@ -1,5 +1,4 @@
-﻿using MouseAndKeyboard.InputShared;
-using MouseAndKeyboard.Native;
+﻿using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
@@ -34,7 +33,7 @@ public class YummiPacket : Packet
         Add(isHorizontal);
     }
 
-    public void WriteMouseClick(MouseButton mouseButton, PressState pressedState)
+    public void WriteMouseClick(MouseButtonsF mouseButton, PressState pressedState)
     {
         Add((byte)Command.MouseClick);
         Add((short)mouseButton);
@@ -80,9 +79,9 @@ public class YummiPacket : Packet
         isHorizontal = ReadBool();
     }
 
-    public void ReadMouseClick(out MouseButton mouseButton, out PressState pressedState)
+    public void ReadMouseClick(out MouseButtonsF mouseButton, out PressState pressedState)
     {
-        mouseButton = (MouseButton)ReadShort();
+        mouseButton = (MouseButtonsF)ReadByte();
         pressedState = (PressState)ReadByte();
     }
 

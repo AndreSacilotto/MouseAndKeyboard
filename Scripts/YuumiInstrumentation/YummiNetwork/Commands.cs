@@ -12,7 +12,7 @@ public enum Command : byte
     /// <summary>Command [B] Amount [I] IsHorizontal [Bool]</summary>
     MouseScroll,
 
-    /// <summary>Command [B] MouseButton [I] PressState [B]</summary>
+    /// <summary>Command [B] MouseButtonVK [I] PressState [B]</summary>
     MouseClick,
 
     /// <summary>Command [B] Key [I] PressState [B]</summary>

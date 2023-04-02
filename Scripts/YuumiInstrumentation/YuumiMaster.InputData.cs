@@ -1,5 +1,4 @@
-﻿using MouseAndKeyboard.InputShared;
-using MouseAndKeyboard.Native;
+﻿using MouseAndKeyboard.Native;
 
 namespace YuumiInstrumentation;
 
@@ -13,10 +12,10 @@ partial class YuumiMaster
     public const VirtualKey TOGGLE_MOUSECLICK = VirtualKey.Numpad1;
     public const VirtualKey TOGGLE_KEYS = VirtualKey.Numpad0;
 
-    public readonly static Dictionary<MouseButton, VirtualKey> MouseToKey = new()
+    public readonly static Dictionary<MouseButtonsF, VirtualKey> MouseToKey = new()
     {
-        [MouseButton.XButton1] = VirtualKey.F,
-        [MouseButton.XButton2] = VirtualKey.D,
+        [MouseButtonsF.XButton1] = VirtualKey.F,
+        [MouseButtonsF.XButton2] = VirtualKey.D,
     };
 
     public readonly static Dictionary<VirtualKey, VirtualKey> KeyWithShiftWhenControlShift = new()

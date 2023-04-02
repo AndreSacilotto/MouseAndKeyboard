@@ -1,5 +1,4 @@
-﻿using MouseAndKeyboard.InputShared;
-using MouseAndKeyboard.Native;
+﻿using MouseAndKeyboard.Native;
 
 namespace MouseAndKeyboard.InputSimulator;
 
@@ -86,90 +85,90 @@ public static partial class MouseSender
     #endregion
 
     #region Sender
-    public static void SendButtonDown(MouseButton mb)
+    public static void SendButtonDown(MouseButtonsF mb)
     {
         switch (mb)
         {
-            case MouseButton.Left:
+            case MouseButtonsF.Left:
             SendButton(MouseEventF.LeftDown);
             break;
-            case MouseButton.Right:
+            case MouseButtonsF.Right:
             SendButton(MouseEventF.RightDown);
             break;
-            case MouseButton.Middle:
+            case MouseButtonsF.Middle:
             SendButton(MouseEventF.MiddleDown);
             break;
-            case MouseButton.XButton1:
+            case MouseButtonsF.XButton1:
             SendButton(MouseEventF.XDown, MouseDataXButton.XButton1);
             break;
-            case MouseButton.XButton2:
+            case MouseButtonsF.XButton2:
             SendButton(MouseEventF.XDown, MouseDataXButton.XButton2);
             break;
         }
     }
 
-    public static void SendButtonUp(MouseButton mb)
+    public static void SendButtonUp(MouseButtonsF mb)
     {
         switch (mb)
         {
-            case MouseButton.Left:
+            case MouseButtonsF.Left:
             SendButton(MouseEventF.LeftUp);
             break;
-            case MouseButton.Right:
+            case MouseButtonsF.Right:
             SendButton(MouseEventF.RightUp);
             break;
-            case MouseButton.Middle:
+            case MouseButtonsF.Middle:
             SendButton(MouseEventF.MiddleUp);
             break;
-            case MouseButton.XButton1:
+            case MouseButtonsF.XButton1:
             SendButton(MouseEventF.XUp, MouseDataXButton.XButton1);
             break;
-            case MouseButton.XButton2:
+            case MouseButtonsF.XButton2:
             SendButton(MouseEventF.XUp, MouseDataXButton.XButton2);
             break;
         }
 
     }
 
-    public static void SendButtonClick(MouseButton mb)
+    public static void SendButtonClick(MouseButtonsF mb)
     {
         switch (mb)
         {
-            case MouseButton.Left:
+            case MouseButtonsF.Left:
             SendButton(MouseEventF.LeftClick);
             break;
-            case MouseButton.Right:
+            case MouseButtonsF.Right:
             SendButton(MouseEventF.RightClick);
             break;
-            case MouseButton.Middle:
+            case MouseButtonsF.Middle:
             SendButton(MouseEventF.MiddleClick);
             break;
-            case MouseButton.XButton1:
+            case MouseButtonsF.XButton1:
             SendButton(MouseEventF.XClick, MouseDataXButton.XButton1);
             break;
-            case MouseButton.XButton2:
+            case MouseButtonsF.XButton2:
             SendButton(MouseEventF.XClick, MouseDataXButton.XButton2);
             break;
         }
     }
 
-    public static void SendButtonMultClick(MouseButton mb, int clicks = 2)
+    public static void SendButtonMultClick(MouseButtonsF mb, int clicks = 2)
     {
         switch (mb)
         {
-            case MouseButton.Left:
+            case MouseButtonsF.Left:
             SendButton(MouseEventF.LeftClick, clicks);
             break;
-            case MouseButton.Right:
+            case MouseButtonsF.Right:
             SendButton(MouseEventF.RightClick, clicks);
             break;
-            case MouseButton.Middle:
+            case MouseButtonsF.Middle:
             SendButton(MouseEventF.MiddleClick, clicks);
             break;
-            case MouseButton.XButton1:
+            case MouseButtonsF.XButton1:
             SendButton(MouseEventF.XClick, MouseDataXButton.XButton1, clicks);
             break;
-            case MouseButton.XButton2:
+            case MouseButtonsF.XButton2:
             SendButton(MouseEventF.XClick, MouseDataXButton.XButton2, clicks);
             break;
         }

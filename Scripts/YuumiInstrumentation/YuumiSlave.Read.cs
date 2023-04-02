@@ -1,5 +1,4 @@
-﻿using MouseAndKeyboard.InputShared;
-using MouseAndKeyboard.InputSimulator;
+﻿using MouseAndKeyboard.InputSimulator;
 using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Util;
 
@@ -80,7 +79,7 @@ partial class YuumiSlave
         }
     }
 
-    private static void MouseClick(MouseButton mouseButton, PressState pressedState)
+    private static void MouseClick(MouseButtonsF mouseButton, PressState pressedState)
     {
         Logger.WriteLine($"RECEIVE: MClick {mouseButton} {pressedState}");
 
@@ -96,11 +95,11 @@ partial class YuumiSlave
     {
         Logger.WriteLine($"RECEIVE: KKey {key} {pressedState}");
 
-        if(pressedState == PressState.Click)
+        if (pressedState == PressState.Click)
             KeyboardSender.SendKeyClick(key);
-        else if(pressedState == PressState.Down)
+        else if (pressedState == PressState.Down)
             KeyboardSender.SendKeyDown(key);
-        else if(pressedState == PressState.Up)
+        else if (pressedState == PressState.Up)
             KeyboardSender.SendKeyUp(key);
     }
 

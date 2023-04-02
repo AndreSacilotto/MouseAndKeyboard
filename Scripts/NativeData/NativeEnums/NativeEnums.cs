@@ -1,6 +1,5 @@
 ﻿//WORD => 16b = short or ushort | (I will use Int16 in this cases or UInt32 if the code needed it)
-global using WORD = System.Int16; 
-global using UWORD = System.UInt16; 
+global using WORD = System.Int16;
 
 //DWORD => 32b = int or uint | (I will use Int32 in this cases or UInt32 if the code needed it)
 global using DWORD = System.Int32;
@@ -98,8 +97,6 @@ public enum KeyEventF : DWORD
     ScanCode = 8,
 }
 
-
-// https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input#keystrokes-message-flags
 // https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input
 [Flags]
 public enum KeyFlags
@@ -117,6 +114,5 @@ public enum KeyFlags
     /// <summary>Manipulates the transition state flag</summary>
     KF_UP = 0x8000
 }
-
 
 #endregion

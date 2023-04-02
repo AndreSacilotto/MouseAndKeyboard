@@ -489,6 +489,7 @@ public enum WindowsMessages : uint
     APP = 0x8000,
     /// <summary>The WM_USER constant is used by applications to help define private messages for use by private window classes, usually of the form WM_USER+X, where X is an integer Value.</summary>
     USER = 0x0400,
+    REFLECT = USER + 0x1C00,
     /// <summary>An application sends the WM_CPL_LAUNCH message to Windows Control Panel to request that a Control Panel application be started.</summary>
     CPL_LAUNCH = USER + 0x1000,
     /// <summary>The WM_CPL_LAUNCHED message is sent when a Control Panel application, started by the WM_CPL_LAUNCH message, has closed. The WM_CPL_LAUNCHED message is sent to the window identified by the wParam parameter of the WM_CPL_LAUNCH message that started the application.</summary>
@@ -519,5 +520,5 @@ public enum WindowsMessages : uint
     /// <summary>The activation has changed to a different top-level, unowned window.</summary>
     HSHELL_WINDOWACTIVATED = 4,
     /// <summary>A top-level window is being replaced. The window exists when the system calls this hook.</summary>
-    HSHELL_WINDOWREPLACED = 13
+    HSHELL_WINDOWREPLACED = 13,
 }

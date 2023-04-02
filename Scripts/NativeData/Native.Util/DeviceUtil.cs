@@ -1,7 +1,7 @@
 ﻿namespace MouseAndKeyboard.Native;
 
 //https://learn.microsoft.com/en-us/windows/win32/gdi/the-virtual-screen
-public static class ScreenUtil
+public static class DeviceUtil
 {
     public readonly record struct DisplayInfo(IntPtr Handler, NativeRect Bounds, NativeRect WorkArea, string Name, bool IsPrimary)
     {
@@ -50,6 +50,17 @@ public static class ScreenUtil
             }
             return true;
         }
+    }
+
+    /// <summary>
+    /// Gets the input locale identifier for the active application's thread.  Using this combined with the ToUnicodeEx and
+    /// MapVirtualKeyEx enables Windows to properly translate keys based on the keyboard layout designated for the application.
+    /// </summary>
+    public static IntPtr GetActiveKeyboardLayout()
+    {
+        var hActiveWnd = HookNativeMethods.GetForegroundWindow(); //handle to focused window
+        var hCurrentWnd = HookNativeMethods.GetWindowThreadProcessId(hActiveWnd, IntPtr.Zero); //thread of focused window
+        return KeyboardNativeMethods.GetKeyboardLayout(hCurrentWnd); //get the layout identifier for the thread whose window is focused
     }
 
 

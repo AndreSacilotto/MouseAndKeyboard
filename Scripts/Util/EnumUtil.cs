@@ -16,6 +16,4 @@ public class EnumUtil
     public static T UnsetFlags<T>(T value, T flags) where T : Enum, IBinaryInteger<T> => value &= ~flags;
     public static T SetFlags<T>(T value, T flags) where T : Enum, IBinaryInteger<T> => value |= flags;
     public static T ToggleFlags<T>(T value, T flags) where T : Enum, IBinaryInteger<T> => value ^= flags;
-
-
 }

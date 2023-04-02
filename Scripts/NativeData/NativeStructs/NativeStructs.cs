@@ -53,8 +53,8 @@ public readonly struct HardwareInput
     }
 }
 
+/// <summary> Keyboard Input Struct </summary>
 // https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
-// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct KeyboardInput
 {
@@ -73,15 +73,37 @@ public readonly struct KeyboardInput
     }
 }
 
+/// <summary> Keyboard Low-Level Input Struct </summary>
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct
+[StructLayout(LayoutKind.Sequential)]
+public readonly struct KeyboardLLInput
+{
+    public readonly DWORD wVk;
+    public readonly DWORD wScan;
+    public readonly KeyEventF dwFlags;
+    public readonly DWORD time;
+    public readonly UIntPtr dwExtraInfo;
+    public KeyboardLLInput(DWORD wVk, DWORD wScan, KeyEventF dwFlags, int time = default, UIntPtr dwExtraInfo = default)
+    {
+        this.wVk = wVk;
+        this.wScan = wScan;
+        this.dwFlags = dwFlags;
+        this.time = time;
+        this.dwExtraInfo = dwExtraInfo;
+    }
+}
+
+/// <summary> Mouse Low-Level Input Struct </summary>
 // https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msllhookstruct
 [StructLayout(LayoutKind.Sequential)]
 public readonly struct MouseInput
 {
+    //public readonly Point pt;
     public readonly int X;
     public readonly int Y;
-    //or public readonly Point pt;
-    public readonly DWORD mouseData; //MouseDataXButton or ScrollAmount
+    /// <summary>MouseDataXButton or ScrollAmount</summary>
+    public readonly HighLowDWORD mouseData;
     public readonly MouseEventF dwFlags;
     public readonly DWORD time;
     public readonly UIntPtr dwExtraInfo;
@@ -89,7 +111,7 @@ public readonly struct MouseInput
     {
         X = pt.X;
         Y = pt.Y;
-        this.mouseData = mouseData;
+        this.mouseData = new(mouseData);
         this.dwFlags = dwFlags;
         this.time = time;
         this.dwExtraInfo = dwExtraInfo;
@@ -98,18 +120,36 @@ public readonly struct MouseInput
     {
         X = x;
         Y = y;
-        this.mouseData = mouseData;
+        this.mouseData = new(mouseData);
         this.dwFlags = dwFlags;
         this.time = time;
         this.dwExtraInfo = dwExtraInfo;
     }
 
     public Point GetPoint() => new(X, Y);
-    public MouseDataXButton AsXButton() => (MouseDataXButton)mouseData;
+    public MouseDataXButton GetXButton() => (MouseDataXButton)mouseData.High;
+    internal short GetWheelDelta() => mouseData.High;
+}
 
-    //private int GetHighWORD() => mouseData >> (sizeof(int) * 4);
-    //internal int GetWheelDelta() => GetHighWORD();
-    internal short GetWheelDelta() => new HighLowDWORD(mouseData).High;
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mousehookstruct
+// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mousehookstructex
+[StructLayout(LayoutKind.Sequential)]
+internal readonly struct MouseHookStructEx
+{
+    public readonly Point pt;
+    public readonly IntPtr hwnd;
+    public readonly uint wHitTestCode;
+    public readonly UIntPtr dwExtraInfo;
+    public readonly DWORD mouseData;
+    public MouseHookStructEx(Point pt, nint hwnd, uint wHitTestCode, nuint dwExtraInfo, int mouseData)
+    {
+        this.pt = pt;
+        this.hwnd = hwnd;
+        this.wHitTestCode = wHitTestCode;
+        this.dwExtraInfo = dwExtraInfo;
+        this.mouseData = mouseData;
+    }
+    public MouseInput ToMouseInput() => new(pt.X, pt.Y, MouseEventF.None, mouseData, Environment.TickCount, dwExtraInfo);
 }
 
 /// <summary>

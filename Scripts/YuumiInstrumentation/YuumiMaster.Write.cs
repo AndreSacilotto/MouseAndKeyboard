@@ -1,5 +1,5 @@
 ﻿using MouseAndKeyboard.InputListener;
-using MouseAndKeyboard.InputShared;
+using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
@@ -49,30 +49,31 @@ partial class YuumiMaster
     private void UnifyKey(PressState pressed, KeyEventData ev)
     {
         Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev}");
-        //if (ev.Shift && MirrorWhenShiftKeys.Contains(ev.KeyCode))
-        //{
-        //    Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} | Shift");
-        //    ypacket.WriteKey(ev.KeyCode, pressed);
-        //    SendPacket();
-        //}
-        //else if (ev.Control && KeyWithShiftWhenControlShift.TryGetValue(ev.KeyCode, out var key))
-        //{
-        //    Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} => {key} | Control");
-        //    ypacket.WriteKeyModifier(key, Modifiers.Control, pressed);
-        //    SendPacket();
-        //}
+        if (ev.Shift && MirrorWhenShiftKeys.Contains(ev.KeyCode))
+        {
+            //Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} | Shift");
+            ypacket.WriteKey(ev.KeyCode, pressed);
+            SendPacket();
+        }
+        else if (ev.Control && KeyWithShiftWhenControlShift.TryGetValue(ev.KeyCode, out var key))
+        {
+            //Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} => {key} | Control");
+            ypacket.WriteKeyModifier(key, InputModifiers.Control, pressed);
+            SendPacket();
+        }
     }
     private void UnifyMouse(PressState pressed, MouseEventData ev)
     {
+        Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev}");
         if (MouseToKey.TryGetValue(ev.Button, out var key))
         {
-            Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button} => {key}");
+            //Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button} => {key}");
             ypacket.WriteKey(key, pressed);
             SendPacket();
         }
         else
         {
-            Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button}");
+            //Logger.WriteLine($"SEND: MClick {pressed,-5}: {ev.Button}");
             ypacket.WriteMouseClick(ev.Button, pressed);
             SendPacket();
         }

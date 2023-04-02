@@ -1,21 +1,22 @@
-﻿using MouseAndKeyboard.InputShared;
-using MouseAndKeyboard.Native;
+﻿using MouseAndKeyboard.Native;
 
 namespace MouseAndKeyboard.InputListener;
 
 public abstract class MouseListener : BaseListener
 {
+    protected record class Buttons(bool Left, bool Right, bool Middle, bool X1, bool X2);
+
     protected readonly static Point offGridPoint = new(-99999, -99999);
 
     protected readonly bool swapButtonThreshold;
     private readonly int dragThresholdX;
     private readonly int dragThresholdY;
 
-    private MouseButton singleDown = MouseButton.None;
-    private MouseButton doubleDown = MouseButton.None;
+    private MouseButtonsF singleDown = MouseButtonsF.None;
+    private MouseButtonsF doubleDown = MouseButtonsF.None;
 
     private Point previousPosition = offGridPoint;
-    
+
     private Point dragStartPosition = offGridPoint;
     private bool isDragging = false;
 
@@ -37,6 +38,7 @@ public abstract class MouseListener : BaseListener
     public event Action<MouseEventData>? MouseDragStarted;
     public event Action<MouseEventData>? MouseDragFinished;
     #endregion
+    protected abstract MouseEventData GetEventArgs(IntPtr wParam, IntPtr lParam);
 
     protected override void HookCallback(IntPtr wParam, IntPtr lParam)
     {
@@ -45,11 +47,14 @@ public abstract class MouseListener : BaseListener
         if (previousPosition != mouseEvent.GetPosition())
             InvokeMouseMove(mouseEvent);
 
-        if (mouseEvent.IsButtonDown)
-            InvokeMouseDown(mouseEvent);
+        if (mouseEvent.IsClickEvent)
+        {
+            if (mouseEvent.IsButtonDown)
+                InvokeMouseDown(mouseEvent);
 
-        if (mouseEvent.IsButtonUp)
-            InvokeMouseUp(mouseEvent);
+            if (mouseEvent.IsButtonUp)
+                InvokeMouseUp(mouseEvent);
+        }
 
         if (mouseEvent.IsScrollEvent)
         {
@@ -61,8 +66,6 @@ public abstract class MouseListener : BaseListener
 
         InvokeMouseDrag(mouseEvent);
     }
-
-    protected abstract MouseEventData GetEventArgs(IntPtr wParam, IntPtr lParam);
 
     protected void InvokMouseWheelHorizontal(MouseEventData e)
     {
@@ -114,7 +117,7 @@ public abstract class MouseListener : BaseListener
 
     private void InvokeMouseDrag(MouseEventData e)
     {
-        if (singleDown.HasFlag(MouseButton.Left))
+        if (singleDown.HasFlag(MouseButtonsF.Left))
         {
             //Drag Start
             if (dragStartPosition == offGridPoint)
@@ -123,7 +126,8 @@ public abstract class MouseListener : BaseListener
             {
                 var isXDragging = Math.Abs(e.X - dragStartPosition.X) > dragThresholdX;
                 var isYDragging = Math.Abs(e.Y - dragStartPosition.Y) > dragThresholdY;
-                if (isXDragging || isYDragging)
+                isDragging = isXDragging || isYDragging;
+                if (isDragging)
                     MouseDragStarted?.Invoke(e);
             }
         }
@@ -133,10 +137,115 @@ public abstract class MouseListener : BaseListener
             dragStartPosition = offGridPoint;
             if (isDragging)
             {
-                MouseDragFinished?.Invoke(e);
                 isDragging = false;
+                MouseDragFinished?.Invoke(e);
             }
         }
+    }
+
+    protected static MouseEventData NewEvent(WindowsMessages WM, ref MouseInput mouseHookStruct, bool swapButton)
+    {
+        var button = MouseButtonsF.None;
+
+        bool isMouseButtonVKDown = false;
+        bool isMouseButtonVKUp = false;
+
+        var clickCount = 0;
+        var mouseScrollDelta = 0;
+        var isHorizontalWheel = false;
+
+        switch (WM)
+        {
+            //LEFT
+            case WindowsMessages.LBUTTONDOWN:
+            isMouseButtonVKDown = true;
+            button = GetLeft();
+            clickCount = 1;
+            break;
+            case WindowsMessages.LBUTTONUP:
+            isMouseButtonVKUp = true;
+            button = GetLeft();
+            clickCount = 1;
+            break;
+            case WindowsMessages.LBUTTONDBLCLK:
+            isMouseButtonVKDown = true;
+            button = GetLeft();
+            clickCount = 2;
+            break;
+            //RIGHT
+            case WindowsMessages.RBUTTONDOWN:
+            isMouseButtonVKDown = true;
+            button = GetRight();
+            clickCount = 1;
+            break;
+            case WindowsMessages.RBUTTONUP:
+            isMouseButtonVKUp = true;
+            button = GetRight();
+            clickCount = 1;
+            break;
+            case WindowsMessages.RBUTTONDBLCLK:
+            isMouseButtonVKDown = true;
+            button = GetRight();
+            clickCount = 2;
+            break;
+            //MIDDLE
+            case WindowsMessages.MBUTTONDOWN:
+            isMouseButtonVKDown = true;
+            button = MouseButtonsF.Middle;
+            clickCount = 1;
+            break;
+            case WindowsMessages.MBUTTONUP:
+            isMouseButtonVKUp = true;
+            button = MouseButtonsF.Middle;
+            clickCount = 1;
+            break;
+            case WindowsMessages.MBUTTONDBLCLK:
+            isMouseButtonVKDown = true;
+            button = MouseButtonsF.Middle;
+            clickCount = 2;
+            break;
+            //WHEEL
+            case WindowsMessages.MOUSEWHEEL:
+            isHorizontalWheel = false;
+            mouseScrollDelta = mouseHookStruct.GetWheelDelta();
+            break;
+            case WindowsMessages.MOUSEHWHEEL:
+            isHorizontalWheel = true;
+            mouseScrollDelta = mouseHookStruct.GetWheelDelta();
+            break;
+            //XButton
+            case WindowsMessages.XBUTTONDOWN:
+            isMouseButtonVKDown = true;
+            button = XButtonToMB(mouseHookStruct.GetXButton());
+            clickCount = 1;
+            break;
+            case WindowsMessages.XBUTTONUP:
+            isMouseButtonVKUp = true;
+            button = XButtonToMB(mouseHookStruct.GetXButton());
+            clickCount = 1;
+            break;
+            case WindowsMessages.XBUTTONDBLCLK:
+            isMouseButtonVKDown = true;
+            button = XButtonToMB(mouseHookStruct.GetXButton());
+            clickCount = 2;
+            break;
+        }
+
+        return new MouseEventData(
+            button,
+            isMouseButtonVKDown,
+            isMouseButtonVKUp,
+            clickCount,
+            mouseHookStruct.X,
+            mouseHookStruct.Y,
+            mouseScrollDelta,
+            isHorizontalWheel,
+            mouseHookStruct.time
+        );
+
+        static MouseButtonsF XButtonToMB(MouseDataXButton mx) => mx == MouseDataXButton.XButton1 ? MouseButtonsF.XButton1 : MouseButtonsF.XButton2;
+        MouseButtonsF GetLeft() => swapButton ? MouseButtonsF.Right : MouseButtonsF.Left;
+        MouseButtonsF GetRight() => swapButton ? MouseButtonsF.Left : MouseButtonsF.Right;
     }
 
 }

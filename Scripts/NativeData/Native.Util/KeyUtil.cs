@@ -1,5 +1,4 @@
-﻿using MouseAndKeyboard.InputShared;
-using MouseAndKeyboard.Util;
+﻿using MouseAndKeyboard.Util;
 
 namespace MouseAndKeyboard.Native;
 
@@ -37,8 +36,8 @@ public static class KeyUtil
         var vk = KeyNativeMethods.VkKeyScanW(ch);
         var order = new HighLowWORD(vk);
 
-        byte virtualKeyCode = order.Low;
-        byte shiftState = order.High;
+        var virtualKey = order.Low;
+        var shiftState = order.High;
 
         //https://stackoverflow.com/a/2899364
         //var retval = (vk & 0xff);
@@ -48,13 +47,12 @@ public static class KeyUtil
         control = (shiftState & 2) != 0;
         alt = (shiftState & 4) != 0;
 
-        return (VirtualKey)virtualKeyCode;
+        return (VirtualKey)virtualKey;
     }
 
     // # It is not possible to distinguish Keys.LControlKey and Keys.RControlKey when they are modifiers. Same apply to Shift/Alt/Menu
     /// <returns>If true the key is down; otherwise, it is up.</returns>
-    //public static bool CheckKeyState(int vKey) => (KeyboardNativeMethods.GetKeyState(vKey) & (short.MaxValue + 1)) > 0;
-    public static bool CheckKeyState(int vKey) => new HighLowWORD(KeyboardNativeMethods.GetKeyState(vKey)).High > 0;
+    public static bool CheckKeyState(int vKey) => HighLowWORD.GetHigh(KeyboardNativeMethods.GetKeyState(vKey)) > 0;
     public static void CheckKeyState(int vKey, out bool isDown, out bool isToggle)
     {
         var hl = new HighLowWORD(KeyboardNativeMethods.GetKeyState(vKey));

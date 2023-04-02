@@ -2,7 +2,7 @@
 
 public class PrimaryMonitor
 {
-    public static PrimaryMonitor Instance { get; private set; } = new(ScreenUtil.GetPrimaryScreenSize());
+    public static PrimaryMonitor Instance { get; private set; } = new(DeviceUtil.GetPrimaryScreenSize());
 
     public static void Update(Point size) => Instance = new(size);
 

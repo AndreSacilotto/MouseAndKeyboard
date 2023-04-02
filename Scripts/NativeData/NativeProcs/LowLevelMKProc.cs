@@ -30,4 +30,8 @@
 // https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelmouseproc
 // or
 // https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc
+// or
+// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644988(v=vs.85)#syntax
+// or
+// https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms644984(v=vs.85)#syntax
 public delegate IntPtr LowLevelMKProc(int nCode, IntPtr wParam, IntPtr lParam);
