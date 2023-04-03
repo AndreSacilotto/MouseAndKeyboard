@@ -1,16 +1,16 @@
 ﻿using MouseAndKeyboard.Native;
 
-namespace MouseAndKeyboard.InputListener;
+namespace MouseAndKeyboard.InputListener.Hook;
 
 internal class GlobalKeyboardListener : KeyboardListener
 {
-    public GlobalKeyboardListener() : base(WinHook.HookGlobalKeyboard())
+    public GlobalKeyboardListener() : base(MKWinHook.HookGlobalKeyboard())
     {
     }
 
     protected override KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
     {
-        var keyboardHookStruct = WinHook.MarshalHookParam<KeyboardLLInput>(lParam);
+        var keyboardHookStruct = MKWinHook.MarshalHookParam<KeyboardHookStruct>(lParam);
 
         var WM = (WindowsMessages)wParam;
 
@@ -26,8 +26,6 @@ internal class GlobalKeyboardListener : KeyboardListener
         var ctl = KeyUtil.CheckKeyState((int)VirtualKey.Control);
         var sht = KeyUtil.CheckKeyState((int)VirtualKey.Shift);
 
-        Logger.WriteLine(Convert.ToString(flags, 2));
-
         return new((VirtualKey)keyboardHookStruct.wVk, (ScanCode)keyboardHookStruct.wScan, isDown, isUp, ctl, sht, alt, isExtendedKey, keyboardHookStruct.time);
     }
 
@@ -38,7 +36,7 @@ internal class GlobalKeyboardListener : KeyboardListener
         if (WM != WindowsMessages.KEYDOWN && WM != WindowsMessages.SYSKEYDOWN)
             yield break;
 
-        var keyboardHookStruct = WinHook.MarshalHookParam<KeyboardLLInput>(lParam);
+        var keyboardHookStruct = MKWinHook.MarshalHookParam<KeyboardHookStruct>(lParam);
 
         var vk = (VirtualKey)keyboardHookStruct.wVk;
 

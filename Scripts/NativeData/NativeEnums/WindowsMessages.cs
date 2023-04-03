@@ -127,7 +127,7 @@ public enum WindowsMessages : uint
     GETOBJECT = 0x003D,
     /// <summary>The WM_COMPACTING message is sent to all top-level windows when the system detects more than 12.5 percent of system time over a 30- to 60-second interval is being spent compacting memory. This indicates that system memory is Low.</summary>
     COMPACTING = 0x0041,
-    /// <summary>WM_COMMNOTIFY is Obsolete for Win32-Based Applications</summary>
+    /// <summary>WM_COMMNOTIFY is Obsolete for User32-Based Applications</summary>
     [Obsolete("Obsolete for Win32 Based Applications")]
     COMMNOTIFY = 0x0044,
     /// <summary>The WM_WINDOWPOSCHANGING message is sent to a window whose size, position, or place in the Z order is about to change as a result of a call to the SetWindowPos function or another window-management function.</summary>

@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace MouseAndKeyboard.InputListener;
+namespace MouseAndKeyboard.InputListener.Hook;
 
-public class WinHook : IDisposable
+public class MKWinHook : IDisposable
 {
     public delegate void NextHookProcedure(IntPtr wParam, IntPtr lParam);
 
@@ -21,7 +21,7 @@ public class WinHook : IDisposable
         {
             if (!IsInvalid)
             {
-                if (HookNativeMethods.UnhookWindowsHookEx(handle))
+                if (User32.UnhookWindowsHookEx(handle))
                     Dispose();
                 handle = IntPtr.Zero;
             }
@@ -35,7 +35,7 @@ public class WinHook : IDisposable
     /* https://stackoverflow.com/a/69105090 */
     private readonly LowLevelMKProc llmkProc;
     private readonly GCHandle gc_llmkProc;
-    public WinHook()
+    public MKWinHook()
     {
         llmkProc = HookCallback;
         gc_llmkProc = GCHandle.Alloc(llmkProc);
@@ -52,16 +52,16 @@ public class WinHook : IDisposable
     {
         if (nCode == 0)
             Callback?.Invoke(wParam, lParam);
-        return HookNativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+        return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
     }
 
     public static T MarshalHookParam<T>(IntPtr lParam) where T : struct => (T)Marshal.PtrToStructure(lParam, typeof(T))!;
 
-    private static WinHook CreateHook(HookId hookType, IntPtr process, int thread = 0)
+    private static MKWinHook CreateHook(HookId hookType, IntPtr process, int thread = 0)
     {
-        var hook = new WinHook();
+        var hook = new MKWinHook();
 
-        var hookHandle = HookNativeMethods.SetWindowsHookExW(hookType, hook.llmkProc, process, thread);
+        var hookHandle = User32.SetWindowsHookExW(hookType, hook.llmkProc, process, thread);
         var hookProcHandle = new HookProcedureHandle(hookHandle);
         hook.hookProc = hookProcHandle;
 
@@ -75,15 +75,15 @@ public class WinHook : IDisposable
     }
 
     #region MK Hooks
-    public static WinHook HookAppMouse() => CreateHook(HookId.WH_MOUSE, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
-    public static WinHook HookAppKeyboard() => CreateHook(HookId.WH_KEYBOARD, IntPtr.Zero, HookNativeMethods.GetCurrentThreadId());
-    public static WinHook HookGlobalMouse()
+    public static MKWinHook HookAppMouse() => CreateHook(HookId.WH_MOUSE, IntPtr.Zero, Kernel32.GetCurrentThreadId());
+    public static MKWinHook HookAppKeyboard() => CreateHook(HookId.WH_KEYBOARD, IntPtr.Zero, Kernel32.GetCurrentThreadId());
+    public static MKWinHook HookGlobalMouse()
     {
         using Process p = Process.GetCurrentProcess();
         using ProcessModule curModule = p.MainModule!;
         return CreateHook(HookId.WH_MOUSE_LL, curModule.BaseAddress, 0);
     }
-    public static WinHook HookGlobalKeyboard()
+    public static MKWinHook HookGlobalKeyboard()
     {
         using Process p = Process.GetCurrentProcess();
         using ProcessModule curModule = p.MainModule!;

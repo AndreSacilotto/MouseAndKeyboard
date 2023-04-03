@@ -13,7 +13,7 @@ public static class KeyUtil
         for (int i = 1; i < vkValues.Length; i++)
         {
             var key = vkValues[i];
-            dict.TryAdd(key, (ScanCode)KeyNativeMethods.MapVirtualKeyW(key, MapType.VK_TO_VSC));
+            dict.TryAdd(key, (ScanCode)User32.MapVirtualKeyW(key, MapType.VK_TO_VSC));
         }
         return dict;
     }
@@ -22,18 +22,18 @@ public static class KeyUtil
     {
         if (!ScanCodesDict.TryGetValue(key, out var result))
         {
-            result = (ScanCode)KeyNativeMethods.MapVirtualKeyW(key, MapType.VK_TO_VSC);
+            result = (ScanCode)User32.MapVirtualKeyW(key, MapType.VK_TO_VSC);
             if (result != 0)
                 ScanCodesDict.Add(key, result);
         }
         return result;
     }
 
-    public static VirtualKey ScanCodeToVirtualKey(short key) => (VirtualKey)KeyNativeMethods.MapVirtualKeyW((uint)key, MapType.VSC_TO_VK);
+    public static VirtualKey ScanCodeToVirtualKey(short key) => (VirtualKey)User32.MapVirtualKeyW((uint)key, MapType.VSC_TO_VK);
 
     public static VirtualKey CharToVirtualKey(char ch, out bool control, out bool shift, out bool alt)
     {
-        var vk = KeyNativeMethods.VkKeyScanW(ch);
+        var vk = User32.VkKeyScanW(ch);
         var order = new HighLowWORD(vk);
 
         var virtualKey = order.Low;
@@ -52,10 +52,10 @@ public static class KeyUtil
 
     // # It is not possible to distinguish Keys.LControlKey and Keys.RControlKey when they are modifiers. Same apply to Shift/Alt/Menu
     /// <returns>If true the key is down; otherwise, it is up.</returns>
-    public static bool CheckKeyState(int vKey) => HighLowWORD.GetHigh(KeyboardNativeMethods.GetKeyState(vKey)) > 0;
+    public static bool CheckKeyState(int vKey) => HighLowWORD.GetHigh(User32.GetKeyState(vKey)) > 0;
     public static void CheckKeyState(int vKey, out bool isDown, out bool isToggle)
     {
-        var hl = new HighLowWORD(KeyboardNativeMethods.GetKeyState(vKey));
+        var hl = new HighLowWORD(User32.GetKeyState(vKey));
         isDown = hl.High > 0;
         isToggle = hl.Low > 0;
     }

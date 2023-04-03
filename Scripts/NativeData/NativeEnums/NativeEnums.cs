@@ -1,9 +1,4 @@
-﻿//WORD => 16b = short or ushort | (I will use Int16 in this cases or UInt32 if the code needed it)
-global using WORD = System.Int16;
-
-//DWORD => 32b = int or uint | (I will use Int32 in this cases or UInt32 if the code needed it)
-global using DWORD = System.Int32;
-global using UDWORD = System.UInt32;
+﻿
 
 namespace MouseAndKeyboard.Native;
 

@@ -1,6 +1,6 @@
 ﻿using MouseAndKeyboard.Native;
 
-namespace MouseAndKeyboard.InputListener;
+namespace MouseAndKeyboard.InputListener.Hook;
 
 public abstract class MouseListener : BaseListener
 {
@@ -20,7 +20,7 @@ public abstract class MouseListener : BaseListener
     private Point dragStartPosition = offGridPoint;
     private bool isDragging = false;
 
-    protected MouseListener(WinHook hook) : base(hook)
+    protected MouseListener(MKWinHook hook) : base(hook)
     {
         swapButtonThreshold = SystemMetrics.GetSwapButtonThreshold() > 0;
         dragThresholdX = SystemMetrics.GetXDragThreshold();

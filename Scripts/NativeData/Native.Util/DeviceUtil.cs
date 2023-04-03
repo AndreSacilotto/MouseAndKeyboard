@@ -18,25 +18,25 @@ public static class DeviceUtil
 
     public static void GetCursorPosition(out int x, out int y)
     {
-        MouseNativeMethods.GetCursorPos(out var pt);
+        User32.GetCursorPos(out var pt);
         x = pt.X;
         y = pt.Y;
     }
     public static Point GetCursorPosition()
     {
-        MouseNativeMethods.GetCursorPos(out var pt);
+        User32.GetCursorPos(out var pt);
         return pt;
     }
 
     public static List<DisplayInfo> GetAllMonitors()
     {
         var list = new List<DisplayInfo>();
-        DeviceNativeMethods.EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnumProcFunc, IntPtr.Zero);
+        User32.EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnumProcFunc, IntPtr.Zero);
         return list;
         bool MonitorEnumProcFunc(IntPtr hMonitor, IntPtr hdcMonitor, ref NativeRect lprcMonitor, IntPtr dwData)
         {
             var monitorInfoEx = new MonitorInfoEx();
-            if (DeviceNativeMethods.GetMonitorInfoW(hMonitor, ref monitorInfoEx))
+            if (User32.GetMonitorInfoW(hMonitor, ref monitorInfoEx))
             {
                 var d = new DisplayInfo()
                 {
@@ -58,9 +58,9 @@ public static class DeviceUtil
     /// </summary>
     public static IntPtr GetActiveKeyboardLayout()
     {
-        var hActiveWnd = HookNativeMethods.GetForegroundWindow(); //handle to focused window
-        var hCurrentWnd = HookNativeMethods.GetWindowThreadProcessId(hActiveWnd, IntPtr.Zero); //thread of focused window
-        return KeyboardNativeMethods.GetKeyboardLayout(hCurrentWnd); //get the layout identifier for the thread whose window is focused
+        var hActiveWnd = User32.GetForegroundWindow(); //handle to focused window
+        var hCurrentWnd = User32.GetWindowThreadProcessId(hActiveWnd, IntPtr.Zero); //thread of focused window
+        return User32.GetKeyboardLayout(hCurrentWnd); //get the layout identifier for the thread whose window is focused
     }
 
 

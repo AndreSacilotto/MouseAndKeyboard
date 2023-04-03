@@ -1,10 +1,10 @@
-namespace MouseAndKeyboard.InputListener;
+namespace MouseAndKeyboard.InputListener.Hook;
 
 public abstract class BaseListener : IDisposable
 {
-    private WinHook Handle { get; }
+    private MKWinHook Handle { get; }
 
-    protected BaseListener(WinHook hook)
+    protected BaseListener(MKWinHook hook)
     {
         Handle = hook;
         Handle.Callback += HookCallback;

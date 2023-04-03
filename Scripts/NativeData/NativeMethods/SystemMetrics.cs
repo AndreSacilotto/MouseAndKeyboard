@@ -5,7 +5,7 @@ namespace MouseAndKeyboard.Native;
 internal static partial class SystemMetrics
 {
     // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics
-    [LibraryImport("user32.dll")]
+    [LibraryImport(User32.USER_32)]
     private static partial int GetSystemMetrics(SystemMetric smIndex);
 
     // https://pinvoke.net/default.aspx/Enums.SystemMetric

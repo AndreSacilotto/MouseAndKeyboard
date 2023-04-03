@@ -1,10 +1,10 @@
 using MouseAndKeyboard.Native;
 
-namespace MouseAndKeyboard.InputListener;
+namespace MouseAndKeyboard.InputListener.Hook;
 
 internal class AppKeyboardListener : KeyboardListener
 {
-    public AppKeyboardListener() : base(WinHook.HookAppKeyboard())
+    public AppKeyboardListener() : base(MKWinHook.HookAppKeyboard())
     {
     }
 

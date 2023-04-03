@@ -1,4 +1,11 @@
-﻿using System.Runtime.InteropServices;
+﻿//WORD => 16b = short or ushort | (I will use Int16 in this cases or UInt32 if the code needed it)
+global using WORD = System.Int16;
+
+//DWORD => 32b = int or uint | (I will use Int32 in this cases or UInt32 if the code needed it)
+global using DWORD = System.Int32;
+global using UDWORD = System.UInt32;
+
+using System.Runtime.InteropServices;
 
 namespace MouseAndKeyboard.Native;
 
@@ -76,14 +83,14 @@ public readonly struct KeyboardInput
 /// <summary> Keyboard Low-Level Input Struct </summary>
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct
 [StructLayout(LayoutKind.Sequential)]
-public readonly struct KeyboardLLInput
+public readonly struct KeyboardHookStruct
 {
     public readonly DWORD wVk;
     public readonly DWORD wScan;
     public readonly KeyEventF dwFlags;
     public readonly DWORD time;
     public readonly UIntPtr dwExtraInfo;
-    public KeyboardLLInput(DWORD wVk, DWORD wScan, KeyEventF dwFlags, int time = default, UIntPtr dwExtraInfo = default)
+    public KeyboardHookStruct(DWORD wVk, DWORD wScan, KeyEventF dwFlags, int time = default, UIntPtr dwExtraInfo = default)
     {
         this.wVk = wVk;
         this.wScan = wScan;

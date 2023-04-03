@@ -1,4 +1,4 @@
-﻿using MouseAndKeyboard.InputListener;
+﻿using MouseAndKeyboard.InputListener.Hook;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
@@ -7,14 +7,14 @@ public sealed partial class YuumiMaster : IDisposable
 {
     private readonly UDPSocket socket;
 
-    private readonly MKListener inputEvents;
+    private readonly MKHookListener inputEvents;
     private readonly YummiPacket ypacket = new();
 
     public UDPSocket Socket => socket;
 
     public YuumiMaster()
     {
-        inputEvents = MKListener.FactoryGlobal();
+        inputEvents = MKHookListener.FactoryGlobal();
 
 #if DEBUG
         socket = new UDPSocket(true, YummiPacket.MAX_PACKET_BYTE_SIZE);
