@@ -422,7 +422,7 @@ public enum WindowsMessages : uint
     CUT = 0x0300,
     /// <summary>An application sends the WM_COPY message to an edit control or combo box to copy the current selection to the clipboard in CF_TEXT format.</summary>
     COPY = 0x0301,
-    /// <summary>An application sends a WM_PASTE message to an edit control or combo box to copy the current content of the clipboard to the edit control at the current caret position. Data is inserted only if the clipboard contains data in CF_TEXT format.</summary>
+    /// <summary>An application sends a WM_PASTE message to an edit control or combo box to copy the current content of the clipboard to the edit control at the current caret position. ButtonUnion is inserted only if the clipboard contains data in CF_TEXT format.</summary>
     PASTE = 0x0302,
     /// <summary>An application sends a WM_CLEAR message to an edit control or combo box to delete (clear) the current selection, if any, from the edit control.</summary>
     CLEAR = 0x0303,

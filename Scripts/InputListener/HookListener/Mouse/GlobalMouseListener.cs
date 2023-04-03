@@ -11,7 +11,7 @@ internal class GlobalMouseListener : MouseListener
     private Point previousClickedPosition;
     private int previousClickedTime;
 
-    public GlobalMouseListener() : base(MKWinHook.HookGlobalMouse())
+    public GlobalMouseListener() : base(MKHookHandle.HookGlobalMouse())
     {
         systemDoubleClickTime = User32.GetDoubleClickTime();
         doubleClickThresholdX = SystemMetrics.GetXDoubleClickThreshold();
@@ -51,7 +51,7 @@ internal class GlobalMouseListener : MouseListener
 
     protected override MouseEventData GetEventArgs(IntPtr wParam, IntPtr lParam)
     {
-        var mouseHookStruct = MKWinHook.MarshalHookParam<MouseInput>(lParam);
+        var mouseHookStruct = MKHookHandle.MarshalHookParam<MouseInput>(lParam);
         return NewEvent((WindowsMessages)wParam, ref mouseHookStruct, swapButtonThreshold);
     }
 }

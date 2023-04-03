@@ -2,7 +2,7 @@ namespace MouseAndKeyboard.InputListener.Hook;
 
 public abstract class KeyboardListener : BaseListener
 {
-    protected KeyboardListener(MKWinHook hook) : base(hook) { }
+    protected KeyboardListener(MKHookHandle hook) : base(hook) { }
 
     public event Action<KeyEventData>? KeyDown;
     public event Action<KeyPressEventData>? KeyPress;

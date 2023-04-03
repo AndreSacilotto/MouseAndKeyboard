@@ -14,7 +14,7 @@ internal static class KeyboardStateHelper
     private static bool lastIsDead;
 
     /// <summary>Translates a virtual key to its character equivalent using a specified keyboard layout</summary>
-    internal static char[]? TryGetCharFromKeyboardState(VirtualKey virtualKeyCode, ScanCode scanCode, KeyEventF fuState)
+    internal static char[] TryGetCharFromKeyboardState(VirtualKey virtualKeyCode, ScanCode scanCode, KeyEventF fuState)
     {
         char[]? chars;
 
@@ -86,7 +86,7 @@ internal static class KeyboardStateHelper
             lastKeyState = (byte[])currentKeyboardState.Clone();
         }
 
-        return chars;
+        return chars ?? Array.Empty<char>();
     }
 
 }

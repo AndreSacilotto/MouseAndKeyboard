@@ -20,7 +20,7 @@ public abstract class MouseListener : BaseListener
     private Point dragStartPosition = offGridPoint;
     private bool isDragging = false;
 
-    protected MouseListener(MKWinHook hook) : base(hook)
+    protected MouseListener(MKHookHandle hook) : base(hook)
     {
         swapButtonThreshold = SystemMetrics.GetSwapButtonThreshold() > 0;
         dragThresholdX = SystemMetrics.GetXDragThreshold();
@@ -111,8 +111,8 @@ public abstract class MouseListener : BaseListener
 
     private void InvokeMouseMove(MouseEventData e)
     {
-        previousPosition = e.GetPosition();
         MouseMove?.Invoke(e);
+        previousPosition = e.GetPosition();
     }
 
     private void InvokeMouseDrag(MouseEventData e)

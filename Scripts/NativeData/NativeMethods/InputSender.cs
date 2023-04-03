@@ -6,9 +6,9 @@ namespace MouseAndKeyboard.Native;
 internal static partial class InputSender
 {
     /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput
-    [LibraryImport("user32.dll")]
+    [LibraryImport(User32.USER_32)]
     internal static partial uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray)] InputStruct[] pInputs, int cbSize);
-    [LibraryImport("user32.dll")]
+    [LibraryImport(User32.USER_32)]
     internal static partial uint SendInput(uint nInputs, ref InputStruct pInputs, int cbSize);
 
     public static uint SendInput(InputStruct input) => SendInput(1, ref input, InputStruct.Size);

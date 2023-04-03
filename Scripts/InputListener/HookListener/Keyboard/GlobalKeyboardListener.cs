@@ -4,13 +4,13 @@ namespace MouseAndKeyboard.InputListener.Hook;
 
 internal class GlobalKeyboardListener : KeyboardListener
 {
-    public GlobalKeyboardListener() : base(MKWinHook.HookGlobalKeyboard())
+    public GlobalKeyboardListener() : base(MKHookHandle.HookGlobalKeyboard())
     {
     }
 
     protected override KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
     {
-        var keyboardHookStruct = MKWinHook.MarshalHookParam<KeyboardHookStruct>(lParam);
+        var keyboardHookStruct = MKHookHandle.MarshalHookParam<KeyboardHookStruct>(lParam);
 
         var WM = (WindowsMessages)wParam;
 
@@ -36,7 +36,7 @@ internal class GlobalKeyboardListener : KeyboardListener
         if (WM != WindowsMessages.KEYDOWN && WM != WindowsMessages.SYSKEYDOWN)
             yield break;
 
-        var keyboardHookStruct = MKWinHook.MarshalHookParam<KeyboardHookStruct>(lParam);
+        var keyboardHookStruct = MKHookHandle.MarshalHookParam<KeyboardHookStruct>(lParam);
 
         var vk = (VirtualKey)keyboardHookStruct.wVk;
 
@@ -48,9 +48,8 @@ internal class GlobalKeyboardListener : KeyboardListener
         else
         {
             var chars = KeyboardStateHelper.TryGetCharFromKeyboardState(vk, (ScanCode)keyboardHookStruct.wScan, keyboardHookStruct.dwFlags);
-            if (chars != null)
-                foreach (var current in chars)
-                    yield return new KeyPressEventData(current, keyboardHookStruct.time);
+            foreach (var current in chars)
+                yield return new KeyPressEventData(current, keyboardHookStruct.time);
         }
     }
 

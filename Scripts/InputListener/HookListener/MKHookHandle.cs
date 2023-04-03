@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 
 namespace MouseAndKeyboard.InputListener.Hook;
 
-public class MKWinHook : IDisposable
+public class MKHookHandle : IDisposable
 {
-    public delegate void NextHookProcedure(IntPtr wParam, IntPtr lParam);
+    public delegate void NextHookProcedure(ref IntPtr wParam, ref IntPtr lParam);
 
     public class HookProcedureHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
@@ -35,7 +35,7 @@ public class MKWinHook : IDisposable
     /* https://stackoverflow.com/a/69105090 */
     private readonly LowLevelMKProc llmkProc;
     private readonly GCHandle gc_llmkProc;
-    public MKWinHook()
+    public MKHookHandle()
     {
         llmkProc = HookCallback;
         gc_llmkProc = GCHandle.Alloc(llmkProc);
@@ -51,15 +51,15 @@ public class MKWinHook : IDisposable
     private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
         if (nCode == 0)
-            Callback?.Invoke(wParam, lParam);
+            Callback?.Invoke(ref wParam, ref lParam);
         return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
     }
 
     public static T MarshalHookParam<T>(IntPtr lParam) where T : struct => (T)Marshal.PtrToStructure(lParam, typeof(T))!;
 
-    private static MKWinHook CreateHook(HookId hookType, IntPtr process, int thread = 0)
+    private static MKHookHandle CreateHook(HookId hookType, IntPtr process, int thread = 0)
     {
-        var hook = new MKWinHook();
+        var hook = new MKHookHandle();
 
         var hookHandle = User32.SetWindowsHookExW(hookType, hook.llmkProc, process, thread);
         var hookProcHandle = new HookProcedureHandle(hookHandle);
@@ -75,15 +75,15 @@ public class MKWinHook : IDisposable
     }
 
     #region MK Hooks
-    public static MKWinHook HookAppMouse() => CreateHook(HookId.WH_MOUSE, IntPtr.Zero, Kernel32.GetCurrentThreadId());
-    public static MKWinHook HookAppKeyboard() => CreateHook(HookId.WH_KEYBOARD, IntPtr.Zero, Kernel32.GetCurrentThreadId());
-    public static MKWinHook HookGlobalMouse()
+    public static MKHookHandle HookAppMouse() => CreateHook(HookId.WH_MOUSE, IntPtr.Zero, Kernel32.GetCurrentThreadId());
+    public static MKHookHandle HookAppKeyboard() => CreateHook(HookId.WH_KEYBOARD, IntPtr.Zero, Kernel32.GetCurrentThreadId());
+    public static MKHookHandle HookGlobalMouse()
     {
         using Process p = Process.GetCurrentProcess();
         using ProcessModule curModule = p.MainModule!;
         return CreateHook(HookId.WH_MOUSE_LL, curModule.BaseAddress, 0);
     }
-    public static MKWinHook HookGlobalKeyboard()
+    public static MKHookHandle HookGlobalKeyboard()
     {
         using Process p = Process.GetCurrentProcess();
         using ProcessModule curModule = p.MainModule!;

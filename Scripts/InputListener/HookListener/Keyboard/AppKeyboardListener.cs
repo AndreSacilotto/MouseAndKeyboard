@@ -4,7 +4,7 @@ namespace MouseAndKeyboard.InputListener.Hook;
 
 internal class AppKeyboardListener : KeyboardListener
 {
-    public AppKeyboardListener() : base(MKWinHook.HookAppKeyboard())
+    public AppKeyboardListener() : base(MKHookHandle.HookAppKeyboard())
     {
     }
 
@@ -16,9 +16,8 @@ internal class AppKeyboardListener : KeyboardListener
             yield break;
 
         var chars = KeyboardStateHelper.TryGetCharFromKeyboardState(keyEvent.KeyCode, keyEvent.ScanCode, 0);
-        if (chars != null)
-            foreach (var ch in chars)
-                yield return new KeyPressEventData(ch, Environment.TickCount);
+        foreach (var ch in chars)
+            yield return new KeyPressEventData(ch, Environment.TickCount);
     }
 
     protected override KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
