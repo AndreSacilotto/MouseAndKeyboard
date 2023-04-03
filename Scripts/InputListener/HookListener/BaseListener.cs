@@ -17,5 +17,5 @@ public abstract class BaseListener : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    protected abstract void HookCallback(ref IntPtr wParam, ref IntPtr lParam);
+    protected abstract void HookCallback(IntPtr wParam, IntPtr lParam);
 }

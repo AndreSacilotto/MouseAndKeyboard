@@ -13,5 +13,9 @@
 		<Content Include="favicon.ico" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Scripts\NativeData\NativeProcs\" />
+	</ItemGroup>
+
 	<!--<PackageReference Include="MouseKeyHook" Version="5.6.0" />-->
 </Project>

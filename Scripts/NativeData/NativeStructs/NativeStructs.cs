@@ -11,7 +11,7 @@ namespace MouseAndKeyboard.Native;
 
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input
 [StructLayout(LayoutKind.Sequential)]
-public readonly struct InputStruct
+internal readonly struct InputStruct
 {
     public enum InputType : DWORD
     {
@@ -21,14 +21,14 @@ public readonly struct InputStruct
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public readonly struct InputUnion
+    internal readonly struct InputUnion
     {
         [FieldOffset(0)] public readonly MouseInput mi;
         [FieldOffset(0)] public readonly KeyboardInput ki;
         [FieldOffset(0)] public readonly HardwareInput hi;
-        internal InputUnion(MouseInput mi) => this.mi = mi;
-        internal InputUnion(KeyboardInput ki) => this.ki = ki;
-        internal InputUnion(HardwareInput hi) => this.hi = hi;
+        public InputUnion(MouseInput mi) => this.mi = mi;
+        public InputUnion(KeyboardInput ki) => this.ki = ki;
+        public InputUnion(HardwareInput hi) => this.hi = hi;
     }
 
     public readonly InputType type;
@@ -38,7 +38,7 @@ public readonly struct InputStruct
         this.type = type;
         this.union = union;
     }
-    public static int Size => Marshal.SizeOf(typeof(InputStruct));
+    public static int Size => Marshal.SizeOf<InputStruct>();
 
     public static InputStruct NewInput(MouseInput input) => new(InputType.Mouse, new(input));
     public static InputStruct NewInput(KeyboardInput input) => new(InputType.Keyboard, new(input));
@@ -47,7 +47,7 @@ public readonly struct InputStruct
 
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-hardwareinput
 [StructLayout(LayoutKind.Sequential)]
-public readonly struct HardwareInput
+internal readonly struct HardwareInput
 {
     public readonly DWORD uMsg;
     public readonly WORD wParamL;
@@ -83,7 +83,7 @@ public readonly struct KeyboardInput
 /// <summary> Keyboard Low-Level Input Struct </summary>
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct
 [StructLayout(LayoutKind.Sequential)]
-public readonly struct KeyboardHookStruct
+internal readonly struct KeyboardHookStruct
 {
     public readonly DWORD wVk;
     public readonly DWORD wScan;
@@ -135,7 +135,7 @@ public readonly struct MouseInput
 
     public Point GetPoint() => new(X, Y);
     public MouseDataXButton GetXButton() => (MouseDataXButton)mouseData.High;
-    internal short GetWheelDelta() => mouseData.High;
+    public short GetWheelDelta() => mouseData.High;
 }
 
 // https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mousehookstruct
@@ -169,7 +169,7 @@ internal readonly struct MouseHookStructEx
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 internal unsafe struct MonitorInfoEx
 {
-    private readonly DWORD cbSize = Marshal.SizeOf(typeof(MonitorInfoEx));
+    public readonly DWORD cbSize = Size;
     public readonly NativeRect rcMonitor;
     public readonly NativeRect rcWork;
     public readonly DWORD dwFlags;
@@ -183,4 +183,19 @@ internal unsafe struct MonitorInfoEx
                 return new string(deviceName);
         }
     }
+    public static DWORD Size => Marshal.SizeOf<MonitorInfoEx>();
+}
+
+
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg
+[StructLayout(LayoutKind.Sequential)]
+internal readonly record struct MSG
+{
+    public readonly IntPtr hwnd;
+    public readonly uint message;
+    public readonly UIntPtr wParam;
+    public readonly IntPtr lParam;
+    public readonly DWORD time;
+    public readonly Point pt;
+    public readonly DWORD lPrivate;
 }

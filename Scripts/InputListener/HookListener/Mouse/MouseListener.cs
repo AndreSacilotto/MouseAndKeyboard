@@ -4,8 +4,6 @@ namespace MouseAndKeyboard.InputListener.Hook;
 
 public abstract class MouseListener : BaseListener
 {
-    protected record class Buttons(bool Left, bool Right, bool Middle, bool X1, bool X2);
-
     protected readonly static Point offGridPoint = new(-99999, -99999);
 
     protected readonly bool swapButtonThreshold;

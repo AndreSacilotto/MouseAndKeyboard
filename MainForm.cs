@@ -1,3 +1,5 @@
+using MouseAndKeyboard.InputListener.RawInput;
+using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Network;
 using System.Windows.Forms;
 using YuumiInstrumentation;
@@ -28,6 +30,18 @@ public partial class MainForm : Form
     private void MainForm_Load(object? sender, EventArgs e)
     {
         ChbConsole_CheckedChanged(null, null!);
+        //Native.Kernel32.AllocConsole();
+        RawInputListener.RegisterGlobal(Handle);
+        var l = new RawInputListener();
+        OnMSG += (_, msg, _, lparam) => { l.NewInputMessage((WindowsMessages)msg, lparam); return nint.Zero; };
+    }
+
+    internal event WindowProc? OnMSG;
+
+    protected override void WndProc(ref Message msg)
+    {
+        OnMSG?.Invoke(msg.HWnd, (uint)msg.Msg, msg.WParam, msg.LParam);
+        base.WndProc(ref msg);
     }
 
     private void MainForm_FormClosing(object? sender, FormClosingEventArgs e)

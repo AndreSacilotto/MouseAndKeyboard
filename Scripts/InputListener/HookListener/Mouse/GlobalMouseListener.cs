@@ -51,7 +51,7 @@ internal class GlobalMouseListener : MouseListener
 
     protected override MouseEventData GetEventArgs(IntPtr wParam, IntPtr lParam)
     {
-        var mouseHookStruct = MKHookHandle.MarshalHookParam<MouseInput>(lParam);
+        var mouseHookStruct = MarshalExt.ToStruct<MouseInput>(lParam);
         return NewEvent((WindowsMessages)wParam, ref mouseHookStruct, swapButtonThreshold);
     }
 }

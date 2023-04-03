@@ -8,7 +8,7 @@ namespace MouseAndKeyboard.InputListener.Hook;
 
 public class MKHookHandle : IDisposable
 {
-    public delegate void NextHookProcedure(ref IntPtr wParam, ref IntPtr lParam);
+    public delegate void NextHookProcedure(IntPtr wParam, IntPtr lParam);
 
     public class HookProcedureHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
@@ -51,11 +51,9 @@ public class MKHookHandle : IDisposable
     private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
         if (nCode == 0)
-            Callback?.Invoke(ref wParam, ref lParam);
+            Callback?.Invoke(wParam, lParam);
         return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
     }
-
-    public static T MarshalHookParam<T>(IntPtr lParam) where T : struct => (T)Marshal.PtrToStructure(lParam, typeof(T))!;
 
     private static MKHookHandle CreateHook(HookId hookType, IntPtr process, int thread = 0)
     {

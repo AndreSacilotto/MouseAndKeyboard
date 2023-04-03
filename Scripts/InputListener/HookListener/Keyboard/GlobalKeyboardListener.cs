@@ -10,7 +10,7 @@ internal class GlobalKeyboardListener : KeyboardListener
 
     protected override KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
     {
-        var keyboardHookStruct = MKHookHandle.MarshalHookParam<KeyboardHookStruct>(lParam);
+        var keyboardHookStruct = MarshalExt.ToStruct<KeyboardHookStruct>(lParam);
 
         var WM = (WindowsMessages)wParam;
 
@@ -36,7 +36,7 @@ internal class GlobalKeyboardListener : KeyboardListener
         if (WM != WindowsMessages.KEYDOWN && WM != WindowsMessages.SYSKEYDOWN)
             yield break;
 
-        var keyboardHookStruct = MKHookHandle.MarshalHookParam<KeyboardHookStruct>(lParam);
+        var keyboardHookStruct = MarshalExt.ToStruct<KeyboardHookStruct>(lParam);
 
         var vk = (VirtualKey)keyboardHookStruct.wVk;
 

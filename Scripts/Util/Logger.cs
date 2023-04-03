@@ -19,6 +19,7 @@ public static class Logger
     //[Conditional("DEBUG")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void WriteLine(string log) => OnLog?.Invoke(log + Environment.NewLine);
+    public static void WriteLine(ReadOnlySpan<string> log) => OnLog?.Invoke(log.ToString() + Environment.NewLine);
 
     //[Conditional("DEBUG")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

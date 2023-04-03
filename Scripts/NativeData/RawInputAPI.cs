@@ -4,10 +4,8 @@ using System.Text;
 
 namespace MouseAndKeyboard.Native.RawInput;
 
-//REMOVE AFTER WORKING PROTOTYPING
-#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
-
-internal class RawInputAPI
+//https://learn.microsoft.com/en-us/windows/win32/inputdev/raw-input
+internal partial class RawInputAPI
 {
     /* Some help from:
     * https://github.com/dahall/vanara
@@ -15,70 +13,114 @@ internal class RawInputAPI
     */
 
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerrawinputdevices
-    [DllImport(User32.USER_32, SetLastError = true)]
+    [LibraryImport(User32.USER_32, SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool RegisterRawInputDevices([In, MarshalAs(UnmanagedType.LPArray)] RawInputDevice[] pRawInputDevices, int uiNumDevices, int cbSize);
-    internal static bool RegisterRawInputDevices(params RawInputDevice[] devices) => RegisterRawInputDevices(devices, devices.Length, Marshal.SizeOf<RawInputDevice>());
-
+    private static partial bool RegisterRawInputDevices([MarshalAs(UnmanagedType.LPArray)] RawInputDevice[] pRawInputDevices, int uiNumDevices, int cbSize);
+    internal static bool RegisterRawInputDevices(params RawInputDevice[] devices) => RegisterRawInputDevices(devices, devices.Length, RawInputDevice.Size);
+    
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getregisteredrawinputdevices
-    [DllImport(User32.USER_32, SetLastError = true)]
-    private static extern uint GetRegisteredRawInputDevices([In, Out, MarshalAs(UnmanagedType.LPArray)] RawInputDevice[]? pRawInputDevices, ref uint puiNumDevices, uint cbSize);
+    [LibraryImport(User32.USER_32, SetLastError = true)]
+    private static partial uint GetRegisteredRawInputDevices([Optional, MarshalAs(UnmanagedType.LPArray)] ref RawInputDevice[]? pRawInputDevices, ref uint puiNumDevices, int cbSize);
     internal static RawInputDevice[]? GetRegisteredRawInputDevices()
     {
-        var size = (uint)Marshal.SizeOf<RawInputDevice>();
+        var size = RawInputDevice.Size;
         uint count = 0;
-        _ = GetRegisteredRawInputDevices(null, ref count, size);
-        var rid = new RawInputDevice[count];
-        if (GetRegisteredRawInputDevices(rid, ref count, size) < 0)
+        RawInputDevice[]? rid = null;
+        _ = GetRegisteredRawInputDevices(ref rid, ref count, size);
+        rid = new RawInputDevice[count];
+        if (GetRegisteredRawInputDevices(ref rid, ref count, size) < 0)
             return null;
         return rid;
     }
 
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defrawinputproc
-    [DllImport(User32.USER_32)]
-    internal static extern IntPtr DefRawInputProc(RawInput[] paRawInput, int nInput, uint cbSizeHeader);
+    [LibraryImport(User32.USER_32)]
+    private static partial IntPtr DefRawInputProc(RawInputStruct[] paRawInput, int nInput, int cbSizeHeader);
+    internal static IntPtr DefRawInputProc(RawInputStruct[] paRawInput, int nInput) => DefRawInputProc(paRawInput, nInput, RawInputHeader.Size);
 
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getrawinputbuffer
-    [DllImport(User32.USER_32, SetLastError = true)]
-    internal static extern uint GetRawInputBuffer(IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
+    [LibraryImport(User32.USER_32, SetLastError = true)]
+    private static partial uint GetRawInputBuffer([Optional] IntPtr pData, ref uint pcbSize, int cbSizeHeader);
+    internal static uint GetRawInputBuffer([Optional] IntPtr pData, ref uint pcbSize) => GetRawInputBuffer(pData, ref pcbSize, RawInputHeader.Size);
 
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getrawinputdata
-    [DllImport(User32.USER_32)]
-    internal static extern uint GetRawInputData(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
+    [LibraryImport(User32.USER_32)]
+    private static partial int GetRawInputData(IntPtr hRawInput, RawInputCommand uiCommand, out RawInputStruct pData, ref int pcbSize, int cbSizeHeader);
+    internal static int GetRawInputData(IntPtr hRawInput, RawInputCommand uiCommand, out RawInputStruct pData, out int pcbSize)
+    {
+        var size = RawInputStruct.Size;
+        var result = GetRawInputData(hRawInput, uiCommand, out pData, ref size, RawInputHeader.Size);
+        pcbSize = size;
+        return result;
+    }
 
-    //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getrawinputdeviceinfoa
     //https://www.pinvoke.net/default.aspx/user32/GetRawInputDeviceInfo.html
-    [DllImport(User32.USER_32, SetLastError = true)]
-    internal static extern uint GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
-    [DllImport("user32.dll", SetLastError = true, EntryPoint = "GetRawInputDeviceInfoA")]
-    internal static extern uint GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, ref DeviceInfo pData, ref uint pcbSize);
-    [DllImport("user32.dll", SetLastError = true, EntryPoint = "GetRawInputDeviceInfoA", CharSet = CharSet.Unicode)]
-    internal static extern uint GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, ref StringBuilder pData, ref uint pcbSize);
+    //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getrawinputdeviceinfoa
+    [LibraryImport(User32.USER_32, SetLastError = true)]
+    internal static partial uint GetRawInputDeviceInfoA([Optional] IntPtr hDevice, DeviceInfoTypes uiCommand, [Optional] ref DeviceInfo pData, ref int pcbSize);
 
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getrawinputdevicelist
-    [DllImport(User32.USER_32, SetLastError = true)]
-    internal static extern uint GetRawInputDeviceList([In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] RawInputDevice[] pRawInputDeviceList, ref uint puiNumDevices, uint cbSize);
+    [LibraryImport(User32.USER_32, SetLastError = true)]
+    private static partial uint GetRawInputDeviceList([Optional, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] out RawInputDevice[]? pRawInputDeviceList, ref uint puiNumDevices, int cbSize);
+    internal static uint GetRawInputDeviceList(out RawInputDevice[]? pRawInputDeviceList, ref uint puiNumDevices) => GetRawInputDeviceList(out pRawInputDeviceList, ref puiNumDevices, RawInputDeviceList.Size);
+
 }
 
 #region Raw Input
+
+// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-input
+internal enum RawInputMessage
+{
+    Input = 0,
+    InputSink = 1,
+}
+
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getrawinputdata
+internal enum RawInputCommand : uint
+{
+    Input = 0x10000003,
+    Header = 0x10000005,
+}
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawinputheader
 [StructLayout(LayoutKind.Sequential)]
 internal readonly struct RawInputHeader
 {
     /// <summary>Type of device the input is coming from.</summary>
-    public readonly RawInputType Type;
+    public readonly RawInputType dwType;
     /// <summary>Size of the packet of data.</summary>
-    public readonly int Size;
+    public readonly DWORD dwSize;
     /// <summary>Handle to the device sending the data.</summary>
-    public readonly IntPtr Device;
+    public readonly IntPtr hDevice;
     /// <summary>wParam from the window message.</summary>
     public readonly IntPtr wParam;
+    public static int Size => Marshal.SizeOf<RawInputHeader>();
+}
+
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawinput
+[StructLayout(LayoutKind.Sequential)]
+internal readonly struct RawInputStruct
+{
+    /// <summary>Header for the data</summary>
+    public readonly RawInputHeader header;
+    public readonly Union data;
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Union
+    {
+        /// <summary>Mouse raw input data</summary>
+        [FieldOffset(0)] public RawMouse mouse;
+        /// <summary>Keyboard raw input data</summary>
+        [FieldOffset(0)] public RawKeyboard keyboard;
+        /// <summary>HID raw input data</summary>
+        [FieldOffset(0)] public RawHID hid;
+    }
+
+    public static int Size => Marshal.SizeOf<RawInputStruct>();
 }
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawhid
 [StructLayout(LayoutKind.Sequential)]
-public readonly struct RawHID
+public readonly record struct RawHID
 {
     /// <summary>
     /// <para>Type: <c>DWORD</c></para>
@@ -97,29 +139,9 @@ public readonly struct RawHID
     public readonly IntPtr bRawData;
 }
 
-//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawinput
-[StructLayout(LayoutKind.Sequential)]
-internal readonly struct RawInput
-{
-    /// <summary>Header for the data</summary>
-    public readonly RawInputHeader Header;
-    public readonly Union Data;
-    [StructLayout(LayoutKind.Explicit)]
-    public struct Union
-    {
-        /// <summary>Mouse raw input data</summary>
-        [FieldOffset(0)] public RawMouse Mouse;
-        /// <summary>Keyboard raw input data</summary>
-        [FieldOffset(0)] public RawKeyboard Keyboard;
-        /// <summary>HID raw input data</summary>
-        [FieldOffset(0)] public RawHID HID;
-    }
-}
-
-
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawkeyboard
 [StructLayout(LayoutKind.Sequential)]
-internal readonly struct RawKeyboard
+public readonly record struct RawKeyboard
 {
     /// <summary>Scan code for key depression</summary>
     public readonly ushort MakeCode;
@@ -150,7 +172,7 @@ internal readonly struct RawKeyboard
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawmouse
 [StructLayout(LayoutKind.Sequential)]
-internal readonly struct RawMouse
+public readonly record struct RawMouse
 {
     [Flags]
     public enum RawMouseFlags : ushort
@@ -209,7 +231,7 @@ internal readonly struct RawMouse
     public readonly RawMouseFlags usFlags;
 
     /// <summary>High-Low DWORD</summary>
-    public readonly ButtonUnion Buttons;
+    public readonly ButtonUnion buttons;
 
     /// <summary>Raw button data</summary>
     public readonly uint ulRawButtons;
@@ -238,7 +260,7 @@ internal enum RawInputType : DWORD
     /// <summary>Raw input comes from the mouse.</summary>
     TypeMouse = 0,
     /// <summary>Raw input comes from the keyboard.</summary>
-    TypeKeyBoard = 1,
+    TypeKeyboard = 1,
     /// <summary>Raw input comes from some device that is not a keyboard or a mouse.</summary>
     TypeHID = 2,
 }
@@ -249,6 +271,7 @@ internal struct RawInputDeviceList
 {
     public IntPtr hDevice;
     public RawInputType Type;
+    public static int Size => Marshal.SizeOf<RawInputDeviceList>();
 }
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawinputdevice
@@ -256,20 +279,23 @@ internal struct RawInputDeviceList
 internal struct RawInputDevice
 {
     /// <summary>Top level collection Usage page for the raw input device</summary>
-    public HIDUsagePage UsagePage;
+    public HIDUsagePage usUsagePage;
     /// <summary>Top level collection Usage for the raw input device. </summary>
-    public HIDUsage Usage;
+    public HIDUsage usUsage;
     /// <summary>Mode flag that specifies how to interpret the information provided by UsagePage and Usage</summary>
-    public RawInputDeviceFlags Flags;
+    public RawInputDeviceFlags dwFlags;
     /// <summary>Handle to the target device. If NULL, it follows the keyboard focus</summary>
-    public IntPtr WindowHandle;
-    public RawInputDevice(HIDUsagePage usagePage, HIDUsage usage, RawInputDeviceFlags flags, nint windowHandle)
+    public IntPtr hwndTarget;
+
+    public RawInputDevice(HIDUsagePage usUsagePage, HIDUsage usUsage, RawInputDeviceFlags dwFlags, nint hwndTarget)
     {
-        UsagePage = usagePage;
-        Usage = usage;
-        Flags = flags;
-        WindowHandle = windowHandle;
+        this.usUsagePage = usUsagePage;
+        this.usUsage = usUsage;
+        this.dwFlags = dwFlags;
+        this.hwndTarget = hwndTarget;
     }
+
+    public static int Size => Marshal.SizeOf<RawInputDevice>();
 }
 
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rawinputdevice
@@ -681,17 +707,18 @@ internal enum HIDUsage : ushort
 
 #region Device Info
 
+//https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getrawinputdeviceinfoa
+internal enum DeviceInfoTypes : DWORD
+{
+    PreParsedData = 0x20000005,
+    DeviceName = 0x20000007,
+    DeviceInfo = 0x2000000B
+}
+
 //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rid_device_info
 [StructLayout(LayoutKind.Sequential)]
 internal readonly struct DeviceInfo
 {
-    internal enum DeviceInfoTypes : DWORD
-    {
-        RIDI_PREPARSEDDATA = 0x20000005,
-        RIDI_DEVICENAME = 0x20000007,
-        RIDI_DEVICEINFO = 0x2000000B
-    }
-
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rid_device_info_mouse
     [StructLayout(LayoutKind.Sequential)]
     internal readonly struct DeviceInfoMouse
@@ -699,7 +726,9 @@ internal readonly struct DeviceInfo
         public readonly DWORD dwId;
         public readonly DWORD dwNumberOfButtons;
         public readonly DWORD dwSampleRate;
-        [MarshalAs(UnmanagedType.Bool)] public readonly bool fHasHorizontalWheel;
+        [MarshalAs(UnmanagedType.Bool)] 
+        public readonly byte fHasHorizontalWheel;
+        public bool HasHorizontalWheel => fHasHorizontalWheel > 0;
     }
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-rid_device_info_keyboard
     [StructLayout(LayoutKind.Sequential)]
@@ -731,9 +760,13 @@ internal readonly struct DeviceInfo
         [FieldOffset(0)] public readonly DeviceInfoHID hid;
     }
 
-    public readonly DWORD cbSize;
-    public readonly DeviceInfoTypes dwType;
-    public readonly DeviceInfoUnion Union;
+    public readonly DWORD cbSize = Size;
+    public readonly RawInputType dwType;
+    public readonly DeviceInfoUnion union;
+
+    public DeviceInfo() { }
+
+    public static int Size => Marshal.SizeOf<DeviceInfo>();
 }
 
 #endregion

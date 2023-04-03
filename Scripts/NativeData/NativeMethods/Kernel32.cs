@@ -12,5 +12,11 @@ internal static partial class Kernel32
 
     //https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew
     [LibraryImport(KERNEL_32, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-    internal static partial IntPtr GetModuleHandleW([MarshalAs(UnmanagedType.LPWStr)] string lpModuleName);
+    internal static partial IntPtr GetModuleHandleW([Optional, MarshalAs(UnmanagedType.LPWStr)] string? lpModuleName);
+
+
+    [LibraryImport(KERNEL_32, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool AllocConsole();
+
 }
