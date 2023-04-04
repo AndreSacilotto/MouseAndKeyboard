@@ -27,7 +27,7 @@ public class KeyboardSnapshot
     /// <summary>
     ///     Indicates whether specified key was down at the moment when snapshot was created or not.
     /// </summary>
-    /// <param name="key">Key (corresponds to the virtual code of the key)</param>
+    /// <param name="key">KeyPress (corresponds to the virtual code of the key)</param>
     /// <returns><b>true</b> if key was down, <b>false</b> - if key was up.</returns>
     public bool IsDown(VirtualKey key)
     {
@@ -51,7 +51,7 @@ public class KeyboardSnapshot
     /// <summary>
     ///     Indicate weather specified key was toggled at the moment when snapshot was created or not.
     /// </summary>
-    /// <param name="key">Key (corresponds to the virtual code of the key)</param>
+    /// <param name="key">KeyPress (corresponds to the virtual code of the key)</param>
     /// <returns>
     ///     <b>true</b> if toggle key like (CapsLock, NumLocke, etc.) was on. <b>false</b> if it was off.
     ///     Ordinal (non toggle) keys return always false.

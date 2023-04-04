@@ -6,7 +6,7 @@ namespace MouseAndKeyboard.InputListener.Hook;
 
 internal static class KeyboardStateHelper
 {
-    //Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the Low word of a 32-bit Virtual Key Value used for non-keyboard input methods
+    //Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the Low word of a 32-bit Virtual KeyPress Value used for non-keyboard input methods
     private static VirtualKey lastVirtualKeyCode;
     private static ScanCode lastScanCode;
 

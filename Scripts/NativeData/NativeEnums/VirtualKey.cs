@@ -17,24 +17,24 @@ public enum VirtualKey : WORD
     XButton1 = 0x05,
     ///<summary>X2 Mouse button. Not Contiguous</summary>
     XButton2 = 0x06,
-    ///<summary>Backspace Key</summary>
+    ///<summary>Backspace KeyPress</summary>
     Back = 0x08,
-    ///<summary>Tab Key</summary>
+    ///<summary>Tab KeyPress</summary>
     Tab = 0x09,
-    ///<summary>Clear Key</summary>
+    ///<summary>Clear KeyPress</summary>
     Clear = 0x0C,
-    ///<summary>Enter Key</summary>
+    ///<summary>Enter KeyPress</summary>
     Return = 0x0D,
-    ///<summary>Shift Key</summary>
+    ///<summary>Shift KeyPress</summary>
     Shift = 0x10,
-    ///<summary>Ctrl Key</summary>
+    ///<summary>Ctrl KeyPress</summary>
     Control = 0x11,
-    ///<summary>Menu/Alt Key</summary>
+    ///<summary>Menu/Alt KeyPress</summary>
     Menu = 0x12,
     Alt = Menu,
-    ///<summary>Pause Key</summary>
+    ///<summary>Pause KeyPress</summary>
     Pause = 0x13,
-    ///<summary>Caps Lock Key</summary>
+    ///<summary>Caps Lock KeyPress</summary>
     CapitalLock = 0x14,
     ///<summary>Input Method Editor (IME) Kana Mode</summary>
     Kana = 0x15,
@@ -48,7 +48,7 @@ public enum VirtualKey : WORD
     Hanja = 0x19,
     ///<summary>IME Kanji Mode</summary>
     Kanji = Hanja,
-    ///<summary>Esc Key</summary>
+    ///<summary>Esc KeyPress</summary>
     Escape = 0x1B,
     ///<summary>IME Convert</summary>
     Convert = 0x1C,
@@ -60,257 +60,257 @@ public enum VirtualKey : WORD
     ModeChange = 0x1F,
     ///<summary>Spacebar</summary>
     Space = 0x20,
-    ///<summary>Page Up Key</summary>
+    ///<summary>Page Up KeyPress</summary>
     Prior = 0x21,
-    ///<summary>Page Down Key</summary>
+    ///<summary>Page Down KeyPress</summary>
     Next = 0x22,
-    ///<summary>End Key</summary>
+    ///<summary>End KeyPress</summary>
     End = 0x23,
-    ///<summary>Home Key</summary>
+    ///<summary>Home KeyPress</summary>
     Home = 0x24,
-    ///<summary>Left Arrow Key</summary>
+    ///<summary>Left Arrow KeyPress</summary>
     LeftArrow = 0x25,
-    ///<summary>Up Arrow Key</summary>
+    ///<summary>Up Arrow KeyPress</summary>
     UpArrow = 0x26,
-    ///<summary>Right Arrow Key</summary>
+    ///<summary>Right Arrow KeyPress</summary>
     RightArrow = 0x27,
-    ///<summary>Down Arrow Key</summary>
+    ///<summary>Down Arrow KeyPress</summary>
     DownArrow = 0x28,
-    ///<summary>Select Key</summary>
+    ///<summary>Select KeyPress</summary>
     Select = 0x29,
-    ///<summary>Print Key</summary>
+    ///<summary>Print KeyPress</summary>
     Print = 0x2A,
-    ///<summary>Execute Key</summary>
+    ///<summary>Execute KeyPress</summary>
     Execute = 0x2B,
-    ///<summary>Print Screen Key</summary>
+    ///<summary>Print Screen KeyPress</summary>
     Snapshot = 0x2C,
-    ///<summary>Ins Key</summary>
+    ///<summary>Ins KeyPress</summary>
     Insert = 0x2D,
-    ///<summary>Del Key</summary>
+    ///<summary>Del KeyPress</summary>
     Delete = 0x2E,
-    ///<summary>Help Key</summary>
+    ///<summary>Help KeyPress</summary>
     Help = 0x2F,
-    ///<summary>Numeric 0 Key</summary>
+    ///<summary>Numeric 0 KeyPress</summary>
     D0 = 0x30,
-    ///<summary>Numeric 1 Key</summary>
+    ///<summary>Numeric 1 KeyPress</summary>
     D1 = 0x31,
-    ///<summary>Numeric 2 Key</summary>
+    ///<summary>Numeric 2 KeyPress</summary>
     D2 = 0x32,
-    ///<summary>Numeric 3 Key</summary>
+    ///<summary>Numeric 3 KeyPress</summary>
     D3 = 0x33,
-    ///<summary>Numeric 4 Key</summary>
+    ///<summary>Numeric 4 KeyPress</summary>
     D4 = 0x34,
-    ///<summary>Numeric 5 Key</summary>
+    ///<summary>Numeric 5 KeyPress</summary>
     D5 = 0x35,
-    ///<summary>Numeric 6 Key</summary>
+    ///<summary>Numeric 6 KeyPress</summary>
     D6 = 0x36,
-    ///<summary>Numeric 7 Key</summary>
+    ///<summary>Numeric 7 KeyPress</summary>
     D7 = 0x37,
-    ///<summary>Numeric 8 Key</summary>
+    ///<summary>Numeric 8 KeyPress</summary>
     D8 = 0x38,
-    ///<summary>Numeric 9 Key</summary>
+    ///<summary>Numeric 9 KeyPress</summary>
     D9 = 0x39,
-    ///<summary>A Key</summary>
+    ///<summary>A KeyPress</summary>
     A = 0x41,
-    ///<summary>B Key</summary>
+    ///<summary>B KeyPress</summary>
     B = 0x42,
-    ///<summary>C Key</summary>
+    ///<summary>C KeyPress</summary>
     C = 0x43,
-    ///<summary>D Key</summary>
+    ///<summary>D KeyPress</summary>
     D = 0x44,
-    ///<summary>E Key</summary>
+    ///<summary>E KeyPress</summary>
     E = 0x45,
-    ///<summary>F Key</summary>
+    ///<summary>F KeyPress</summary>
     F = 0x46,
-    ///<summary>G Key</summary>
+    ///<summary>G KeyPress</summary>
     G = 0x47,
-    ///<summary>H Key</summary>
+    ///<summary>H KeyPress</summary>
     H = 0x48,
-    ///<summary>I Key</summary>
+    ///<summary>I KeyPress</summary>
     I = 0x49,
-    ///<summary>J Key</summary>
+    ///<summary>J KeyPress</summary>
     J = 0x4A,
-    ///<summary>K Key</summary>
+    ///<summary>K KeyPress</summary>
     K = 0x4B,
-    ///<summary>L Key</summary>
+    ///<summary>L KeyPress</summary>
     L = 0x4C,
-    ///<summary>M Key</summary>
+    ///<summary>M KeyPress</summary>
     M = 0x4D,
-    ///<summary>N Key</summary>
+    ///<summary>N KeyPress</summary>
     N = 0x4E,
-    ///<summary>O Key</summary>
+    ///<summary>O KeyPress</summary>
     O = 0x4F,
-    ///<summary>P Key</summary>
+    ///<summary>P KeyPress</summary>
     P = 0x50,
-    ///<summary>Q Key</summary>
+    ///<summary>Q KeyPress</summary>
     Q = 0x51,
-    ///<summary>R Key</summary>
+    ///<summary>R KeyPress</summary>
     R = 0x52,
-    ///<summary>S Key</summary>
+    ///<summary>S KeyPress</summary>
     S = 0x53,
-    ///<summary>T Key</summary>
+    ///<summary>T KeyPress</summary>
     T = 0x54,
-    ///<summary>U Key</summary>
+    ///<summary>U KeyPress</summary>
     U = 0x55,
-    ///<summary>V Key</summary>
+    ///<summary>V KeyPress</summary>
     V = 0x56,
-    ///<summary>W Key</summary>
+    ///<summary>W KeyPress</summary>
     W = 0x57,
-    ///<summary>X Key</summary>
+    ///<summary>X KeyPress</summary>
     X = 0x58,
-    ///<summary>Y Key</summary>
+    ///<summary>Y KeyPress</summary>
     Y = 0x59,
-    ///<summary>Z Key</summary>
+    ///<summary>Z KeyPress</summary>
     Z = 0x5A,
-    ///<summary>Left Windows Key (Microsoft Natural Keyboard)</summary>
+    ///<summary>Left Windows KeyPress (Microsoft Natural Keyboard)</summary>
     LeftWindows = 0x5B,
-    ///<summary>Right Windows Key (Natural Keyboard)</summary>
+    ///<summary>Right Windows KeyPress (Natural Keyboard)</summary>
     RightWindows = 0x5C,
-    ///<summary>Applications Key (Natural Keyboard)</summary>
+    ///<summary>Applications KeyPress (Natural Keyboard)</summary>
     Apps = 0x5D,
-    ///<summary>Computer Sleep Key</summary>
+    ///<summary>Computer Sleep KeyPress</summary>
     Sleep = 0x5F,
-    ///<summary>Numeric Keypad 0 Key</summary>
+    ///<summary>Numeric Keypad 0 KeyPress</summary>
     Numpad0 = 0x60,
-    ///<summary>Numeric Keypad 1 Key</summary>
+    ///<summary>Numeric Keypad 1 KeyPress</summary>
     Numpad1 = 0x61,
-    ///<summary>Numeric Keypad 2 Key</summary>
+    ///<summary>Numeric Keypad 2 KeyPress</summary>
     Numpad2 = 0x62,
-    ///<summary>Numeric Keypad 3 Key</summary>
+    ///<summary>Numeric Keypad 3 KeyPress</summary>
     Numpad3 = 0x63,
-    ///<summary>Numeric Keypad 4 Key</summary>
+    ///<summary>Numeric Keypad 4 KeyPress</summary>
     Numpad4 = 0x64,
-    ///<summary>Numeric Keypad 5 Key</summary>
+    ///<summary>Numeric Keypad 5 KeyPress</summary>
     Numpad5 = 0x65,
-    ///<summary>Numeric Keypad 6 Key</summary>
+    ///<summary>Numeric Keypad 6 KeyPress</summary>
     Numpad6 = 0x66,
-    ///<summary>Numeric Keypad 7 Key</summary>
+    ///<summary>Numeric Keypad 7 KeyPress</summary>
     Numpad7 = 0x67,
-    ///<summary>Numeric Keypad 8 Key</summary>
+    ///<summary>Numeric Keypad 8 KeyPress</summary>
     Numpad8 = 0x68,
-    ///<summary>Numeric Keypad 9 Key</summary>
+    ///<summary>Numeric Keypad 9 KeyPress</summary>
     Numpad9 = 0x69,
-    ///<summary>Numpad Multiply Key</summary>
+    ///<summary>Numpad Multiply KeyPress</summary>
     Multiply = 0x6A,
-    ///<summary>Numpad Add Key</summary>
+    ///<summary>Numpad Add KeyPress</summary>
     Add = 0x6B,
-    ///<summary>Numpad Separator Key</summary>
+    ///<summary>Numpad Separator KeyPress</summary>
     Separator = 0x6C,
-    ///<summary>Numpad Subtract Key</summary>
+    ///<summary>Numpad Subtract KeyPress</summary>
     Subtract = 0x6D,
-    ///<summary>Numpad Decimal Key</summary>
+    ///<summary>Numpad Decimal KeyPress</summary>
     Decimal = 0x6E,
-    ///<summary>Numpad Divide Key</summary>
+    ///<summary>Numpad Divide KeyPress</summary>
     Divide = 0x6F,
-    ///<summary>F1 Key</summary>
+    ///<summary>F1 KeyPress</summary>
     F1 = 0x70,
-    ///<summary>F2 Key</summary>
+    ///<summary>F2 KeyPress</summary>
     F2 = 0x71,
-    ///<summary>F3 Key</summary>
+    ///<summary>F3 KeyPress</summary>
     F3 = 0x72,
-    ///<summary>F4 Key</summary>
+    ///<summary>F4 KeyPress</summary>
     F4 = 0x73,
-    ///<summary>F5 Key</summary>
+    ///<summary>F5 KeyPress</summary>
     F5 = 0x74,
-    ///<summary>F6 Key</summary>
+    ///<summary>F6 KeyPress</summary>
     F6 = 0x75,
-    ///<summary>F7 Key</summary>
+    ///<summary>F7 KeyPress</summary>
     F7 = 0x76,
-    ///<summary>F8 Key</summary>
+    ///<summary>F8 KeyPress</summary>
     F8 = 0x77,
-    ///<summary>F9 Key</summary>
+    ///<summary>F9 KeyPress</summary>
     F9 = 0x78,
-    ///<summary>F10 Key</summary>
+    ///<summary>F10 KeyPress</summary>
     F10 = 0x79,
-    ///<summary>F11 Key</summary>
+    ///<summary>F11 KeyPress</summary>
     F11 = 0x7A,
-    ///<summary>F12 Key</summary>
+    ///<summary>F12 KeyPress</summary>
     F12 = 0x7B,
-    ///<summary>F13 Key</summary>
+    ///<summary>F13 KeyPress</summary>
     F13 = 0x7C,
-    ///<summary>F14 Key</summary>
+    ///<summary>F14 KeyPress</summary>
     F14 = 0x7D,
-    ///<summary>F15 Key</summary>
+    ///<summary>F15 KeyPress</summary>
     F15 = 0x7E,
-    ///<summary>F16 Key</summary>
+    ///<summary>F16 KeyPress</summary>
     F16 = 0x7F,
-    ///<summary>F17 Key</summary>
+    ///<summary>F17 KeyPress</summary>
     F17 = 0x80,
-    ///<summary>F18 Key</summary>
+    ///<summary>F18 KeyPress</summary>
     F18 = 0x81,
-    ///<summary>F19 Key</summary>
+    ///<summary>F19 KeyPress</summary>
     F19 = 0x82,
-    ///<summary>F20 Key</summary>
+    ///<summary>F20 KeyPress</summary>
     F20 = 0x83,
-    ///<summary>F21 Key</summary>
+    ///<summary>F21 KeyPress</summary>
     F21 = 0x84,
-    ///<summary>F22 Key, (Ppc Only) Key Used To Lock Device.</summary>
+    ///<summary>F22 KeyPress, (Ppc Only) KeyPress Used To Lock Device.</summary>
     F22 = 0x85,
-    ///<summary>F23 Key</summary>
+    ///<summary>F23 KeyPress</summary>
     F23 = 0x86,
-    ///<summary>F24 Key</summary>
+    ///<summary>F24 KeyPress</summary>
     F24 = 0x87,
-    ///<summary>Num Lock Key</summary>
+    ///<summary>Num Lock KeyPress</summary>
     NumLock = 0x90,
-    ///<summary>ScrollLock Lock Key</summary>
+    ///<summary>ScrollLock Lock KeyPress</summary>
     ScrollLock = 0x91,
-    ///<summary>Left Shift Key</summary>
+    ///<summary>Left Shift KeyPress</summary>
     LeftShift = 0xA0,
-    ///<summary>Right Shift Key</summary>
+    ///<summary>Right Shift KeyPress</summary>
     RightShift = 0xA1,
-    ///<summary>Left Control Key</summary>
+    ///<summary>Left Control KeyPress</summary>
     LeftControl = 0xA2,
-    ///<summary>Right Control Key</summary>
+    ///<summary>Right Control KeyPress</summary>
     RightControl = 0xA3,
-    ///<summary>Left Menu/Alt Key</summary>
+    ///<summary>Left Menu/Alt KeyPress</summary>
     LeftMenu = 0xA4,
-    ///<summary>Right Menu/Alt Key</summary>
+    ///<summary>Right Menu/Alt KeyPress</summary>
     RightMenu = 0xA5,
-    ///<summary>Browser Back Key</summary>
+    ///<summary>Browser Back KeyPress</summary>
     BrowserBack = 0xA6,
-    ///<summary>Browser Forward Key</summary>
+    ///<summary>Browser Forward KeyPress</summary>
     BrowserForward = 0xA7,
-    ///<summary>Browser Refresh Key</summary>
+    ///<summary>Browser Refresh KeyPress</summary>
     BrowserRefresh = 0xA8,
-    ///<summary>Browser Stop Key</summary>
+    ///<summary>Browser Stop KeyPress</summary>
     BrowserStop = 0xA9,
-    ///<summary>Browser Search Key</summary>
+    ///<summary>Browser Search KeyPress</summary>
     BrowserSearch = 0xAA,
-    ///<summary>Browser Favorites Key</summary>
+    ///<summary>Browser Favorites KeyPress</summary>
     BrowserFavorites = 0xAB,
-    ///<summary>Browser Startclient And Home Key</summary>
+    ///<summary>Browser Startclient And Home KeyPress</summary>
     BrowserHome = 0xAC,
-    ///<summary>Volume Mute Key</summary>
+    ///<summary>Volume Mute KeyPress</summary>
     VolumeMute = 0xAD,
-    ///<summary>Volume Down Key</summary>
+    ///<summary>Volume Down KeyPress</summary>
     VolumeDown = 0xAE,
-    ///<summary>Volume Up Key</summary>
+    ///<summary>Volume Up KeyPress</summary>
     VolumeUp = 0xAF,
-    ///<summary>Next Track Key</summary>
+    ///<summary>Next Track KeyPress</summary>
     MediaNextTrack = 0xB0,
-    ///<summary>Previous Track Key</summary>
+    ///<summary>Previous Track KeyPress</summary>
     MediaPrevTrack = 0xB1,
-    ///<summary>Stop Media Key</summary>
+    ///<summary>Stop Media KeyPress</summary>
     MediaStop = 0xB2,
-    ///<summary>Play/Pause Media Key</summary>
+    ///<summary>Play/Pause Media KeyPress</summary>
     MediaPlayPause = 0xB3,
-    ///<summary>Startclient Mail Key</summary>
+    ///<summary>Startclient Mail KeyPress</summary>
     LaunchMail = 0xB4,
-    ///<summary>Select Media Key</summary>
+    ///<summary>Select Media KeyPress</summary>
     LaunchMediaSelect = 0xB5,
-    ///<summary>Startclient Application 1 Key</summary>
+    ///<summary>Startclient Application 1 KeyPress</summary>
     LaunchApp1 = 0xB6,
-    ///<summary>Startclient Application 2 Key</summary>
+    ///<summary>Startclient Application 2 KeyPress</summary>
     LaunchApp2 = 0xB7,
     ///<summary>Used for miscellaneous characters; it can vary by Keyboard.</summary>
     Oem1 = 0xBA,
-    ///<summary>For any country/region, the '+' Key</summary>
+    ///<summary>For any country/region, the '+' KeyPress</summary>
     OemPlus = 0xBB,
-    ///<summary>For any country/region, the ',' Key</summary>
+    ///<summary>For any country/region, the ',' KeyPress</summary>
     OemComma = 0xBC,
-    ///<summary>For any country/region, the '-' Key</summary>
+    ///<summary>For any country/region, the '-' KeyPress</summary>
     OemMinus = 0xBD,
-    ///<summary>For any country/region, the '.' Key</summary>
+    ///<summary>For any country/region, the '.' KeyPress</summary>
     OemPeriod = 0xBE,
     ///<summary>Used for miscellaneous characters; it can vary by Keyboard.</summary>
     Oem2 = 0xBF,
@@ -328,7 +328,7 @@ public enum VirtualKey : WORD
     Oem8 = 0xDF,
     ///<summary>Either the angle bracket key or the backslash key on the rt 102-key keyboard</summary>
     Oem102 = 0xE2,
-    ///<summary>Windows 95/98/Me, Windows Nt 4.0, IME Process Key</summary>
+    ///<summary>Windows 95/98/Me, Windows Nt 4.0, IME Process KeyPress</summary>
     ProcessKey = 0xE5,
     IcoClear = 0xE6,
     ///<summary>
@@ -350,22 +350,22 @@ public enum VirtualKey : WORD
     OemAuto = 0xF3,
     OemEnlw = 0xF4,
     OemBacktab = 0xF5,
-    ///<summary>ATTN Key</summary>
+    ///<summary>ATTN KeyPress</summary>
     Attn = 0xF6,
-    ///<summary>Crsel Key</summary>
+    ///<summary>Crsel KeyPress</summary>
     CrSel = 0xF7,
-    ///<summary>Exsel Key</summary>
+    ///<summary>Exsel KeyPress</summary>
     ExSel = 0xF8,
-    ///<summary>Erase EoF Key</summary>
+    ///<summary>Erase EoF KeyPress</summary>
     EraseEoF = 0xF9,
-    ///<summary>Play Key</summary>
+    ///<summary>Play KeyPress</summary>
     Play = 0xFA,
-    ///<summary>Zoom Key</summary>
+    ///<summary>Zoom KeyPress</summary>
     Zoom = 0xFB,
     ///<summary>Reserved</summary>
     NoName = 0xFC,
-    ///<summary>PA1 Key</summary>
+    ///<summary>PA1 KeyPress</summary>
     PA1 = 0xFD,
-    ///<summary>Clear Key</summary>
+    ///<summary>Clear KeyPress</summary>
     OemClear = 0xFE,
 }

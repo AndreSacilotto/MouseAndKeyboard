@@ -1,5 +1,9 @@
 ﻿namespace MouseAndKeyboard.Native;
 
+
+#pragma warning disable IDE0079 // Enums values should not be duplicated
+#pragma warning disable CA1069 // Enums values should not be duplicated
+
 /// <summary>
 /// Windows Messages
 /// Defined in winuser.h from Windows SDK v6.1
@@ -7,7 +11,6 @@
 /// </summary>
 // https://github.com/rubberduck-vba/SlimDucky/blob/ym/WM.cs
 // https://www.pinvoke.net/default.aspx/Enums/WindowsMessages.html
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1069:Enums values should not be duplicated", Justification = "<Pending>")]
 public enum WindowsMessages : uint
 {
     /// <summary>The WM_NULL message performs no operation. An application sends the WM_NULL message if it wants to post a message that the recipient window will ignore.</summary>

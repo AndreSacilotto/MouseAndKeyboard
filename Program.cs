@@ -1,6 +1,7 @@
 global using MouseAndKeyboard.Util.Log;
 global using System;
 global using System.Collections.Generic;
+using MouseAndKeyboard.Forms;
 using System.Windows.Forms;
 
 namespace MouseAndKeyboard;

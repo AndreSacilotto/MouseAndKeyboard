@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace MouseAndKeyboard.Util;
 
@@ -13,7 +14,14 @@ public class EnumUtil
     public static int EnumCount<T>() where T : Enum => Enum.GetValues(typeof(T)).Length;
     public static T[] EnumToArray<T>() where T : Enum => (T[])typeof(T).GetEnumValues();
 
-    public static T UnsetFlags<T>(T value, T flags) where T : Enum, IBinaryInteger<T> => value &= ~flags;
-    public static T SetFlags<T>(T value, T flags) where T : Enum, IBinaryInteger<T> => value |= flags;
-    public static T ToggleFlags<T>(T value, T flags) where T : Enum, IBinaryInteger<T> => value ^= flags;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T UnsetFlags<T>(T value, T flags) where T : IBinaryInteger<T> => value &= ~flags;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T SetFlags<T>(T value, T flags) where T : IBinaryInteger<T> => value |= flags;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T ToggleFlags<T>(T value, T flags) where T : IBinaryInteger<T> => value ^= flags;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool HasFlag<T>(T value, T flags) where T : IBinaryInteger<T> => (value & flags) == flags;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool HasAnyFlag<T>(T value, T flags) where T : IBinaryInteger<T> => (value & flags) != T.Zero;
 }

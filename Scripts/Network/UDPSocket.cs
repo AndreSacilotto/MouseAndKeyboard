@@ -40,10 +40,13 @@ public class UDPSocket : IDisposable
     {
         OnReceive = null;
         OnConnect = null;
-        cancelToken?.Cancel();
+        if (cancelToken != null) 
+        { 
+            cancelToken.Cancel();
+            cancelToken.Dispose();
+        }
         MySocket.Close(); // Calls Dispose internally
         GC.SuppressFinalize(this);
-
         Logger.WriteLine("[Dispose Socket]");
     }
 
@@ -63,8 +66,6 @@ public class UDPSocket : IDisposable
 
 
     #region Server
-    private bool isServerRunning;
-
     public void StartServer(int port)
     {
         if (MySocket.IsBound)
@@ -79,29 +80,26 @@ public class UDPSocket : IDisposable
 
     public void ResumeServer()
     {
-        if (isServerRunning || !MySocket.IsBound || cancelToken == null || cancelToken.IsCancellationRequested)
+        if (!MySocket.IsBound || cancelToken == null || cancelToken.IsCancellationRequested)
             return;
-        Task.Run(BeginReceiveNextPacket);
+        Task.Run(BeginReceiveNextPacket, cancelToken.Token);
     }
 
     public void PauseServer()
     {
-        if (!isServerRunning || !MySocket.IsBound || cancelToken == null || cancelToken.IsCancellationRequested)
+        if (!MySocket.IsBound || cancelToken == null || cancelToken.IsCancellationRequested)
             return;
-        cancelToken?.Cancel();
+        cancelToken.Cancel();
     }
 
     private async Task BeginReceiveNextPacket()
     {
-        isServerRunning = true;
         Logger.WriteLine("[Server Running]");
-        while (MySocket.IsBound && !cancelToken!.IsCancellationRequested)
+        while (MySocket.IsBound)
         {
-            var receivedBytes = await MySocket.ReceiveAsync(memBuffer, SocketFlags.None, cancelToken.Token);
+            var receivedBytes = await MySocket.ReceiveAsync(memBuffer, SocketFlags.None, cancelToken!.Token);
             OnReceive?.Invoke(receivedBytes, buffer!);
         }
-        Logger.WriteLine("[Server Stop]");
-        isServerRunning = false;
     }
 
     #endregion

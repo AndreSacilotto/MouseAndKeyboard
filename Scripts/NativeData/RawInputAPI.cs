@@ -1,6 +1,4 @@
-﻿using MouseAndKeyboard.Native;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
 namespace MouseAndKeyboard.Native.RawInput;
 
@@ -17,7 +15,7 @@ internal partial class RawInputAPI
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool RegisterRawInputDevices([MarshalAs(UnmanagedType.LPArray)] RawInputDevice[] pRawInputDevices, int uiNumDevices, int cbSize);
     internal static bool RegisterRawInputDevices(params RawInputDevice[] devices) => RegisterRawInputDevices(devices, devices.Length, RawInputDevice.Size);
-    
+
     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getregisteredrawinputdevices
     [LibraryImport(User32.USER_32, SetLastError = true)]
     private static partial uint GetRegisteredRawInputDevices([Optional, MarshalAs(UnmanagedType.LPArray)] ref RawInputDevice[]? pRawInputDevices, ref uint puiNumDevices, int cbSize);
@@ -399,9 +397,10 @@ internal enum HIDUsagePage : ushort
     MSR = 0x8E
 }
 
+#pragma warning disable IDE0079 // Enums values should not be duplicated
+#pragma warning disable CA1069 // Enums values should not be duplicated
 //https://www.pinvoke.net/default.aspx/Enums/HIDUsage.html
 //https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/hid-usages#usage-id
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1069:Enums values should not be duplicated", Justification = "<Pending>")]
 internal enum HIDUsage : ushort
 {
     /// <summary></summary>
@@ -703,6 +702,9 @@ internal enum HIDUsage : ushort
     /// <summary></summary>
     SimulationThrottle = 0xBB
 }
+#pragma warning restore CA1069 // Enums values should not be duplicated
+#pragma warning restore IDE0079 // Enums values should not be duplicated
+
 #endregion
 
 #region Device Info
@@ -726,7 +728,7 @@ internal readonly struct DeviceInfo
         public readonly DWORD dwId;
         public readonly DWORD dwNumberOfButtons;
         public readonly DWORD dwSampleRate;
-        [MarshalAs(UnmanagedType.Bool)] 
+        [MarshalAs(UnmanagedType.Bool)]
         public readonly byte fHasHorizontalWheel;
         public bool HasHorizontalWheel => fHasHorizontalWheel > 0;
     }

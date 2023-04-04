@@ -17,7 +17,7 @@ public enum InputModifiers : uint
 
     /// <summary>
     /// Either WINDOWS key was held down. These keys are labeled with the Windows logo. 
-    /// <br/>Hotkeys that involve the Windows key are reserved for use by the operating system
+    /// <br/>HotkeysKeyboardEvent that involve the Windows key are reserved for use by the operating system
     /// </summary>
     Windows = 0x0008,
 

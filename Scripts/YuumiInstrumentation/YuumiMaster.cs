@@ -6,38 +6,27 @@ namespace YuumiInstrumentation;
 public sealed partial class YuumiMaster : IDisposable
 {
     private readonly UDPSocket socket;
-
-    private readonly MKHookListener inputEvents;
     private readonly YummiPacket ypacket = new();
+
+    private readonly bool handleInputEvents;
+    private readonly MKHookListener inputEvents;
 
     public UDPSocket Socket => socket;
 
-    public YuumiMaster()
+    #region Ctor
+    public YuumiMaster() : this(MKHookListener.FactoryGlobal(), true) { }
+
+    public YuumiMaster(MKHookListener inputEvents, bool handleInputEvents = false)
     {
-        inputEvents = MKHookListener.FactoryGlobal();
+        this.handleInputEvents = handleInputEvents;
+        this.inputEvents = inputEvents;
 
-#if DEBUG
-        socket = new UDPSocket(true, YummiPacket.MAX_PACKET_BYTE_SIZE);
-
-        var mainForm = (MouseAndKeyboard.MainForm)System.Windows.Forms.Application.OpenForms[System.Windows.Forms.Application.OpenForms.Count - 1]!;
-        //inputEvents.KeyListener.KeyUp += (ev) =>
-        //{
-        //    switch (ev.KeyCode)
-        //    {
-        //        case TOGGLE_CONSOLE: mainForm.Console = !mainForm.Console; break;
-        //        case TOGGLE_MOUSEMOVE: mainForm.MMove = !mainForm.MMove; break;
-        //        case TOGGLE_MOUSECLICK: mainForm.MClick = !mainForm.MClick; break;
-        //        case TOGGLE_KEYS: mainForm.KKey = !mainForm.KKey; break;
-        //        case TOGGLE_MOUSESCROLL: mainForm.MScroll = !mainForm.MScroll; break;
-        //        case EMERGENCY_QUIT: mainForm.Close(); break;
-        //    }
-        //};
-#else
-		socket = new UDPSocket(false);
-#endif
+        socket = new UDPSocket(MouseAndKeyboard.Util.DebuggingService.IsDebugMode, YummiPacket.MAX_PACKET_BYTE_SIZE);
 
         socket.OnConnect += WhenConnect;
     }
+
+    #endregion
 
     public void Dispose()
     {
@@ -46,7 +35,8 @@ public sealed partial class YuumiMaster : IDisposable
         EnabledMC = false;
         EnabledKK = false;
         socket.Dispose();
-        inputEvents.Dispose();
+        if (handleInputEvents)
+            inputEvents.Dispose();
     }
 
     #region Enabling

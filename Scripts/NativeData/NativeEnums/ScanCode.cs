@@ -1,10 +1,12 @@
 ﻿namespace MouseAndKeyboard.Native;
 
+#pragma warning disable IDE0079 // Enums values should not be duplicated
+#pragma warning disable CA1069 // Enums values should not be duplicated
+
 /// <summary>
-/// Hardware Dependent Key Codes
+/// Hardware Dependent KeyPress Codes
 /// <br/>~DO NOT TRUST IT VALUES~
 /// </summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1069:Enums values should not be duplicated", Justification = "<Pending>")]
 public enum ScanCode : WORD
 {
     None = 0,

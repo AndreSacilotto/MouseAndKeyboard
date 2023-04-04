@@ -22,9 +22,9 @@ public class RawInputListener
     #endregion
 
     #region Keyboard Events
-    public event Action<KeyEventData>? KeyDown;
+    public event Action<KeyboardEventData>? KeyDown;
     public event Action<KeyPressEventData>? KeyPress;
-    public event Action<KeyEventData>? KeyUp;
+    public event Action<KeyboardEventData>? KeyUp;
     #endregion
 
     #region Mouse Events

@@ -55,7 +55,7 @@ internal static partial class User32
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool TranslateMessage(ref MSG lpMsg);
     #endregion
-    
+
     #region Device
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors
     [LibraryImport(USER_32)]

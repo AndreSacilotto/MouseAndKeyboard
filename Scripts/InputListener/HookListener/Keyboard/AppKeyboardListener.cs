@@ -20,7 +20,7 @@ internal class AppKeyboardListener : KeyboardListener
             yield return new KeyPressEventData(ch, Environment.TickCount);
     }
 
-    protected override KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
+    protected override KeyboardEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
     {
         var vk = (VirtualKey)wParam;
 
@@ -41,7 +41,7 @@ internal class AppKeyboardListener : KeyboardListener
         var isKeyDown = !transitionData;
         var isKeyUp = previousKeyState && transitionData;
 
-        return new KeyEventData(vk, scanCode, isKeyDown, isKeyUp, ctl, sht, contextCode, isExtendedKey, Environment.TickCount);
+        return new KeyboardEventData(vk, scanCode, isKeyDown, isKeyUp, ctl, sht, contextCode, isExtendedKey, Environment.TickCount);
     }
 
 

@@ -4,9 +4,9 @@ namespace MouseAndKeyboard.Native;
 
 public static class KeyUtil
 {
-    internal static readonly Dictionary<VirtualKey, ScanCode> ScanCodesDict = GetAllScanCodes();
+    public static readonly Dictionary<VirtualKey, ScanCode> ScanCodesDict = new();
 
-    private static Dictionary<VirtualKey, ScanCode> GetAllScanCodes()
+    public static Dictionary<VirtualKey, ScanCode> GetAllScanCodes()
     {
         var vkValues = EnumUtil.EnumToArray<VirtualKey>();
         var dict = new Dictionary<VirtualKey, ScanCode>(vkValues.Length);
@@ -50,43 +50,42 @@ public static class KeyUtil
         return (VirtualKey)virtualKey;
     }
 
+    #region KeyState
     // # It is not possible to distinguish Keys.LControlKey and Keys.RControlKey when they are modifiers. Same apply to Shift/Alt/Menu
+    
+    // # Windows KeyPress
+    // combine LWin and RWin key with other keys will potentially corrupt the data
+    // notable F5 | Keys.LWin == F12
+    // and the KeyEventArgs.KeyData don't recognize combined data either
+
+    // # Function KeyPress [Fn]
+    // CANNOT determine state due to conversion inside keyboard
+    // See http://en.wikipedia.org/wiki/Fn_key#Technical_details
+
     /// <returns>If true the key is down; otherwise, it is up.</returns>
     public static bool CheckKeyState(int vKey) => HighLowWORD.GetHigh(User32.GetKeyState(vKey)) > 0;
-    public static void CheckKeyState(int vKey, out bool isDown, out bool isToggle)
+    public static bool CheckToggleState(int vKey) => HighLowWORD.GetLow(User32.GetKeyState(vKey)) > 0;
+    public static bool CheckKeyState(int vKey, out bool isToggle)
     {
         var hl = new HighLowWORD(User32.GetKeyState(vKey));
-        isDown = hl.High > 0;
         isToggle = hl.Low > 0;
+        return hl.High > 0;
     }
 
-    public static InputModifiers CheckeModifiersState()
+    public static bool GetNumLockToggleState() => CheckToggleState((int)VirtualKey.NumLock);
+    public static bool GetCapsLockToggleState() => CheckToggleState((int)VirtualKey.CapitalLock);
+    public static bool GetScrollLockToggleState() => CheckToggleState((int)VirtualKey.ScrollLock);
+
+    public static bool GetControlState() => CheckKeyState((int)VirtualKey.Control);
+    public static bool GetShiftState() => CheckKeyState((int)VirtualKey.Control);
+    public static bool GetAltState() => CheckKeyState((int)VirtualKey.Menu);
+    public static InputModifiers CheckModifiersState()
     {
-        var mod = InputModifiers.None;
-        if (CheckKeyState((int)VirtualKey.Control))
-            mod |= InputModifiers.Control;
-        if (CheckKeyState((int)VirtualKey.Shift))
-            mod |= InputModifiers.Shift;
-        if (CheckKeyState((int)VirtualKey.Menu))
-            mod |= InputModifiers.Alt;
-        return mod;
+        return (GetControlState() ? InputModifiers.Control : InputModifiers.None) |
+            (GetShiftState() ? InputModifiers.Shift : InputModifiers.None) |
+            (GetAltState() ? InputModifiers.Alt : InputModifiers.None);
     }
-
-    public static void CheckeModifiersState(out bool control, out bool shift, out bool alt)
-    {
-        control = CheckKeyState((int)VirtualKey.Control);
-        shift = CheckKeyState((int)VirtualKey.Shift);
-        alt = CheckKeyState((int)VirtualKey.Menu);
-
-        // # Windows Key
-        // combine LWin and RWin key with other keys will potentially corrupt the data
-        // notable F5 | Keys.LWin == F12
-        // and the KeyEventArgs.KeyData don't recognize combined data either
-
-        // # Function Key [Fn]
-        // CANNOT determine state due to conversion inside keyboard
-        // See http://en.wikipedia.org/wiki/Fn_key#Technical_details
-    }
+    #endregion
 
     public static VirtualKey[] ModifiersToVirtualKey(this InputModifiers mod)
     {

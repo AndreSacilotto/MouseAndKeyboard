@@ -2,21 +2,20 @@
 
 namespace YuumiInstrumentation;
 
-partial class YuumiMaster
+public static class InputData
 {
-    public const VirtualKey EMERGENCY_QUIT = VirtualKey.Pause;
-
-    public const VirtualKey TOGGLE_CONSOLE = VirtualKey.ScrollLock;
-    public const VirtualKey TOGGLE_MOUSEMOVE = VirtualKey.Numpad7;
-    public const VirtualKey TOGGLE_MOUSESCROLL = VirtualKey.Numpad4;
-    public const VirtualKey TOGGLE_MOUSECLICK = VirtualKey.Numpad1;
-    public const VirtualKey TOGGLE_KEYS = VirtualKey.Numpad0;
-
-    public readonly static Dictionary<MouseButtonsF, VirtualKey> MouseToKey = new()
+    public enum HotkeysVK
     {
-        [MouseButtonsF.XButton1] = VirtualKey.F,
-        [MouseButtonsF.XButton2] = VirtualKey.D,
-    };
+        EmergencyQuit = VirtualKey.Pause,
+        Start = VirtualKey.Multiply,
+        Stop = VirtualKey.Subtract,
+        ToggleConsole = VirtualKey.Add,
+        ToggleMouseMove = VirtualKey.Numpad7,
+        ToggleMouseScroll = VirtualKey.Numpad4,
+        ToggleMouseClick = VirtualKey.Numpad1,
+        ToggleKeyboard = VirtualKey.Numpad0,
+    }
+
 
     public readonly static Dictionary<VirtualKey, VirtualKey> KeyWithShiftWhenControlShift = new()
     {
@@ -26,8 +25,16 @@ partial class YuumiMaster
         [VirtualKey.OemMinus] = VirtualKey.R,
     };
 
+    public readonly static Dictionary<VirtualKey, int> FunctionKeys = new()
+    {
+        [VirtualKey.F1] = 1 << 0, 
+        [VirtualKey.F2] = 1 << 1,
+        [VirtualKey.F3] = 1 << 2,
+        [VirtualKey.F4] = 1 << 3,
+        [VirtualKey.F5] = 1 << 4,
+    };
+
     public readonly static HashSet<VirtualKey> MirrorWhenShiftKeys = new() {
-        VirtualKey.F1, VirtualKey.F2, VirtualKey.F3, VirtualKey.F4, VirtualKey.F5,
 
         VirtualKey.Q, VirtualKey.W, VirtualKey.E, VirtualKey.R,
 
@@ -43,5 +50,8 @@ partial class YuumiMaster
         VirtualKey.P,
         VirtualKey.Escape,
     };
+
+
+
 
 }

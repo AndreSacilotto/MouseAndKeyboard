@@ -8,7 +8,7 @@ partial class YuumiSlave
 {
     public static void ReadAll(YummiPacket packet)
     {
-        packet.ReadCommand(out var cmd);
+        packet.Get(out Command cmd);
         switch (cmd)
         {
             case Command.MouseMove:
@@ -25,19 +25,19 @@ partial class YuumiSlave
             }
             case Command.MouseClick:
             {
-                packet.ReadMouseClick(out var mouseButton, out var pressedState);
+                packet.ReadMousePress(out var mouseButton, out var pressedState);
                 MouseClick(mouseButton, pressedState);
                 break;
             }
-            case Command.Key:
+            case Command.KeyPress:
             {
                 packet.ReadKeyPress(out var key, out var pressedState);
                 KeyPress(key, pressedState);
                 break;
             }
-            case Command.KeyWithModifier:
+            case Command.KeyPressWithModifier:
             {
-                packet.ReadKeyWithModifier(out var key, out var mods, out var pressedState);
+                packet.ReadKeyPressWithModifier(out var key, out var mods, out var pressedState);
                 KeyWithModifierPress(key, mods, pressedState);
                 break;
             }

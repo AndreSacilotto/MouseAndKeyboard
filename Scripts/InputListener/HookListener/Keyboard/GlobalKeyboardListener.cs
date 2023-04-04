@@ -8,7 +8,7 @@ internal class GlobalKeyboardListener : KeyboardListener
     {
     }
 
-    protected override KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
+    protected override KeyboardEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam)
     {
         var keyboardHookStruct = MarshalExt.ToStruct<KeyboardHookStruct>(lParam);
 
@@ -23,8 +23,8 @@ internal class GlobalKeyboardListener : KeyboardListener
         var isExtendedKey = (flags & 0b_0000_0001) > 0;
         var alt = ((flags & 0b_0010_0000) >> 5) > 0;
 
-        var ctl = KeyUtil.CheckKeyState((int)VirtualKey.Control);
-        var sht = KeyUtil.CheckKeyState((int)VirtualKey.Shift);
+        var ctl = KeyUtil.GetControlState();
+        var sht = KeyUtil.GetShiftState();
 
         return new((VirtualKey)keyboardHookStruct.wVk, (ScanCode)keyboardHookStruct.wScan, isDown, isUp, ctl, sht, alt, isExtendedKey, keyboardHookStruct.time);
     }

@@ -4,11 +4,11 @@ public abstract class KeyboardListener : BaseListener
 {
     protected KeyboardListener(MKHookHandle hook) : base(hook) { }
 
-    public event Action<KeyEventData>? KeyDown;
+    public event Action<KeyboardEventData>? KeyDown;
     public event Action<KeyPressEventData>? KeyPress;
-    public event Action<KeyEventData>? KeyUp;
+    public event Action<KeyboardEventData>? KeyUp;
 
-    public void InvokeKeyDown(KeyEventData e)
+    public void InvokeKeyDown(KeyboardEventData e)
     {
         if (KeyDown == null || e.Handled || !e.IsKeyDown)
             return;
@@ -22,7 +22,7 @@ public abstract class KeyboardListener : BaseListener
         KeyPress(e);
     }
 
-    public void InvokeKeyUp(KeyEventData e)
+    public void InvokeKeyUp(KeyboardEventData e)
     {
         if (KeyUp == null || e.Handled || !e.IsKeyUp)
             return;
@@ -44,6 +44,6 @@ public abstract class KeyboardListener : BaseListener
         InvokeKeyUp(keyEvent);
     }
 
-    protected abstract KeyEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam);
+    protected abstract KeyboardEventData GetKeyEventArgs(IntPtr wParam, IntPtr lParam);
     protected abstract IEnumerable<KeyPressEventData> GetPressEventArgs(IntPtr wParam, IntPtr lParam);
 }

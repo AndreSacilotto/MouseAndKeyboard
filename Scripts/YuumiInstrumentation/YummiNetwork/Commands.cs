@@ -15,10 +15,10 @@ public enum Command : byte
     /// <summary>Command [B] MouseButtonVK [I] PressState [B]</summary>
     MouseClick,
 
-    /// <summary>Command [B] Key [I] PressState [B]</summary>
-    Key,
-    /// <summary>Command [B] Key [I] VirtualModifier [I] PressState [B]</summary>
-    KeyWithModifier,
+    /// <summary>Command [B] KeyPress [I] PressState [B]</summary>
+    KeyPress,
+    /// <summary>Command [B] KeyPress [I] VirtualModifier [I] PressState [B]</summary>
+    KeyPressWithModifier,
 
     /// <summary>Command [B] Width [I] Height [I]</summary>
     Screen,

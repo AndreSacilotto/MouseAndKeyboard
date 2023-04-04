@@ -6,11 +6,11 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<ApplicationIcon>favicon.ico</ApplicationIcon>
+		<ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="favicon.ico" />
+		<Content Include="Resources\favicon.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
