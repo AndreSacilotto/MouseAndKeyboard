@@ -52,7 +52,7 @@ public static class KeyUtil
 
     #region KeyState
     // # It is not possible to distinguish Keys.LControlKey and Keys.RControlKey when they are modifiers. Same apply to Shift/Alt/Menu
-    
+
     // # Windows KeyPress
     // combine LWin and RWin key with other keys will potentially corrupt the data
     // notable F5 | Keys.LWin == F12
@@ -63,13 +63,12 @@ public static class KeyUtil
     // See http://en.wikipedia.org/wiki/Fn_key#Technical_details
 
     /// <returns>If true the key is down; otherwise, it is up.</returns>
-    public static bool CheckKeyState(int vKey) => HighLowWORD.GetHigh(User32.GetKeyState(vKey)) > 0;
-    public static bool CheckToggleState(int vKey) => HighLowWORD.GetLow(User32.GetKeyState(vKey)) > 0;
+    public static bool CheckKeyState(int vKey) => BitUtil.GetHighOrderBit(User32.GetKeyState(vKey)) != 0;
+    public static bool CheckToggleState(int vKey) => BitUtil.GetLowOrderBit(User32.GetKeyState(vKey)) != 0;
     public static bool CheckKeyState(int vKey, out bool isToggle)
     {
-        var hl = new HighLowWORD(User32.GetKeyState(vKey));
-        isToggle = hl.Low > 0;
-        return hl.High > 0;
+        isToggle = BitUtil.GetLowOrderBit(User32.GetKeyState(vKey)) != 0;
+        return BitUtil.GetHighOrderBit(User32.GetKeyState(vKey)) != 0;
     }
 
     public static bool GetNumLockToggleState() => CheckToggleState((int)VirtualKey.NumLock);
@@ -77,14 +76,13 @@ public static class KeyUtil
     public static bool GetScrollLockToggleState() => CheckToggleState((int)VirtualKey.ScrollLock);
 
     public static bool GetControlState() => CheckKeyState((int)VirtualKey.Control);
-    public static bool GetShiftState() => CheckKeyState((int)VirtualKey.Control);
+    public static bool GetShiftState() => CheckKeyState((int)VirtualKey.Shift);
     public static bool GetAltState() => CheckKeyState((int)VirtualKey.Menu);
-    public static InputModifiers CheckModifiersState()
-    {
-        return (GetControlState() ? InputModifiers.Control : InputModifiers.None) |
-            (GetShiftState() ? InputModifiers.Shift : InputModifiers.None) |
-            (GetAltState() ? InputModifiers.Alt : InputModifiers.None);
-    }
+    public static InputModifiers CheckModifiersState() => 
+        (GetControlState() ? InputModifiers.Control : InputModifiers.None) |
+        (GetShiftState() ? InputModifiers.Shift : InputModifiers.None) |
+        (GetAltState() ? InputModifiers.Alt : InputModifiers.None);
+
     #endregion
 
     public static VirtualKey[] ModifiersToVirtualKey(this InputModifiers mod)
@@ -100,6 +98,18 @@ public static class KeyUtil
         if (alt == 1) arr[i++] = VirtualKey.Alt;
         return arr;
     }
+
+    public static VirtualKey ModifiersToVirtualKeySingle(this InputModifiers mod)
+    {
+        if (mod.HasFlag(InputModifiers.Control))
+            return VirtualKey.Control;
+        if (mod.HasFlag(InputModifiers.Shift))
+            return VirtualKey.Shift;
+        if (mod.HasFlag(InputModifiers.Alt))
+            return VirtualKey.Alt;
+        return VirtualKey.None;
+    }
+
     public static InputModifiers KeyToModifier(this VirtualKey key)
     {
         var mod = InputModifiers.None;

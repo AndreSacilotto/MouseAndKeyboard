@@ -26,7 +26,7 @@ partial class YuumiSlave
             case Command.MouseClick:
             {
                 packet.ReadMousePress(out var mouseButton, out var pressedState);
-                MouseClick(mouseButton, pressedState);
+                MousePress(mouseButton, pressedState);
                 break;
             }
             case Command.KeyPress:
@@ -79,7 +79,7 @@ partial class YuumiSlave
         }
     }
 
-    private static void MouseClick(MouseButtonsF mouseButton, PressState pressedState)
+    private static void MousePress(MouseButtonsF mouseButton, PressState pressedState)
     {
         Logger.WriteLine($"RECEIVE: MClick {mouseButton} {pressedState}");
 
@@ -108,11 +108,11 @@ partial class YuumiSlave
         Logger.WriteLine($"RECEIVE: KMKey {key} {modifiers} {pressedState}");
 
         if (pressedState == PressState.Click)
-            KeyboardSender.SendKeyClick(key);
+            KeyboardSender.SendKeyClick(key, modifiers.ModifiersToVirtualKey());
         else if (pressedState == PressState.Down)
-            KeyboardSender.SendKeyDown(key);
+            KeyboardSender.SendKeyDown(key, modifiers.ModifiersToVirtualKey());
         else if (pressedState == PressState.Up)
-            KeyboardSender.SendKeyUp(key);
+            KeyboardSender.SendKeyUp(key, modifiers.ModifiersToVirtualKey());
     }
 
 }

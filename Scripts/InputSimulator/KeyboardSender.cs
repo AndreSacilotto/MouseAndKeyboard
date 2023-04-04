@@ -42,7 +42,7 @@ public static partial class KeyboardSender
 
     #region Down
     public static void SendKeyDown(VirtualKey key) => InputSender.SendInput(KeyDownInputSC(key));
-    public static void SendKeyDown(params VirtualKey[] VirtualKey)
+    public static void SendKeyDown(VirtualKey[] VirtualKey)
     {
         var inputs = new InputStruct[VirtualKey.Length];
         for (int i = 0; i < VirtualKey.Length; i++)
@@ -51,7 +51,7 @@ public static partial class KeyboardSender
     }
     public static void SendKeyDown(VirtualKey key, VirtualKey modifier) =>
         InputSender.SendInput(KeyDownInputSC(modifier), KeyDownInputSC(key));
-    public static void SendKeyDown(VirtualKey key, params VirtualKey[] modifiers)
+    public static void SendKeyDown(VirtualKey key, VirtualKey[] modifiers)
     {
         var inputs = new InputStruct[modifiers.Length + 1];
         for (int i = 0; i < modifiers.Length; i++)
@@ -63,7 +63,7 @@ public static partial class KeyboardSender
 
     #region Up
     public static void SendKeyUp(VirtualKey key) => InputSender.SendInput(KeyUpInputSC(key));
-    public static void SendKeyUp(params VirtualKey[] VirtualKey)
+    public static void SendKeyUp(VirtualKey[] VirtualKey)
     {
         var inputs = new InputStruct[VirtualKey.Length];
         for (int i = 0; i < VirtualKey.Length; i++)
@@ -72,7 +72,7 @@ public static partial class KeyboardSender
     }
     public static void SendKeyUp(VirtualKey key, VirtualKey modifier) =>
         InputSender.SendInput(KeyUpInputSC(modifier), KeyUpInputSC(key));
-    public static void SendKeyUp(VirtualKey key, params VirtualKey[] modifiers)
+    public static void SendKeyUp(VirtualKey key, VirtualKey[] modifiers)
     {
         var inputs = new InputStruct[modifiers.Length + 1];
         for (int i = 0; i < modifiers.Length; i++)
@@ -84,7 +84,7 @@ public static partial class KeyboardSender
 
     #region Click
     public static void SendKeyClick(VirtualKey key) => InputSender.SendInput(KeyDownInputSC(key), KeyUpInputSC(key));
-    public static void SendKeyClick(params VirtualKey[] VirtualKey)
+    public static void SendKeyClick(VirtualKey[] VirtualKey)
     {
         var len = VirtualKey.Length;
         var inputs = new InputStruct[len * 2];
@@ -105,7 +105,7 @@ public static partial class KeyboardSender
             KeyUpInputSC(modifier)
         );
     }
-    public static void SendKeyClick(VirtualKey key, params VirtualKey[] modifiers)
+    public static void SendKeyClick(VirtualKey key, VirtualKey[] modifiers)
     {
         var len = modifiers.Length;
         var inputs = new InputStruct[len * 2 + 2];

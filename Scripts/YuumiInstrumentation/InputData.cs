@@ -17,30 +17,18 @@ public static class InputData
     }
 
 
-    public readonly static Dictionary<VirtualKey, VirtualKey> KeyWithShiftWhenControlShift = new()
+    public readonly static HashSet<VirtualKey> FunctionKeysVK = new()
     {
-        [VirtualKey.D8] = VirtualKey.Q,
-        [VirtualKey.D9] = VirtualKey.W,
-        [VirtualKey.D0] = VirtualKey.E,
-        [VirtualKey.OemMinus] = VirtualKey.R,
+        VirtualKey.F1, VirtualKey.F2, VirtualKey.F3, VirtualKey.F4, VirtualKey.F5,
     };
 
-    public readonly static Dictionary<VirtualKey, int> FunctionKeys = new()
-    {
-        [VirtualKey.F1] = 1 << 0, 
-        [VirtualKey.F2] = 1 << 1,
-        [VirtualKey.F3] = 1 << 2,
-        [VirtualKey.F4] = 1 << 3,
-        [VirtualKey.F5] = 1 << 4,
-    };
-
-    public readonly static HashSet<VirtualKey> MirrorWhenShiftKeys = new() {
+    public readonly static HashSet<VirtualKey> MirrorWhenShiftVK = new() {
 
         VirtualKey.Q, VirtualKey.W, VirtualKey.E, VirtualKey.R,
 
         VirtualKey.D, VirtualKey.F,
 
-        VirtualKey.D1, VirtualKey.D2, VirtualKey.D3, VirtualKey.D4,
+        VirtualKey.D1, VirtualKey.D2, VirtualKey.D3, VirtualKey.D4, VirtualKey.D5,
 
         VirtualKey.Space,
 

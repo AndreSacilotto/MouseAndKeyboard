@@ -34,7 +34,7 @@ public class YummiPacket : Packet
         value = (PressState)v;
     }
 
-    public void Add(MouseButtonsF value) => Add((short)value);
+    public void Add(MouseButtonsF value) => Add((byte)value);
     public void Get(out MouseButtonsF value)
     {
         Get(out byte v);

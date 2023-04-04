@@ -35,8 +35,8 @@ internal class AppKeyboardListener : KeyboardListener
         var previousKeyState = ((bits & 0b_0100_0000__0000_0000__0000_0000__0000_0000) >> 30) > 0;
         var transitionData = ((bits & 0b_1000_0000__0000_0000__0000_0000__0000_0000) >> 31) > 0;
 
-        var ctl = KeyUtil.CheckKeyState((int)VirtualKey.Control);
-        var sht = KeyUtil.CheckKeyState((int)VirtualKey.Shift);
+        var ctl = KeyUtil.GetControlState();
+        var sht = KeyUtil.GetShiftState();
 
         var isKeyDown = !transitionData;
         var isKeyUp = previousKeyState && transitionData;

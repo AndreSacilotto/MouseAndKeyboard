@@ -49,57 +49,56 @@ partial class YuumiMaster
 
     #region Unify
 
-    int funtionKey;
-
     private void UnifyKeyboardPress(PressState pressed, KeyboardEventData ev)
     {
         var vk = ev.KeyCode;
 
-        if (FunctionKeys.TryGetValue(vk, out int mask)) 
+        if (ev.Shift && MirrorWhenShiftVK.Contains(vk))
         {
-            if (EnumUtil.HasFlag(funtionKey, mask))
+            if (ev.Control) // Mirror when Shift Control
             {
-                ypacket.WriteKeyPress(ev.KeyCode, PressState.Down);
-                funtionKey = EnumUtil.UnsetFlags(funtionKey, mask);
+                Logger.WriteLine($"SEND: KKey {pressed,-5}: {vk} | Control");
+                ypacket.WriteKeyPressWithModifier(vk, InputModifiers.Control, pressed);
+                SendPacket();
             }
-            else 
+            else
             {
-                ypacket.WriteKeyPress(ev.KeyCode, PressState.Up);
-                funtionKey = EnumUtil.SetFlags(funtionKey, mask);
+                Logger.WriteLine($"SEND: KKey {pressed,-5}: {vk} | Shift");
+                ypacket.WriteKeyPress(vk, pressed);
+                SendPacket();
             }
-            SendPacket();
         }
-
-        Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev}");
-        if (ev.Shift && MirrorWhenShiftKeys.Contains(ev.KeyCode))
+        else if (FunctionKeysVK.Contains(vk))
         {
-            //Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} | Shift");
-            ypacket.WriteKeyPress(ev.KeyCode, pressed);
-            SendPacket();
-        }
-        else if (ev.Control && KeyWithShiftWhenControlShift.TryGetValue(ev.KeyCode, out var key))
-        {
-            //Logger.WriteLine($"SEND: KKey {pressed,-5}: {ev.KeyCode} => {key} | Control");
-            ypacket.WriteKeyPressWithModifier(key, InputModifiers.Control, pressed);
+            if (ev.Shift)
+            {
+                Logger.WriteLine($"SEND: KKey {pressed,-5}: {vk} | DOWN");
+                ypacket.WriteKeyPress(vk, PressState.Down);
+            }
+            else
+            {
+                Logger.WriteLine($"SEND: KKey {pressed,-5}: {vk}");
+                ypacket.WriteKeyPress(vk, PressState.Click);
+            }
             SendPacket();
         }
     }
+
     private void UnifyMousePress(PressState pressed, MouseEventData ev)
     {
-
+        //Logger.WriteLine(ev);
         if (ev.Button == MouseButtonsF.XButton1)
-        {
-            Logger.WriteLine($"SEND: MClick {pressed,-5} {ev.Button} | Right");
-            ypacket.WriteMousePress(MouseButtonsF.Right, pressed);
-            SendPacket();
-        }
-        else if (ev.Button == MouseButtonsF.XButton2)
         {
             Logger.WriteLine($"SEND: MClick {pressed,-5} {ev.Button} | Left");
             ypacket.WriteMousePress(MouseButtonsF.Left, pressed);
             SendPacket();
         }
-
+        else if (ev.Button == MouseButtonsF.XButton2)
+        {
+            Logger.WriteLine($"SEND: MClick {pressed,-5} {ev.Button} | Right");
+            ypacket.WriteMousePress(MouseButtonsF.Right, pressed);
+            SendPacket();
+        }
     }
     #endregion
 

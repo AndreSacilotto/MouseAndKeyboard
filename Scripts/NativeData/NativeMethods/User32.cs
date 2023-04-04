@@ -96,6 +96,8 @@ internal static partial class User32
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeystate
     [LibraryImport(USER_32)]
     internal static partial short GetKeyState(int nVirtKey);
+    [LibraryImport(USER_32)]
+    internal static partial short GetAsyncKeyState(int vKey);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyw
     [LibraryImport(USER_32)]

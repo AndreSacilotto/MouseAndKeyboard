@@ -1,4 +1,5 @@
-﻿using MouseAndKeyboard.InputListener.Hook;
+﻿using MouseAndKeyboard.InputListener;
+using MouseAndKeyboard.InputListener.Hook;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;

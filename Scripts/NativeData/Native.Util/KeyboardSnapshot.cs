@@ -1,7 +1,5 @@
 ﻿
-using MouseAndKeyboard.Native;
-
-namespace MouseAndKeyboard.InputListener.Hook;
+namespace MouseAndKeyboard.Native;
 
 /// <summary>
 /// Contains a snapshot of a keyboard state at certain moment and provides methods

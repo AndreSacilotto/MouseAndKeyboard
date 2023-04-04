@@ -28,6 +28,6 @@ public readonly struct HighLowDWORD
     public HighLowDWORD(int value) => Value = value;
 
     public const int HALF_DWORD_BITS = sizeof(DWORD) * 8 / 2;
-    public static int GetLow(WORD value) => value & 0b_0000_0000_0000_0000_1111_1111_1111_1111;
-    public static int GetHigh(WORD value) => value >> HALF_DWORD_BITS;
+    public static WORD GetLow(DWORD value) => (WORD)(value & 0b_0000_0000_0000_0000_1111_1111_1111_1111);
+    public static WORD GetHigh(DWORD value) => (WORD)(value >> HALF_DWORD_BITS);
 }
