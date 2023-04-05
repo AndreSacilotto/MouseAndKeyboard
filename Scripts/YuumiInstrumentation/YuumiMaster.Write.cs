@@ -1,7 +1,6 @@
 ﻿using MouseAndKeyboard.InputListener;
 using MouseAndKeyboard.Native;
 using MouseAndKeyboard.Network;
-using MouseAndKeyboard.Util;
 using static YuumiInstrumentation.InputData;
 
 namespace YuumiInstrumentation;
@@ -15,15 +14,6 @@ partial class YuumiMaster
     }
 
     #region Events Funcs
-
-    private void WhenConnect(bool isServer)
-    {
-        var width = PrimaryMonitor.Instance.Width;
-        var height = PrimaryMonitor.Instance.Height;
-        Logger.WriteLine($"SEND: Screen {width} {height}");
-        ypacket.WriteScreen(width, height);
-        SendPacket();
-    }
 
     private void WhenKeyDown(KeyboardEventData ev) => UnifyKeyboardPress(PressState.Down, ev);
     private void WhenKeyUp(KeyboardEventData ev) => UnifyKeyboardPress(PressState.Up, ev);
@@ -48,6 +38,14 @@ partial class YuumiMaster
     #endregion
 
     #region Unify
+    private void SendScreen()
+    {
+        var width = PrimaryMonitor.Instance.Width;
+        var height = PrimaryMonitor.Instance.Height;
+        Logger.WriteLine($"SEND: Screen {width} {height}");
+        ypacket.WriteScreen(width, height);
+        SendPacket();
+    }
 
     private void UnifyKeyboardPress(PressState pressed, KeyboardEventData ev)
     {
@@ -55,7 +53,7 @@ partial class YuumiMaster
 
         if (ev.Shift && MirrorWhenShiftVK.Contains(vk))
         {
-            if (ev.Control) // Mirror when Shift Control
+            if (ev.Control) // Mirror Control when Shift Control
             {
                 Logger.WriteLine($"SEND: KKey {pressed,-5}: {vk} | Control");
                 ypacket.WriteKeyPressWithModifier(vk, InputModifiers.Control, pressed);
@@ -68,20 +66,21 @@ partial class YuumiMaster
                 SendPacket();
             }
         }
-        else if (FunctionKeysVK.Contains(vk))
+        else if (vk == FOCUS_KEY)
         {
-            if (ev.Shift)
-            {
-                Logger.WriteLine($"SEND: KKey {pressed,-5}: {vk} | DOWN");
-                ypacket.WriteKeyPress(vk, PressState.Down);
-            }
-            else
-            {
-                Logger.WriteLine($"SEND: KKey {pressed,-5}: {vk}");
-                ypacket.WriteKeyPress(vk, PressState.Click);
-            }
+            ypacket.WriteKeyPress(FOCUS_KEY, pressed);
             SendPacket();
         }
+        else if (!ev.Shift && !ev.Control)
+        {
+            ypacket.WriteKeyPress(FOCUS_KEY, pressed);
+            SendPacket();
+            ypacket.WriteKeyPress(CAMERA_KEY, pressed);
+            SendPacket();
+            if (vk == SCREEN_KEY)
+                SendScreen();
+        }
+
     }
 
     private void UnifyMousePress(PressState pressed, MouseEventData ev)

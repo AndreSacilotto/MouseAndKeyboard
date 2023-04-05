@@ -9,10 +9,9 @@ namespace MouseAndKeyboard.Network;
 public class UDPSocket : IDisposable
 {
     public delegate void NetReceive(int recievedBytes, byte[] data);
-    public delegate void NetConnect(bool isServer);
 
     public event NetReceive? OnReceive;
-    public event NetConnect? OnConnect;
+    public event Action? OnConnect;
 
     private readonly Socket socket = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
@@ -20,6 +19,11 @@ public class UDPSocket : IDisposable
     private Memory<byte> memBuffer;
 
     private CancellationTokenSource? cancelToken;
+
+    private bool isClient, isServer;
+
+    public bool IsClient => isClient;
+    public bool IsServer => isServer;
 
     public UDPSocket(bool clientCanHost = true, int bufferSize = NetworkUtil.DEFAULT_BUFFER_SIZE) : base()
     {
@@ -38,10 +42,12 @@ public class UDPSocket : IDisposable
 
     public virtual void Dispose()
     {
+        isServer = false;
+        isClient = false;
         OnReceive = null;
         OnConnect = null;
-        if (cancelToken != null) 
-        { 
+        if (cancelToken != null)
+        {
             cancelToken.Cancel();
             cancelToken.Dispose();
         }
@@ -50,7 +56,12 @@ public class UDPSocket : IDisposable
         Logger.WriteLine("[Dispose Socket]");
     }
 
-    public void Stop() => MySocket.Disconnect(true);
+    public void Stop()
+    {
+        isServer = false;
+        isClient = false;
+        MySocket.Disconnect(true);
+    }
 
     #region Client
 
@@ -58,8 +69,9 @@ public class UDPSocket : IDisposable
     {
         if (MySocket.Connected)
             return;
+        isClient = true;
         MySocket.Connect(remoteEP);
-        OnConnect?.Invoke(false);
+        OnConnect?.Invoke();
     }
 
     #endregion
@@ -70,11 +82,12 @@ public class UDPSocket : IDisposable
     {
         if (MySocket.IsBound)
             return;
+        isServer = true;
         buffer = new byte[MySocket.SendBufferSize];
         memBuffer = buffer;
         cancelToken = new();
         MySocket.Bind(new IPEndPoint(IPAddress.Any, port));
-        OnConnect?.Invoke(true);
+        OnConnect?.Invoke();
         ResumeServer();
     }
 

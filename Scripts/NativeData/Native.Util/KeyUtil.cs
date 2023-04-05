@@ -78,7 +78,7 @@ public static class KeyUtil
     public static bool GetControlState() => CheckKeyState((int)VirtualKey.Control);
     public static bool GetShiftState() => CheckKeyState((int)VirtualKey.Shift);
     public static bool GetAltState() => CheckKeyState((int)VirtualKey.Menu);
-    public static InputModifiers CheckModifiersState() => 
+    public static InputModifiers CheckModifiersState() =>
         (GetControlState() ? InputModifiers.Control : InputModifiers.None) |
         (GetShiftState() ? InputModifiers.Shift : InputModifiers.None) |
         (GetAltState() ? InputModifiers.Alt : InputModifiers.None);

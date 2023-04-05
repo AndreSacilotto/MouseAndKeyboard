@@ -1,5 +1,4 @@
-﻿using MouseAndKeyboard.InputListener;
-using MouseAndKeyboard.InputListener.Hook;
+﻿using MouseAndKeyboard.InputListener.Hook;
 using MouseAndKeyboard.Network;
 
 namespace YuumiInstrumentation;
@@ -24,7 +23,7 @@ public sealed partial class YuumiMaster : IDisposable
 
         socket = new UDPSocket(MouseAndKeyboard.Util.DebuggingService.IsDebugMode, YummiPacket.MAX_PACKET_BYTE_SIZE);
 
-        socket.OnConnect += WhenConnect;
+        socket.OnConnect += SendScreen;
     }
 
     #endregion
@@ -35,9 +34,9 @@ public sealed partial class YuumiMaster : IDisposable
         EnabledMS = false;
         EnabledMC = false;
         EnabledKK = false;
-        socket.Dispose();
         if (handleInputEvents)
             inputEvents.Dispose();
+        socket.Dispose();
     }
 
     #region Enabling

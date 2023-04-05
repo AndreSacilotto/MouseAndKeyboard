@@ -17,10 +17,9 @@ public static class InputData
     }
 
 
-    public readonly static HashSet<VirtualKey> FunctionKeysVK = new()
-    {
-        VirtualKey.F1, VirtualKey.F2, VirtualKey.F3, VirtualKey.F4, VirtualKey.F5,
-    };
+    public const VirtualKey CAMERA_KEY = VirtualKey.Y;
+    public const VirtualKey FOCUS_KEY = VirtualKey.F1;
+    public const VirtualKey SCREEN_KEY = VirtualKey.Numpad9;
 
     public readonly static HashSet<VirtualKey> MirrorWhenShiftVK = new() {
 
@@ -38,8 +37,6 @@ public static class InputData
         VirtualKey.P,
         VirtualKey.Escape,
     };
-
-
 
 
 }

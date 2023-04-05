@@ -5,7 +5,7 @@ namespace MouseAndKeyboard.Forms;
 
 partial class MainForm
 {
-    private void WndProcInit() 
+    private void WndProcInit()
     {
         mkListener.KeyListener.KeyUp += HotkeysKeyboardEvent;
         //mkListener.MouseListener.MouseUp += HotkeysMouseEvent;
