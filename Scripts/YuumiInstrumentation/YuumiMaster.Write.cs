@@ -47,12 +47,24 @@ partial class YuumiMaster
         SendPacket();
     }
 
+    bool hasSendCamera;
+    void SendFocusSelf() 
+    {
+        ypacket.WriteKeyPress(FOCUS_KEY, PressState.Click);
+        SendPacket();
+    }
+
     private void UnifyKeyboardPress(PressState pressed, KeyboardEventData ev)
     {
         var vk = ev.KeyCode;
 
         if (ev.Shift && MirrorWhenShiftVK.Contains(vk))
         {
+            if (FocusSelfWhen.Contains(vk)) 
+            {
+                SendFocusSelf();
+            }
+
             if (ev.Control) // Mirror Control when Shift Control
             {
                 Logger.WriteLine($"SEND: KKey {pressed,-5}: {vk} | Control");
@@ -66,18 +78,24 @@ partial class YuumiMaster
                 SendPacket();
             }
         }
-        else if (vk == FOCUS_KEY)
-        {
-            ypacket.WriteKeyPress(FOCUS_KEY, pressed);
-            SendPacket();
-        }
         else if (!ev.Shift && !ev.Control)
         {
-            ypacket.WriteKeyPress(FOCUS_KEY, pressed);
-            SendPacket();
-            ypacket.WriteKeyPress(CAMERA_KEY, pressed);
-            SendPacket();
-            if (vk == SCREEN_KEY)
+            if (vk == CAMERA_KEY)
+            {
+                if (!hasSendCamera) 
+                {
+                    SendFocusSelf();
+                    ypacket.WriteKeyPress(CAMERA_KEY, PressState.Click);
+                    SendPacket();
+                }
+                hasSendCamera = !hasSendCamera;
+            }
+            else if (vk == FOCUS_KEY)
+            {
+                ypacket.WriteKeyPress(FOCUS_KEY, pressed);
+                SendPacket();
+            }
+            else if (vk == SCREEN_KEY)
                 SendScreen();
         }
 

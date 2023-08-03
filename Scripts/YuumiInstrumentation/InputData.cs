@@ -21,6 +21,11 @@ public static class InputData
     public const VirtualKey FOCUS_KEY = VirtualKey.F1;
     public const VirtualKey SCREEN_KEY = VirtualKey.Numpad9;
 
+    public readonly static HashSet<VirtualKey> FocusSelfWhen = new()
+    {
+        VirtualKey.Q, VirtualKey.R
+    };
+
     public readonly static HashSet<VirtualKey> MirrorWhenShiftVK = new() {
 
         VirtualKey.Q, VirtualKey.W, VirtualKey.E, VirtualKey.R,
